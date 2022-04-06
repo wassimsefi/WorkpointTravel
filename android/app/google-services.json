@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "143241544476",
+    "project_id": "workpointbeta",
+    "storage_bucket": "workpointbeta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143241544476:android:ab129a921f846788fc70d9",
+        "android_client_info": {
+          "package_name": "workpoint.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143241544476-9v9l8arq5hvatdkvhlhs4k4r23ohd3gp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW3vKyga7rFCSM36o1a5ZSpU5RCVn_kiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143241544476-9v9l8arq5hvatdkvhlhs4k4r23ohd3gp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143241544476:android:e37ada9f240f96defc70d9",
+        "android_client_info": {
+          "package_name": "workpoint.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143241544476-9v9l8arq5hvatdkvhlhs4k4r23ohd3gp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW3vKyga7rFCSM36o1a5ZSpU5RCVn_kiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143241544476-9v9l8arq5hvatdkvhlhs4k4r23ohd3gp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
