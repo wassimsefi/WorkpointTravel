@@ -34,7 +34,8 @@ class StepperWidget extends StatefulWidget {
   _StepperWidgetState createState() => _StepperWidgetState();
 }
 
-class _StepperWidgetState extends State<StepperWidget> {
+class _StepperWidgetState extends State<StepperWidget>
+    with TickerProviderStateMixin {
   int _currentStep = 0;
   String title;
   String hotelPreference;
@@ -46,8 +47,10 @@ class _StepperWidgetState extends State<StepperWidget> {
   String engagementPartner;
   bool transport_required = true;
   bool round_trip = false;
-  bool visaB = true;
-  //List<bool> vaccinB;
+  bool visaB = false;
+  bool docVisa = false;
+
+  List<bool> vaccinList = [];
   bool vaccinB = false;
 
   String country;
@@ -124,7 +127,15 @@ class _StepperWidgetState extends State<StepperWidget> {
   Future<dynamic> getVisa;
   String missionVisa = "";
 
+  List<dynamic> listVaccin = [];
+
+  List<dynamic> listDocVisa = [];
+  List<dynamic> listNumDocVisa = [];
+
   final List<DropdownMenuItem> pays = [];
+
+  int nbrDoc = 0;
+  int nbrVaccin = 0;
 
   String StartDate;
   String EndDate;
@@ -135,6 +146,8 @@ class _StepperWidgetState extends State<StepperWidget> {
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
   ];
+
+  TabController _tabController;
 
   void onStepContine() {
     final isLastStep = _currentStep == getSteps().length - 1;
@@ -247,30 +260,10 @@ class _StepperWidgetState extends State<StepperWidget> {
         //  selectedValue = User["manager"];
       });
     });
-/*
-    getVaccine = _missionService.getVaccine().then((value) {
-      setState(() {
-        missionVaccine = value["data"];
-      });
 
-      missionVaccine.asMap().forEach((index, element) {
-        setState(() {
-          vaccineMission.add(element["name"]);
-        });
-
-        for (var i = 0; i < vaccineMission.length; i++) {
-          vaccinB[i] = false;
-        }
-
-        print("List Vacinne : " + vaccineMission.toString());
-        print("List etat Vacinne : " + vaccinB.toString());
-
-        //  selectedValue = User["manager"];
-      });
-    });
-*/
     // TODO: implement initState
     super.initState();
+    _tabController = new TabController(length: 2, vsync: this);
   }
   /*void loginUser() async {
     const String apiUrl = "http://192.168.1.17:3000/demande/create";
@@ -496,16 +489,18 @@ class _StepperWidgetState extends State<StepperWidget> {
               children: [
                 Text("Date de mission :"),
                 Container(
+                    // width: MediaQuery.of(context).size.width,
+                    // height: MediaQuery.of(context).size.height ,
                     child: Theme(
                   data: Theme.of(context).copyWith(
-                      accentColor: Colors.deepPurpleAccent,
-                      primaryColor: Colors.deepPurple,
+                      accentColor: LightColors.kDarkBlue,
+                      primaryColor: LightColors.kDarkBlue,
                       buttonTheme: ButtonThemeData(
-                        highlightColor: Colors.deepPurple,
+                        highlightColor: LightColors.kDarkBlue,
                         colorScheme: Theme.of(context).colorScheme.copyWith(
-                              secondary: Colors.purple,
-                              primary: Colors.deepPurple,
-                              primaryVariant: Colors.deepPurpleAccent,
+                              secondary: LightColors.kDarkBlue,
+                              primary: LightColors.kDarkBlue,
+                              primaryVariant: LightColors.kDarkBlue,
                             ),
                       )),
                   child: Builder(
@@ -676,48 +671,47 @@ class _StepperWidgetState extends State<StepperWidget> {
                 hint: "Departure country",
                 searchHint: "Select your departure country ",
                 onChanged: (value) {
-                  setState(() async {
-                    pays_depart = value;
+                  //   setState(() async {
+                  pays_depart = value;
 
-                    getIdCountry = _missionService
-                        .getCountryNyName(value["name"])
+                  getIdCountry = _missionService
+                      .getCountryNyName(value["name"])
+                      .then((value) {
+                    missionIdCountry = value["data"];
+                    //  print("Cite length : " + missionCite.length.toString());
+                    // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + missionIdCountry.toString());
+                    getCite = _missionService
+                        .getCiteByCountry(missionIdCountry[0]["_id"])
                         .then((value) {
-                      missionIdCountry = value["data"];
-                      //  print("Cite length : " + missionCite.length.toString());
-                      // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + missionIdCountry.toString());
-                      getCite = _missionService
-                          .getCiteByCountry(missionIdCountry[0]["_id"])
-                          .then((value) {
-                        for (var i = 0; i < missionCite.length; i++) {
-                          citeMission.removeLast();
-                        }
-                        setState(() {
-                          missionCite = value["data"];
-                          print(
-                              "dataaaaaaaa :" + missionCite.length.toString());
-                        });
-
-                        int i = 0;
-                        print("dataaaaaaaa 222 :" +
-                            citeMission.length.toString());
-                        missionCite.asMap().forEach((index, element) {
-                          i++;
-                          citeMission.add(
-                            DropdownMenuItem(
-                                child: Text("$i : " + element["name"]),
-                                value: element),
-                          );
-
-                          //  selectedValue = User["manager"];
-                        });
-
-                        print("dataaaaaaaa 333 :" +
-                            citeMission.length.toString());
+                      for (var i = 0; i < missionCite.length; i++) {
+                        citeMission.removeLast();
+                      }
+                      setState(() {
+                        missionCite = value["data"];
+                        print("dataaaaaaaa :" + missionCite.length.toString());
                       });
-                    });
 
-                    //  print("Country !!!!  2 : " + missionIdCountry);
+                      int i = 0;
+                      print(
+                          "dataaaaaaaa 222 :" + citeMission.length.toString());
+                      missionCite.asMap().forEach((index, element) {
+                        i++;
+                        citeMission.add(
+                          DropdownMenuItem(
+                              child: Text("$i : " + element["name"]),
+                              value: element),
+                        );
+
+                        //  selectedValue = User["manager"];
+                      });
+
+                      print(
+                          "dataaaaaaaa 333 :" + citeMission.length.toString());
+                    });
                   });
+
+                  //  print("Country !!!!  2 : " + missionIdCountry);
+                  //  });
                 },
                 isExpanded: true,
               ),
@@ -754,31 +748,56 @@ class _StepperWidgetState extends State<StepperWidget> {
                         .then((value) {
                       missionIdCountry = value["data"];
 
+//Get Visa
                       visaId = missionIdCountry[0]["visa"];
-                      //  print("..................." +missionIdCountry[0]["_id"].toString());
 
-                      //  print("..................." + visaId.toString());
-                      //  print("Cite length : " + missionCite.length.toString());
+                      listVaccin = missionIdCountry[0]["vaccine"];
 
+                      listDocVisa.clear();
+                      listNumDocVisa.clear();
                       getVisa =
                           _missionService.getVisaById(visaId).then((value) {
-                        setState(() async {
-                          missionVisa = value["data"]["name"];
-                          print("..................." + value["data"]["name"]);
-                        });
+                        missionVisa = value["data"]["name"];
+
+                        nbrDoc = value["data"]["documents_list"].length;
+                        for (var i = 0;
+                            i < value["data"]["documents_list"].length;
+                            i++) {
+                          _missionService
+                              .getDocVisaById(value["data"]["documents_list"][i]
+                                  ["document"])
+                              .then((value) {
+                            listDocVisa.add(value["data"]["name"]);
+                          });
+
+                          listNumDocVisa.add(value["data"]["documents_list"][i]
+                              ["number_of_document"]);
+                        }
+                        print("..................." + listDocVisa.toString());
+                        print(
+                            "..................." + listNumDocVisa.toString());
                       });
 
+// Get List Vaccin
+                      nbrVaccin = value["data"][0]["vaccine"].length;
+                      vaccineMission.clear();
+                      for (var i = 0; i < listVaccin.length; i++) {
+                        _missionService.getVaccine(listVaccin[i]).then((value) {
+                          vaccineMission.add(value["data"]["name"]);
+                          print("3333333333333 listtttt vaccin : " +
+                              vaccineMission.length.toString());
+                        });
+                      }
+//Get Cite
                       getCite = _missionService
                           .getCiteByCountry(missionIdCountry[0]["_id"])
                           .then((value) {
                         for (var i = 0; i < missionCiteDes.length; i++) {
                           citeDesMission.removeLast();
                         }
-                        setState(() {
-                          missionCiteDes = value["data"];
-                          print("dataaaaaaaa :" +
-                              missionCiteDes.length.toString());
-                        });
+                        missionCiteDes = value["data"];
+                        print(
+                            "dataaaaaaaa :" + missionCiteDes.length.toString());
 
                         int i = 0;
 
@@ -793,15 +812,14 @@ class _StepperWidgetState extends State<StepperWidget> {
                           //  selectedValue = User["manager"];
                         });
                       });
+//Get CityCap
 
                       getCityCap = _missionService
                           .getCityCapByCountry(missionIdCountry[0]["_id"])
                           .then((value) {
-                        setState(() async {
-                          Mximum_rate_per_night =
-                              value["data"]["Mximum_rate_per_night"];
-                          //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
-                        });
+                        Mximum_rate_per_night =
+                            value["data"]["Mximum_rate_per_night"];
+                        //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
                       });
                     });
 
@@ -1048,6 +1066,9 @@ class _StepperWidgetState extends State<StepperWidget> {
               padding: const EdgeInsets.only(top: 20, left: 12),
               child: MapScreen(),
             ),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
@@ -1061,61 +1082,15 @@ class _StepperWidgetState extends State<StepperWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-                child: Theme(
-              data: Theme.of(context).copyWith(
-                  accentColor: Colors.deepPurpleAccent,
-                  primaryColor: Colors.deepPurple,
-                  buttonTheme: ButtonThemeData(
-                    highlightColor: Colors.deepPurple,
-                    colorScheme: Theme.of(context).colorScheme.copyWith(
-                          secondary: Colors.purple,
-                          primary: Colors.deepPurple,
-                          primaryVariant: Colors.deepPurpleAccent,
-                        ),
-                  )),
-              child: Column(
-                children: [
-                  Text("Validité du passeport :"),
-                  Builder(
-                      builder: (context) => TextButton.icon(
-                            label: Text(
-                              this.labeDatePasseport,
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            icon: Icon(
-                              Icons.date_range,
-                              color: Colors.black54,
-                            ),
-                            onPressed: () async {
-                              final List<DateTime> picked =
-                                  await DateRangePicker.showDatePicker(
-                                      context: context,
-                                      initialFirstDate: new DateTime.now(),
-                                      initialLastDate: (new DateTime.now())
-                                          .add(new Duration(days: 7)),
-                                      firstDate: new DateTime(2015),
-                                      lastDate: new DateTime(
-                                          DateTime.now().year + 2));
-                              if (picked != null && picked.length == 2) {
-                                print(picked.toList());
-                                StartDate =
-                                    DateFormat('yyyy-MM-dd').format(picked[0]);
-                                EndDate =
-                                    DateFormat('yyyy-MM-dd').format(picked[1]);
-
-                                setState(() {
-                                  this.labeDatePasseport = "From " +
-                                      this.StartDate +
-                                      "  To " +
-                                      EndDate;
-                                });
-                              }
-                            },
-                          )),
-                ],
-              ),
-            )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Validité du passeport : 24/08/2026"),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1123,9 +1098,8 @@ class _StepperWidgetState extends State<StepperWidget> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              //   mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Je dois obtenir le visa : "),
                 Checkbox(
                   //  hoverColor: LightColors.kDarkBlue,
                   //  fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -1136,53 +1110,141 @@ class _StepperWidgetState extends State<StepperWidget> {
                     });
                   },
                 ),
+                Text("Je dois obtenir le visa "),
               ],
             ),
+            visaB == true
+                ? ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: nbrDoc,
+                    itemBuilder: (context, i) {
+                      return Card(
+                        color: NeumorphicColors.background,
+                        child: ListTile(
+                          subtitle: Text("number of document : " +
+                              listNumDocVisa[i].toString()),
+                          title: Text("" + listDocVisa[i]),
+                          leading: Icon(Icons.file_copy),
+                          trailing: Checkbox(
+                            //  hoverColor: LightColors.kDarkBlue,
+                            //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                            value: docVisa,
+                            onChanged: (bool value) {
+                              setState(() {
+                                docVisa = value;
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    })
+                : new Container(),
+            SizedBox(
+              height: 20,
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              //    mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("vaccine 1 : "),
-                Checkbox(
-                  //  hoverColor: LightColors.kDarkBlue,
-                  //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: vaccinB,
-                  onChanged: (bool value) {
-                    setState(() {
-                      vaccinB = value;
-                    });
-                  },
-                ),
+                Text("List vaccin :"),
               ],
-            )
-
-            /*    ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: vaccineMission.length,
-              itemBuilder: (context, i) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(vaccineMission[i] + " : "),
-                    Checkbox(
-                      //  hoverColor: LightColors.kDarkBlue,
-                      //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                      value: vaccinB[i],
-                      onChanged: (bool value) {
-                        setState(() {
-                          vaccinB[i] = value;
-                        });
-                      },
-                    ),
-                  ],
-                );
-              },
-            )
-     */
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            vaccineMission.length == 0
+                ? Center(child: Text("aucun vaccin"))
+                : ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: nbrVaccin,
+                    itemBuilder: (context, i) {
+                      return Card(
+                          color: NeumorphicColors.background,
+                          child: ListTile(
+                            title: Text("" + vaccineMission[i]),
+                            leading: Icon(Icons.medication),
+                            trailing: Checkbox(
+                              //  hoverColor: LightColors.kDarkBlue,
+                              //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                              value: vaccinB,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  vaccinB = value;
+                                });
+                              },
+                            ),
+                          ));
+                    },
+                  )
           ],
         ),
       ),
     );
+
+    /* return SingleChildScrollView(
+      child: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.only(top: 360, left: 20.0, right: 20.0),
+        children: <Widget>[
+          SizedBox(height: 15.0),
+          TabBar(
+              controller: _tabController,
+              indicatorColor: Color(0xff13f4ef),
+              indicatorWeight: 6,
+              // indicator: BoxDecoration(
+              //     color: Color(0xff13f4ef),
+              //     borderRadius: BorderRadius.all(
+              //         Radius.circular(40.0))),
+              labelColor: Color(0xff001a33),
+              // isScrollable: true,
+              labelPadding: EdgeInsets.only(right: 40.0, left: 40.0),
+              unselectedLabelColor: Color(0xFFCDCDCD),
+              tabs: [
+                Tab(
+                  child: Text('All',
+                      style: TextStyle(
+                        fontFamily: 'Varela',
+                        fontSize: 21.0,
+                      )),
+                ),
+                Tab(
+                  child: Text('Receive',
+                      style: TextStyle(
+                        fontFamily: 'Varela',
+                        fontSize: 21.0,
+                      )),
+                ),
+              ]),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              width: double.infinity,
+              child: TabBarView(controller: _tabController, children: [
+                Column(
+                  children: [
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                    Text("wassiomm"),
+                  ],
+                ),
+                Text("taraiiiii"),
+              ]))
+        ],
+      ),
+    );
+*/
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(

@@ -42,7 +42,7 @@ class MissionService {
           //  'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
-    print("response operation" + response.data.toString());
+    print("response Hotel" + response.data.toString());
 
     return response.data;
   }
@@ -54,7 +54,7 @@ class MissionService {
           //  'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
-    print("response operation" + response.data.toString());
+    print("response Country" + response.data.toString());
 
     return response.data;
   }
@@ -83,14 +83,14 @@ class MissionService {
     return response.data;
   }
 
-  Future<dynamic> getVaccine() async {
+  Future<dynamic> getVaccine(id) async {
     //final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Vaccine/",
+    response = await dio.get(link.linkw + "/api/Vaccine/search/" + id,
         options: Dio.Options(headers: {
           //  'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
-    print("response operation" + response.data.toString());
+    print("response Vaccine " + response.data.toString());
 
     return response.data;
   }
@@ -102,7 +102,7 @@ class MissionService {
           //  'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
-    print("response operation" + response.data.toString());
+    print("response Visa" + response.data.toString());
 
     return response.data;
   }
@@ -122,6 +122,18 @@ class MissionService {
   Future<dynamic> getCityCapById(id) async {
     //final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/CityCap/search/" + id,
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+
+    return response.data;
+  }
+
+  Future<dynamic> getDocVisaById(id) async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/Visa/DocumentVisa/search/" + id,
         options: Dio.Options(headers: {
           //  'x-access-token': token,
         }));
