@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:vato/constants/light_colors.dart';
+import 'package:vato/screens/Home/Mission/detail_mission.dart';
 import 'package:vato/widgets/stepper.dart';
 import 'package:vato/widgets/topContainerScan.dart';
 
@@ -31,7 +32,7 @@ class _AddMissionsState extends State<AddMissions> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0))),
-              child: StepperWidget(),
+              child: DetailMission(),
             ),
           )
         ],

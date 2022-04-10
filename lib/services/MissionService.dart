@@ -37,12 +37,36 @@ class MissionService {
 
   Future<dynamic> getAllHotel() async {
     //final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Hotel/",
+    response = await dio.get(link.linkw + "/api/Hotel/all",
         options: Dio.Options(headers: {
           //  'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
     print("response Hotel" + response.data.toString());
+
+    return response.data;
+  }
+
+  Future<dynamic> getHotelbyName(name) async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/Hotel/getId/" + name,
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+
+    return response.data;
+  }
+
+  Future<dynamic> getHotelbyid(id) async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/Hotel/search/" + id,
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
 
     return response.data;
   }

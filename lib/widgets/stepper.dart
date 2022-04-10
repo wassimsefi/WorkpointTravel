@@ -134,8 +134,21 @@ class _StepperWidgetState extends State<StepperWidget>
 
   final List<DropdownMenuItem> pays = [];
 
+  String idHotel;
+  String altitudeHotel = "36.806389";
+  String longitudeHotel = "10.181667";
+
   int nbrDoc = 0;
   int nbrVaccin = 0;
+
+  String _selectedAnimal;
+
+  // This list holds all the suggestions
+
+  final List<String> _listHotel = [];
+
+  var VaccinList = <Map>[];
+  var VisaList = <Map>[];
 
   String StartDate;
   String EndDate;
@@ -231,17 +244,16 @@ class _StepperWidgetState extends State<StepperWidget>
 
     getHotel = _missionService.getAllHotel().then((value) {
       setState(() {
+        _listHotel.clear();
         missionHotel = value["data"];
-      });
-
-      missionHotel.asMap().forEach((index, element) {
-        setState(() {
-          hotelMission.add(
-            DropdownMenuItem(child: Text(element["name"]), value: element),
-          );
-        });
-
-        //  selectedValue = User["manager"];
+        print("hotel list :" + value["data"][0]["name"].toString());
+        for (var i = 0; i < value["data"].length; i++) {
+          _listHotel.add(value["data"][i]["name"]);
+          print("list hotel longitude : " +
+              value["data"][i]["longitude"]["\$numberDecimal"].toString());
+          print("list hotel altitude : " +
+              value["data"][i]["altitude"]["\$numberDecimal"].toString());
+        }
       });
     });
 
@@ -755,28 +767,41 @@ class _StepperWidgetState extends State<StepperWidget>
 
                       listDocVisa.clear();
                       listNumDocVisa.clear();
-                      getVisa =
-                          _missionService.getVisaById(visaId).then((value) {
-                        missionVisa = value["data"]["name"];
+                      print("************************* : " + visaId.toString());
 
-                        nbrDoc = value["data"]["documents_list"].length;
-                        for (var i = 0;
-                            i < value["data"]["documents_list"].length;
-                            i++) {
-                          _missionService
-                              .getDocVisaById(value["data"]["documents_list"][i]
-                                  ["document"])
-                              .then((value) {
-                            listDocVisa.add(value["data"]["name"]);
-                          });
+                      if (visaId == null) {
+                        nbrDoc = 0;
+                      } else {
+                        getVisa =
+                            _missionService.getVisaById(visaId).then((value) {
+                          missionVisa = value["data"]["name"];
 
-                          listNumDocVisa.add(value["data"]["documents_list"][i]
-                              ["number_of_document"]);
-                        }
-                        print("..................." + listDocVisa.toString());
-                        print(
-                            "..................." + listNumDocVisa.toString());
-                      });
+                          nbrDoc = value["data"]["documents_list"].length;
+                          for (var i = 0;
+                              i < value["data"]["documents_list"].length;
+                              i++) {
+                            var map = {};
+                            map['name'] =
+                                value["data"]["documents_list"][i]["document"];
+                            map['nbrDoc'] = value["data"]["documents_list"][i]
+                                ["number_of_document"];
+                            map['isChecked'] = false;
+                            VisaList.add(map);
+
+                            _missionService
+                                .getDocVisaById(value["data"]["documents_list"]
+                                    [i]["document"])
+                                .then((value) {
+                              listDocVisa.add(value["data"]["name"]);
+                              map['name'] = value["data"]["name"];
+                            });
+
+                            listNumDocVisa.add(value["data"]["documents_list"]
+                                [i]["number_of_document"]);
+                          }
+                          print("****************** : " + VisaList.toString());
+                        });
+                      }
 
 // Get List Vaccin
                       nbrVaccin = value["data"][0]["vaccine"].length;
@@ -784,10 +809,14 @@ class _StepperWidgetState extends State<StepperWidget>
                       for (var i = 0; i < listVaccin.length; i++) {
                         _missionService.getVaccine(listVaccin[i]).then((value) {
                           vaccineMission.add(value["data"]["name"]);
-                          print("3333333333333 listtttt vaccin : " +
-                              vaccineMission.length.toString());
+
+                          var map = {};
+                          map['name'] = value["data"]["name"];
+                          map['isChecked'] = false;
+                          VaccinList.add(map);
                         });
                       }
+
 //Get Cite
                       getCite = _missionService
                           .getCiteByCountry(missionIdCountry[0]["_id"])
@@ -796,8 +825,6 @@ class _StepperWidgetState extends State<StepperWidget>
                           citeDesMission.removeLast();
                         }
                         missionCiteDes = value["data"];
-                        print(
-                            "dataaaaaaaa :" + missionCiteDes.length.toString());
 
                         int i = 0;
 
@@ -808,8 +835,6 @@ class _StepperWidgetState extends State<StepperWidget>
                                 child: Text("$i : " + element["name"]),
                                 value: element),
                           );
-
-                          //  selectedValue = User["manager"];
                         });
                       });
 //Get CityCap
@@ -933,7 +958,7 @@ class _StepperWidgetState extends State<StepperWidget>
                       hint: "Destination country",
                       searchHint: "Select your Destination country ",
                       onChanged: (value) {
-                        setState(() async {
+                        setState(() {
                           pays_destination_retour = value;
 
                           getIdCountry = _missionService
@@ -1016,6 +1041,7 @@ class _StepperWidgetState extends State<StepperWidget>
   }
 
   Widget _AccomodationWidget() {
+    print("*******************" + longitudeHotel.toString());
     return SingleChildScrollView(
       child: Form(
         key: _formKeys[3],
@@ -1040,6 +1066,49 @@ class _StepperWidgetState extends State<StepperWidget>
 
             Padding(
               padding: const EdgeInsets.all(8.0),
+              child: Text("Select Preference Hotel :"),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Autocomplete<String>(
+                optionsBuilder: (TextEditingValue value) {
+                  // When the field is empty
+                  if (value.text.isEmpty) {
+                    return [];
+                  }
+
+                  // The logic to find out which ones should appear
+                  return _listHotel.where((suggestion) => suggestion
+                      .toLowerCase()
+                      .contains(value.text.toLowerCase()));
+                },
+                onSelected: (value) {
+                  setState(() {
+                    hotelPreference = value;
+                    print("tset hotel : " + hotelPreference.toString());
+
+                    _missionService
+                        .getHotelbyName(hotelPreference)
+                        .then((value) {
+                      idHotel = value["data"];
+                      print("hotel id :" + idHotel.toString());
+                    });
+
+                    _missionService.getHotelbyid(idHotel).then((value) {
+                      altitudeHotel =
+                          value["data"]["altitude"]["\$numberDecimal"];
+                      longitudeHotel =
+                          value["data"]["longitude"]["\$numberDecimal"];
+                      print("altitude Hotel :" + altitudeHotel.toString());
+                    });
+
+                    print("object");
+                  });
+                },
+              ),
+            ),
+            /*     Padding(
+              padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 initialValue: hotelPreference,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1052,6 +1121,7 @@ class _StepperWidgetState extends State<StepperWidget>
                 ),
               ),
             ),
+       */
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 12),
               child: Text("Mximum rate per night : " +
@@ -1064,7 +1134,8 @@ class _StepperWidgetState extends State<StepperWidget>
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 12),
-              child: MapScreen(),
+              child:
+                  MapScreen(altitudeHotel: "36.258", longitudeHotel: "9.589"),
             ),
             SizedBox(
               height: 20,
@@ -1082,6 +1153,50 @@ class _StepperWidgetState extends State<StepperWidget>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            /*     SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                             // The checkboxes will be here
+                      Column(
+                          children: availableHobbies.map((hobby) {
+                        return CheckboxListTile(
+                            value: hobby["isChecked"],
+                            title: Text(hobby["name"]),
+                            onChanged: (newValue) {
+                              setState(() {
+                                hobby["isChecked"] = newValue;
+                              });
+                            });
+                      }).toList()),
+
+                      // Display the result here
+                      const SizedBox(height: 10),
+                      const Divider(),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        children: availableHobbies.map((hobby) {
+                          if (hobby["isChecked"] == true) {
+                            return Card(
+                              elevation: 3,
+                              color: Colors.amber,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(hobby["name"]),
+                              ),
+                            );
+                          }
+
+                          return Container();
+                        }).toList(),
+                      )
+
+                      
+                    ]),
+              ),
+            ), */
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1094,7 +1209,9 @@ class _StepperWidgetState extends State<StepperWidget>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Visa : " + missionVisa),
+                nbrDoc == 0
+                    ? Text("Visa : null ")
+                    : Text("Visa : " + missionVisa),
               ],
             ),
             Row(
@@ -1114,32 +1231,34 @@ class _StepperWidgetState extends State<StepperWidget>
               ],
             ),
             visaB == true
-                ? ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: nbrDoc,
-                    itemBuilder: (context, i) {
-                      return Card(
-                        color: NeumorphicColors.background,
-                        child: ListTile(
-                          subtitle: Text("number of document : " +
-                              listNumDocVisa[i].toString()),
-                          title: Text("" + listDocVisa[i]),
-                          leading: Icon(Icons.file_copy),
-                          trailing: Checkbox(
-                            //  hoverColor: LightColors.kDarkBlue,
-                            //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                            value: docVisa,
-                            onChanged: (bool value) {
-                              setState(() {
-                                docVisa = value;
-                              });
-                            },
-                          ),
-                        ),
-                      );
-                    })
+                ? nbrDoc == 0
+                    ? Center(child: Text("aucun visa"))
+                    : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: nbrDoc,
+                        itemBuilder: (context, i) {
+                          return Card(
+                            color: NeumorphicColors.background,
+                            child: ListTile(
+                              subtitle: Text("number of document : " +
+                                  VisaList[i]["nbrDoc"].toString()),
+                              title: Text("" + VisaList[i]["name"]),
+                              leading: Icon(Icons.file_copy),
+                              trailing: Checkbox(
+                                //  hoverColor: LightColors.kDarkBlue,
+                                //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                value: VisaList[i]["isChecked"],
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    VisaList[i]["isChecked"] = newValue;
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        })
                 : new Container(),
             SizedBox(
               height: 20,
@@ -1164,15 +1283,17 @@ class _StepperWidgetState extends State<StepperWidget>
                       return Card(
                           color: NeumorphicColors.background,
                           child: ListTile(
-                            title: Text("" + vaccineMission[i]),
+                            title: Text("" + VaccinList[i]["name"]),
                             leading: Icon(Icons.medication),
                             trailing: Checkbox(
                               //  hoverColor: LightColors.kDarkBlue,
                               //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                              value: vaccinB,
-                              onChanged: (bool value) {
+                              value: VaccinList[i]["isChecked"],
+                              onChanged: (newValue) {
                                 setState(() {
-                                  vaccinB = value;
+                                  VaccinList[i]["isChecked"] = newValue;
+                                  print("test test test ::: " +
+                                      VaccinList.toString());
                                 });
                               },
                             ),

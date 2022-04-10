@@ -7,7 +7,10 @@ import 'package:flutter/gestures.dart';
 import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key key}) : super(key: key);
+  final String altitudeHotel;
+  final String longitudeHotel;
+  const MapScreen({Key key, this.altitudeHotel, this.longitudeHotel})
+      : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -18,6 +21,15 @@ class _MapScreenState extends State<MapScreen> {
     target: LatLng(36.806389, 10.181667),
     zoom: 14.4746,
   );
+
+  double alt;
+  double long;
+  @override
+  void initState() {
+    alt = double.parse(widget.altitudeHotel);
+    long = double.parse(widget.longitudeHotel);
+    super.initState();
+  }
 
   Completer<GoogleMapController> _controller = Completer();
   List<Marker> markers = [];
@@ -47,7 +59,7 @@ class _MapScreenState extends State<MapScreen> {
 
         markers: markers.map((e) => e).toSet(),
         initialCameraPosition:
-            CameraPosition(target: LatLng(36.806389, 10.181667), zoom: 14),
+            CameraPosition(target: LatLng(alt, long), zoom: 5),
 
         onMapCreated: (controller) {
           _controller.complete(controller);
