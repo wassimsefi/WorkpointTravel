@@ -3,6 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart' as http;
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:search_choices/search_choices.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vato/SplashScreen.dart';
 
 import 'package:vato/constants/light_colors.dart';
@@ -20,6 +21,7 @@ import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:intl/intl.dart';
 import 'package:vato/generated/intl/messages_en.dart';
 import 'package:vato/services/MissionService.dart';
+import 'package:vato/services/UserServices.dart';
 import 'package:vato/travel/simple_map.dart';
 import 'package:vato/widgets/mapScreen.dart';
 
@@ -66,8 +68,7 @@ class _StepperWidgetState extends State<StepperWidget>
 
   dynamic amount;
   dynamic perdiem;
-  dynamic manager;
-  dynamic partner;
+  final List<DropdownMenuItem> manager = [];
 
   dynamic pays_depart;
   dynamic city_depart;
@@ -162,6 +163,20 @@ class _StepperWidgetState extends State<StepperWidget>
 
   TabController _tabController;
 
+  String tokenLogin;
+  String User_id;
+  UserService _userService = new UserService();
+  var User;
+  List<dynamic> managers;
+  List<dynamic> Users;
+  Future<SharedPreferences> _prefs;
+  Future<dynamic> getManagers;
+  Future<dynamic> getUsers;
+  dynamic selectedValueManger;
+  dynamic selectedValuePartner;
+
+  final List<DropdownMenuItem> partner = [];
+
   void onStepContine() {
     final isLastStep = _currentStep == getSteps().length - 1;
 
@@ -195,19 +210,66 @@ class _StepperWidgetState extends State<StepperWidget>
     this.labeDateMission = "the full time of your mission";
     this.labeDatePasseport = "the full time of your passeport";
 
-    setState(() {
-      pays.add(
-        DropdownMenuItem(child: Text("Tunis"), value: "Tunis"),
-      );
-      pays.add(
-        DropdownMenuItem(child: Text("Italia"), value: "Italia"),
-      );
-      pays.add(
-        DropdownMenuItem(child: Text("Qatar"), value: "Qatar"),
-      );
-      pays.add(
-        DropdownMenuItem(child: Text("Libya"), value: "Libya"),
-      );
+    _prefs = SharedPreferences.getInstance();
+    _prefs.then((SharedPreferences prefs) async {
+      setState(() {
+        this.tokenLogin = prefs.get("token").toString();
+        User_id = prefs.get("_id");
+      });
+      await _userService.getUserProfil(User_id, tokenLogin).then((userData) {
+        setState(() {
+          User = userData["data"];
+        });
+      });
+      getManagers = _userService.getMangers(tokenLogin).then((value) {
+        setState(() {
+          managers = value["data"];
+        });
+
+        managers.asMap().forEach((index, element) {
+          if (User["_id"].toString() != element["_id"].toString()) {
+            setState(() {
+              manager.add(
+                DropdownMenuItem(
+                    child:
+                        Text(element["firstname"] + " " + element["lastname"]),
+                    value: element),
+              );
+            });
+          }
+          /*  manager.forEach((element) {
+            if (element.value["_id"] == User["manager"]["_id"]) {
+              selectedValue = element.value;
+            }
+          });*/
+          //  selectedValue = User["manager"];
+        });
+      });
+
+      getUsers = _userService.getUsers(tokenLogin).then((value) {
+        setState(() {
+          Users = value["data"];
+        });
+
+        Users.asMap().forEach((index, element) {
+          if (User["_id"].toString() != element["_id"].toString()) {
+            setState(() {
+              partner.add(
+                DropdownMenuItem(
+                    child:
+                        Text(element["firstname"] + " " + element["lastname"]),
+                    value: element),
+              );
+            });
+          }
+          /*    manager.forEach((element) {
+            if (element.value["_id"] == User["manager"]["_id"]) {
+              selectedValue = element.value;
+            }
+          });*/
+          //  selectedValue = User["manager"];
+        });
+      });
     });
 
     getMissionObject = _missionService.getAllMissionObject().then((value) {
@@ -221,8 +283,6 @@ class _StepperWidgetState extends State<StepperWidget>
             DropdownMenuItem(child: Text(element["name"]), value: element),
           );
         });
-
-        //  selectedValue = User["manager"];
       });
     });
 
@@ -268,8 +328,6 @@ class _StepperWidgetState extends State<StepperWidget>
             DropdownMenuItem(child: Text(element["name"]), value: element),
           );
         });
-
-        //  selectedValue = User["manager"];
       });
     });
 
@@ -470,13 +528,13 @@ class _StepperWidgetState extends State<StepperWidget>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SearchChoices.single(
-                items: pays,
-                value: manager,
+                items: manager,
+                value: selectedValueManger,
                 hint: "Manager",
                 searchHint: "Select your Manager",
                 onChanged: (value) {
                   setState(() {
-                    manager = value;
+                    selectedValueManger = value;
                   });
                 },
                 isExpanded: true,
@@ -485,13 +543,13 @@ class _StepperWidgetState extends State<StepperWidget>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SearchChoices.single(
-                items: pays,
-                value: partner,
+                items: partner,
+                value: selectedValuePartner,
                 hint: "Partner",
                 searchHint: "Select your partner",
                 onChanged: (value) {
                   setState(() {
-                    partner = value;
+                    selectedValuePartner = value;
                   });
                 },
                 isExpanded: true,
@@ -710,11 +768,9 @@ class _StepperWidgetState extends State<StepperWidget>
                         i++;
                         citeMission.add(
                           DropdownMenuItem(
-                              child: Text("$i : " + element["name"]),
+                              child: Text("" + element["name"]),
                               value: element),
                         );
-
-                        //  selectedValue = User["manager"];
                       });
 
                       print(
@@ -767,7 +823,6 @@ class _StepperWidgetState extends State<StepperWidget>
 
                       listDocVisa.clear();
                       listNumDocVisa.clear();
-                      print("************************* : " + visaId.toString());
 
                       if (visaId == null) {
                         nbrDoc = 0;
@@ -799,7 +854,6 @@ class _StepperWidgetState extends State<StepperWidget>
                             listNumDocVisa.add(value["data"]["documents_list"]
                                 [i]["number_of_document"]);
                           }
-                          print("****************** : " + VisaList.toString());
                         });
                       }
 
@@ -818,13 +872,15 @@ class _StepperWidgetState extends State<StepperWidget>
                       }
 
 //Get Cite
-                      getCite = _missionService
+                      _missionService
                           .getCiteByCountry(missionIdCountry[0]["_id"])
                           .then((value) {
                         for (var i = 0; i < missionCiteDes.length; i++) {
                           citeDesMission.removeLast();
                         }
-                        missionCiteDes = value["data"];
+                        setState(() {
+                          missionCiteDes = value["data"];
+                        });
 
                         int i = 0;
 
@@ -832,11 +888,12 @@ class _StepperWidgetState extends State<StepperWidget>
                           i++;
                           citeDesMission.add(
                             DropdownMenuItem(
-                                child: Text("$i : " + element["name"]),
+                                child: Text("" + element["name"]),
                                 value: element),
                           );
                         });
                       });
+
 //Get CityCap
 
                       getCityCap = _missionService
@@ -914,8 +971,6 @@ class _StepperWidgetState extends State<StepperWidget>
                                       child: Text("$i : " + element["name"]),
                                       value: element),
                                 );
-
-                                //  selectedValue = User["manager"];
                               });
 
                               print("dataaaaaaaa 333 :" +
@@ -1004,8 +1059,6 @@ class _StepperWidgetState extends State<StepperWidget>
                                       child: Text("$i : " + element["name"]),
                                       value: element),
                                 );
-
-                                //  selectedValue = User["manager"];
                               });
                             });
                           });
@@ -1041,7 +1094,6 @@ class _StepperWidgetState extends State<StepperWidget>
   }
 
   Widget _AccomodationWidget() {
-    print("*******************" + longitudeHotel.toString());
     return SingleChildScrollView(
       child: Form(
         key: _formKeys[3],

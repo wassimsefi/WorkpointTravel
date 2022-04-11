@@ -12,21 +12,20 @@ class UserService {
   var dio = API().Api();
   final _storage = const FlutterSecureStorage();
   Future<dynamic> login(User user) async {
-
     Response res = await post(Uri.parse(link.linkw + "/api/User/login"),
         headers: {"Content-Type": "application/json"}, body: jsonEncode(user));
     dynamic body = jsonDecode(res.body);
     return body;
   }
 
-    Future<dynamic> updatepassword(String user, String oldpassword,
+  Future<dynamic> updatepassword(String user, String oldpassword,
       String newpassword, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
     response = await dio.put(link.linkw + "/api/User/updatemyprofile/" + user,
         data: jsonEncode(<String, String>{
           'newpassword': newpassword,
           'oldpassword': oldpassword,
-        }) ,
+        }),
         options: Dio.Options(headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
@@ -75,7 +74,7 @@ class UserService {
     final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/User/getUsers",
         options: Dio.Options(headers: {
-          'x-access-token': token,
+          //   'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
@@ -120,13 +119,14 @@ class UserService {
   Future<dynamic> getStatRes(
       String id, String datestart, String dateend, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +
-        "/api/User/nbofreservations/" +
-        id +
-        "/" +
-        dateend +
-        "/" +
-        datestart,
+    response = await dio.get(
+        link.linkw +
+            "/api/User/nbofreservations/" +
+            id +
+            "/" +
+            dateend +
+            "/" +
+            datestart,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -152,13 +152,14 @@ class UserService {
   Future<dynamic> getStatCheckin(
       String id, String datestart, String dateend, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +
-        "/api/User/nbofchekins/" +
-        id +
-        "/" +
-        dateend +
-        "/" +
-        datestart,
+    response = await dio.get(
+        link.linkw +
+            "/api/User/nbofchekins/" +
+            id +
+            "/" +
+            dateend +
+            "/" +
+            datestart,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -184,13 +185,14 @@ class UserService {
   Future<dynamic> getStatCancel(
       String id, String datestart, String dateend, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +
-        "/api/User/nbofcancellations/" +
-        id +
-        "/" +
-        dateend +
-        "/" +
-        datestart,
+    response = await dio.get(
+        link.linkw +
+            "/api/User/nbofcancellations/" +
+            id +
+            "/" +
+            dateend +
+            "/" +
+            datestart,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -213,9 +215,7 @@ class UserService {
     return body;*/
   }
 
-
   Future<dynamic> forgotpassword(dynamic email, String validationCode) async {
-
     Response res = await post(Uri.parse(link.linkw + "/api/user/forgotPasswd"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(<String, String>{
@@ -241,7 +241,7 @@ class UserService {
     final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/user/getValidators/",
         options: Dio.Options(headers: {
-          'x-access-token': token,
+          // 'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
@@ -257,8 +257,7 @@ class UserService {
 
   Future<dynamic> getTeamManager(String tokenLogin, String User) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +
-        "/api/user/getTeamManager/" + User,
+    response = await dio.get(link.linkw + "/api/user/getTeamManager/" + User,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -280,12 +279,12 @@ class UserService {
     final token = await _storage.read(key: 'token');
     response = await dio.get(
         link.linkw +
-        "/api/user/nbofreservations/" +
-        User +
-        "/" +
-        startDate +
-        "/" +
-        endDate,
+            "/api/user/nbofreservations/" +
+            User +
+            "/" +
+            startDate +
+            "/" +
+            endDate,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -311,13 +310,14 @@ class UserService {
   Future<dynamic> Get_NBR_WFH(
       String tokenLogin, String User, String startDate, String endDate) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +
-        "/api/user/nbofwfh/" +
-        User +
-        "/" +
-        startDate +
-        "/" +
-        endDate,
+    response = await dio.get(
+        link.linkw +
+            "/api/user/nbofwfh/" +
+            User +
+            "/" +
+            startDate +
+            "/" +
+            endDate,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -339,6 +339,4 @@ class UserService {
     dynamic body = jsonDecode(res.body);
     return body;*/
   }
-
-
 }
