@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as Dio;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:vato/constants/link.dart';
+import 'package:vato/models/Mission.dart';
 import 'package:vato/services/API.dart';
 
 class MissionService {
@@ -165,5 +166,28 @@ class MissionService {
     print("response operation" + response.data.toString());
 
     return response.data;
+  }
+
+  Future<dynamic> addRequest(Missions missions, String tokenLogin) async {
+    final token = await _storage.read(key: 'token');
+    response = await dio.post(link.linkw + "/api/Mission/addMission",
+        data: json.encode(missions),
+        options: Dio.Options(headers: {
+          //   'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+    return response.data;
+/*    Response res = await post(
+      Uri.parse(link.linkw + "/api/Request/addRequest"),
+      body: json.encode(request),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'x-access-token': token
+      },
+    );
+    dynamic body = jsonDecode(res.body);
+    return body;*/
   }
 }

@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:search_choices/search_choices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sweetalert/sweetalert.dart';
 import 'package:vato/SplashScreen.dart';
 
 import 'package:vato/constants/light_colors.dart';
@@ -20,10 +21,12 @@ import 'package:vato/constants/light_colors.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:intl/intl.dart';
 import 'package:vato/generated/intl/messages_en.dart';
+import 'package:vato/models/Mission.dart';
 import 'package:vato/services/MissionService.dart';
 import 'package:vato/services/UserServices.dart';
 import 'package:vato/travel/simple_map.dart';
 import 'package:vato/widgets/mapScreen.dart';
+import 'package:vato/widgets/navBar.dart';
 
 import 'package:vato/widgets/top_container_travel.dart';
 
@@ -40,7 +43,7 @@ class _StepperWidgetState extends State<StepperWidget>
     with TickerProviderStateMixin {
   int _currentStep = 0;
   String title;
-  String hotelPreference;
+  String hotelPreference = "";
 
   String email;
   String category;
@@ -127,6 +130,7 @@ class _StepperWidgetState extends State<StepperWidget>
   dynamic visaId;
   Future<dynamic> getVisa;
   String missionVisa = "";
+  String idVisa = "";
 
   List<dynamic> listVaccin = [];
 
@@ -188,6 +192,69 @@ class _StepperWidgetState extends State<StepperWidget>
       if (isLastStep) {
         print("object ...............");
         //  loginUser();
+        Missions missions = new Missions();
+        missions.title = title;
+        missions.MissionFormula = formula["_id"];
+        missions.MissionObjet = object["_id"];
+        missions.manager = selectedValueManger["_id"];
+        missions.partner = selectedValuePartner["_id"];
+        missions.dateDebut = StartDate;
+        missions.dateFinal = EndDate;
+        missions.perdiem = " test perdiem";
+        missions.amount = double.parse(amount);
+        missions.comment = comment;
+        missions.needTransport = transport_required;
+        missions.allerRetour = round_trip;
+
+        missions.departureCountryAller = pays_depart["_id"];
+        missions.departureCityAller = city_depart["_id"];
+        missions.destinationCountryAller = pays_destination["_id"];
+        missions.destinationCityAller = city_destination["_id"];
+
+        missions.hotel = hotelPreference;
+        missions.rateHotelMax = Mximum_rate_per_night;
+
+        missions.validtePassport = " 2058-28-02";
+        missions.visa = idVisa;
+        missions.obtenirVisa = visaB;
+
+        /*   for (var i = 0; i < nbrDoc; i++) {
+          print("***" + VisaList[i].toString());
+          missions.documents_visa[i] = VisaList[i];
+        }*/
+
+        print("***" + VisaList.toString());
+        print("***" + VisaList.runtimeType.toString());
+
+        for (var i = 0; i < nbrDoc; i++) {
+          missions.documents_visa.add(VisaList[i]);
+        }
+
+        for (var i = 0; i < nbrVaccin; i++) {
+          missions.vaccin.add(VaccinList[i]);
+        }
+        _missionService.addRequest(missions, tokenLogin).then((value) async {
+          print("okay !!!!");
+          SweetAlert.show(context,
+              subtitle: "Loading ...", style: SweetAlertStyle.loading);
+          await Future.delayed(new Duration(seconds: 1), () async {
+            if (value["status"].toString() == "200") {
+              await SweetAlert.show(
+                context,
+                subtitle: " Done !",
+                style: SweetAlertStyle.success,
+              );
+            } else if (value["status"].toString() == "201") {
+              await SweetAlert.show(context,
+                  subtitle: value["message"], style: SweetAlertStyle.error);
+            } else {
+              await SweetAlert.show(context,
+                  subtitle: "Ooops! Something Went Wrong!",
+                  style: SweetAlertStyle.error);
+            }
+          });
+        });
+
         return;
       }
       _currentStep += 1;
@@ -335,6 +402,7 @@ class _StepperWidgetState extends State<StepperWidget>
     super.initState();
     _tabController = new TabController(length: 2, vsync: this);
   }
+
   /*void loginUser() async {
     const String apiUrl = "http://192.168.1.17:3000/demande/create";
     DemandeElement demande = DemandeElement(
@@ -505,6 +573,7 @@ class _StepperWidgetState extends State<StepperWidget>
                 onChanged: (value) {
                   setState(() {
                     object = value;
+                    print("-----------" + object.toString());
                   });
                 },
                 isExpanded: true,
@@ -520,6 +589,7 @@ class _StepperWidgetState extends State<StepperWidget>
                 onChanged: (value) {
                   setState(() {
                     formula = value;
+                    print("-----------" + formula.toString());
                   });
                 },
                 isExpanded: true,
@@ -535,6 +605,7 @@ class _StepperWidgetState extends State<StepperWidget>
                 onChanged: (value) {
                   setState(() {
                     selectedValueManger = value;
+                    print("-----------" + selectedValueManger.toString());
                   });
                 },
                 isExpanded: true,
@@ -829,6 +900,8 @@ class _StepperWidgetState extends State<StepperWidget>
                       } else {
                         getVisa =
                             _missionService.getVisaById(visaId).then((value) {
+                          idVisa = value["data"]["_id"];
+
                           missionVisa = value["data"]["name"];
 
                           nbrDoc = value["data"]["documents_list"].length;
@@ -836,6 +909,8 @@ class _StepperWidgetState extends State<StepperWidget>
                               i < value["data"]["documents_list"].length;
                               i++) {
                             var map = {};
+                            map['document'] = value["data"]["_id"];
+
                             map['name'] =
                                 value["data"]["documents_list"][i]["document"];
                             map['nbrDoc'] = value["data"]["documents_list"][i]
@@ -849,6 +924,7 @@ class _StepperWidgetState extends State<StepperWidget>
                                 .then((value) {
                               listDocVisa.add(value["data"]["name"]);
                               map['name'] = value["data"]["name"];
+                              map['document'] = value["data"]["_id"];
                             });
 
                             listNumDocVisa.add(value["data"]["documents_list"]
@@ -865,6 +941,9 @@ class _StepperWidgetState extends State<StepperWidget>
                           vaccineMission.add(value["data"]["name"]);
 
                           var map = {};
+                          print("........." + value["data"].toString());
+                          map['idVaccin'] = value["data"]["_id"];
+
                           map['name'] = value["data"]["name"];
                           map['isChecked'] = false;
                           VaccinList.add(map);
@@ -1137,9 +1216,8 @@ class _StepperWidgetState extends State<StepperWidget>
                 onSelected: (value) {
                   setState(() {
                     hotelPreference = value;
-                    print("tset hotel : " + hotelPreference.toString());
 
-                    _missionService
+                    /*    _missionService
                         .getHotelbyName(hotelPreference)
                         .then((value) {
                       idHotel = value["data"];
@@ -1153,11 +1231,14 @@ class _StepperWidgetState extends State<StepperWidget>
                           value["data"]["longitude"]["\$numberDecimal"];
                       print("altitude Hotel :" + altitudeHotel.toString());
                     });
-
-                    print("object");
+               */
                   });
                 },
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(child: Text("" + hotelPreference)),
             ),
             /*     Padding(
               padding: const EdgeInsets.all(8.0),
