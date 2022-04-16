@@ -22,7 +22,11 @@ import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:intl/intl.dart';
 import 'package:vato/generated/intl/messages_en.dart';
 import 'package:vato/models/Mission.dart';
+import 'package:vato/models/Operation.dart';
+import 'package:vato/models/Request.dart';
 import 'package:vato/services/MissionService.dart';
+import 'package:vato/services/OperationsService.dart';
+import 'package:vato/services/RequestService.dart';
 import 'package:vato/services/UserServices.dart';
 import 'package:vato/travel/simple_map.dart';
 import 'package:vato/widgets/mapScreen.dart';
@@ -170,6 +174,9 @@ class _StepperWidgetState extends State<StepperWidget>
   String tokenLogin;
   String User_id;
   UserService _userService = new UserService();
+  RequestService _requestservice = new RequestService();
+  OperationService _operationservice = new OperationService();
+
   var User;
   List<dynamic> managers;
   List<dynamic> Users;
@@ -233,17 +240,51 @@ class _StepperWidgetState extends State<StepperWidget>
         for (var i = 0; i < nbrVaccin; i++) {
           missions.vaccin.add(VaccinList[i]);
         }
-        _missionService.addRequest(missions, tokenLogin).then((value) async {
+
+        Requests request = new Requests();
+        request.idSender = User_id;
+        request.idReciever = selectedValueManger["_id"];
+
+        _missionService.addMission(missions, tokenLogin).then((value) async {
           print("okay !!!!");
           SweetAlert.show(context,
               subtitle: "Loading ...", style: SweetAlertStyle.loading);
           await Future.delayed(new Duration(seconds: 1), () async {
             if (value["status"].toString() == "200") {
-              await SweetAlert.show(
-                context,
-                subtitle: " Done !",
-                style: SweetAlertStyle.success,
-              );
+              request.mission = value["data"]["_id"];
+              request.name = "Mission";
+              _requestservice
+                  .addRequest(request, this.tokenLogin)
+                  .then((value) async {
+                //  missions.request = value["data"]["_id"];
+                Operation operation = new Operation();
+                operation.request = value["data"]["_id"];
+                operation.OperationType = "TRAVEL";
+                operation.status = "ACTIVE";
+                operation.date_debut = StartDate;
+                operation.date_fin = EndDate;
+
+                _operationservice
+                    .addOperation(operation, this.tokenLogin)
+                    .then((value) async {
+                  if (value["status"].toString() == "200") {
+                    if (value["status"].toString() == "200") {
+                      await SweetAlert.show(context,
+                          subtitle: " Done !", style: SweetAlertStyle.success,
+                          onPress: (bool isConfirm) {
+                        if (isConfirm) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => navigationScreen(
+                                      0, null, null, 0, null, null, "home")));
+                          return false;
+                        }
+                      });
+                    }
+                  }
+                });
+              });
             } else if (value["status"].toString() == "201") {
               await SweetAlert.show(context,
                   subtitle: value["message"], style: SweetAlertStyle.error);

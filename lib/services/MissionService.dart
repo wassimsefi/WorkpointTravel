@@ -168,7 +168,7 @@ class MissionService {
     return response.data;
   }
 
-  Future<dynamic> addRequest(Missions missions, String tokenLogin) async {
+  Future<dynamic> addMission(Missions missions, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
     response = await dio.post(link.linkw + "/api/Mission/addMission",
         data: json.encode(missions),

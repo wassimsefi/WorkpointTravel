@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:vato/constants/link.dart';
+import 'package:vato/models/Operation.dart';
 import 'package:vato/models/Reservations.dart';
 import 'package:vato/services/API.dart';
 
@@ -13,43 +14,43 @@ class OperationService {
   var dio = API().Api();
   final _storage = const FlutterSecureStorage();
 
-  Future<dynamic> getOperationsbyRequest(
-
-      String request, String tokenLogin) async {
+  Future<dynamic> addOperation(Operation operation, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Operation/getOperationsByRequest/" + request,
+    response = await dio.post(link.linkw + "/api/Operation/addOperation",
+        data: json.encode(operation),
         options: Dio.Options(headers: {
-          'x-access-token': token,
+          //  'x-access-token': token,
         }));
-    //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
     return response.data;
-/*    Response res = await get(
-        Uri.parse(
-            link.linkw + "/api/Operation/getOperationsByRequest/" + request),
-        headers: <String, String>{
-          'x-access-token': token,
-        });
-    dynamic body = jsonDecode(res.body);
-    // List<CardReservations> posts = List<CardReservations>.from(body.map((model)=> CardReservations.fromJsonMap(model)));
+  }
 
-    return body;*/
+  Future<dynamic> getOperationsbyRequest(
+      String request, String tokenLogin) async {
+    final token = await _storage.read(key: 'token');
+    response = await dio.get(
+        link.linkw + "/api/Operation/getOperationsByRequest/" + request,
+        options: Dio.Options(headers: {
+          //   'x-access-token': token,
+        }));
+    print("response operation" + response.data.toString());
+    return response.data;
   }
 
   Future<dynamic> getOperationsbyUser(String idUser, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
 
 //print("tokenjdid"+token.toString());
-    response = await dio.get(link.linkw + "/api/Operation/getOperationsByUser/" + idUser,options: Dio.Options(
-        headers: {
+    response = await dio.get(
+        link.linkw + "/api/Operation/getOperationsByUser/" + idUser,
+        options: Dio.Options(headers: {
           'x-access-token': token,
-        }
-    ));
-   //dynamic body = jsonDecode(response);
-    print("response operation"+response.data.toString());
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
 
     return response.data;
-    print("tttttttttttttttt"+response.data.toString());
+    print("tttttttttttttttt" + response.data.toString());
 /*    Response res = await get(
         Uri.parse(link.linkw + "/api/Operation/getOperationsByUser/" + idUser),
         headers: <String, String>{
@@ -70,7 +71,8 @@ class OperationService {
   Future<dynamic> CancelOperation(
       String operation_id, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.delete(link.linkw + "/api/Operation/deleteOperation/" + operation_id,
+    response = await dio.delete(
+        link.linkw + "/api/Operation/deleteOperation/" + operation_id,
         options: Dio.Options(headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
@@ -95,10 +97,11 @@ class OperationService {
 
   Future<dynamic> checkoutParking(String id) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Operation/checkoutParking/" + id,
-        options: Dio.Options(headers: {
-          'x-access-token': token,
-        }));
+    response =
+        await dio.get(link.linkw + "/api/Operation/checkoutParking/" + id,
+            options: Dio.Options(headers: {
+              'x-access-token': token,
+            }));
     //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
     return response.data;
@@ -115,8 +118,8 @@ class OperationService {
     return body;*/
   }
 
-  Future<dynamic> AddNewReservation(Reservations reservation,
-      String tokenLogin) async {
+  Future<dynamic> AddNewReservation(
+      Reservations reservation, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
     response = await dio.post(link.linkw + "/api/Operation/addNewReservation",
         data: jsonEncode(reservation),
@@ -147,8 +150,7 @@ class OperationService {
     final token = await _storage.read(key: 'token');
     response = await dio.post(link.linkw + "/api/Operation/addNewReservations",
         data: jsonEncode(reservation),
-        options: Dio.Options(
-            headers: {
+        options: Dio.Options(headers: {
           'x-access-token': token,
         }));
     //dynamic body = jsonDecode(response);
@@ -169,7 +171,8 @@ class OperationService {
 
   Future<dynamic> getOperationsByManager(String user, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +  "/api/Operation/getOperationsByManager/" + user,
+    response = await dio.get(
+        link.linkw + "/api/Operation/getOperationsByManager/" + user,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -193,15 +196,16 @@ class OperationService {
   Future<dynamic> checkAvailibility(String user, String reservationDate,
       String timeslot, String resource, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw +
-        "/api/Operation/checkReservation/" +
-        user +
-        "/" +
-        reservationDate +
-        "/" +
-        timeslot +
-        "/" +
-        resource,
+    response = await dio.get(
+        link.linkw +
+            "/api/Operation/checkReservation/" +
+            user +
+            "/" +
+            reservationDate +
+            "/" +
+            timeslot +
+            "/" +
+            resource,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -228,7 +232,8 @@ class OperationService {
   Future<dynamic> ScanDesk(
       String user, String QDcode, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Operation/ScanQR/" + user + "/" + QDcode,
+    response = await dio.get(
+        link.linkw + "/api/Operation/ScanQR/" + user + "/" + QDcode,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));

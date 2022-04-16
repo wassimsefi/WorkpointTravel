@@ -56,6 +56,8 @@ class _DetailRequestState extends State<DetailRequest> {
 
   @override
   void initState() {
+   // print("****2222*" + widget.commentUser.toString());
+
     _prefs = SharedPreferences.getInstance();
     _prefs.then((SharedPreferences prefs) {
       setState(() {
@@ -83,14 +85,8 @@ class _DetailRequestState extends State<DetailRequest> {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     CalendarController _controller = CalendarController();
 
     return Scaffold(
@@ -127,7 +123,7 @@ class _DetailRequestState extends State<DetailRequest> {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       //SizedBox(width: 10,),
                                       Neumorphic(
@@ -137,7 +133,7 @@ class _DetailRequestState extends State<DetailRequest> {
                                             //shape: NeumorphicShape.convex,
                                             color: NeumorphicColors.background,
                                             boxShape:
-                                            NeumorphicBoxShape.circle(),
+                                                NeumorphicBoxShape.circle(),
                                           ),
                                           child: Container(
                                             width: 70,
@@ -154,9 +150,9 @@ class _DetailRequestState extends State<DetailRequest> {
                                   Spacer(),
                                   Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.start,
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.end,
+                                          CrossAxisAlignment.end,
                                       children: <Widget>[
                                         SizedBox(
                                           height: 70,
@@ -165,45 +161,45 @@ class _DetailRequestState extends State<DetailRequest> {
                                         //  SizedBox(width: 10,),
                                         (widget.StatusRequest == "pending")
                                             ? Padding(
-                                          padding:
-                                          const EdgeInsets.fromLTRB(
-                                              30, 0, 40, 10),
-                                          child: Text(
-                                            widget.StatusRequest,
-                                            style: TextStyle(
-                                                color: Colors.deepOrange,
-                                                fontWeight:
-                                                FontWeight.w400,
-                                                fontSize: 17),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        )
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        30, 0, 40, 10),
+                                                child: Text(
+                                                  widget.StatusRequest,
+                                                  style: TextStyle(
+                                                      color: Colors.deepOrange,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 17),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
                                             : (widget.StatusRequest ==
-                                            "accepted")
-                                            ? Padding(
-                                          padding: const EdgeInsets
-                                              .fromLTRB(
-                                              30, 10, 10, 10),
-                                          child: Text(
-                                            widget.StatusRequest,
-                                            style: TextStyle(
-                                                color: Colors.green,
-                                                fontWeight:
-                                                FontWeight.w400),
-                                          ),
-                                        )
-                                            : Padding(
-                                          padding: const EdgeInsets
-                                              .fromLTRB(
-                                              30, 10, 10, 10),
-                                          child: Text(
-                                            widget.StatusRequest,
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontWeight:
-                                                FontWeight.w400),
-                                          ),
-                                        ),
+                                                    "accepted")
+                                                ? Padding(
+                                                    padding: const EdgeInsets
+                                                            .fromLTRB(
+                                                        30, 10, 10, 10),
+                                                    child: Text(
+                                                      widget.StatusRequest,
+                                                      style: TextStyle(
+                                                          color: Colors.green,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                  )
+                                                : Padding(
+                                                    padding: const EdgeInsets
+                                                            .fromLTRB(
+                                                        30, 10, 10, 10),
+                                                    child: Text(
+                                                      widget.StatusRequest,
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                  ),
                                         // Spacer(),
                                         // SizedBox(height: 5,),
                                         Padding(
@@ -234,7 +230,7 @@ class _DetailRequestState extends State<DetailRequest> {
                                       ),
                                       child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: <Widget>[
                                             /* Padding(
                                                   padding: const EdgeInsets.all(10.0),
@@ -250,8 +246,8 @@ class _DetailRequestState extends State<DetailRequest> {
                                               ),*/
                                             Padding(
                                                 padding:
-                                                const EdgeInsets.fromLTRB(
-                                                    10, 0, 10, 0),
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 0, 10, 0),
                                                 child: Container(
                                                   // color: Colors.grey[200],
                                                   child: Neumorphic(
@@ -260,22 +256,22 @@ class _DetailRequestState extends State<DetailRequest> {
                                                       color: NeumorphicColors
                                                           .background,
                                                       boxShape:
-                                                      NeumorphicBoxShape
-                                                          .roundRect(
-                                                          BorderRadius
-                                                              .circular(
-                                                              8)),
+                                                          NeumorphicBoxShape
+                                                              .roundRect(
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
                                                     ),
                                                     child: Row(
                                                       mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                       children: <Widget>[
                                                         Padding(
                                                           padding:
-                                                          const EdgeInsets
-                                                              .only(
-                                                              left: 10),
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
                                                           child: Text(
                                                             "List of people to notify ",
                                                             style: TextStyle(
@@ -285,51 +281,42 @@ class _DetailRequestState extends State<DetailRequest> {
                                                         ),
                                                         Container(
                                                           height: widget
-                                                              .UserTonotif
-                                                              .length *
-                                                              20.0 +
+                                                                      .UserTonotif
+                                                                      .length *
+                                                                  20.0 +
                                                               30,
                                                           width: 130,
                                                           child: Padding(
                                                             padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
+                                                                const EdgeInsets
+                                                                    .all(8.0),
                                                             child: Center(
                                                               child: ListView
                                                                   .builder(
-                                                                  scrollDirection: Axis
-                                                                      .vertical,
-                                                                  //shrinkWrap: true,
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                      top:
-                                                                      5.0),
-                                                                  itemCount: widget
-                                                                      .UserTonotif
-                                                                      .length,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                      s) {
-                                                                    return Container(
-                                                                      padding:
-                                                                      EdgeInsets
-                                                                          .only(
-                                                                          top: 5.0),
-                                                                      child: Text(
-                                                                          widget
-                                                                              .UserTonotif[s]["firstname"] +
-                                                                              " " +
-                                                                              widget
-                                                                                  .UserTonotif[s]["lastname"],
-                                                                          textAlign: TextAlign
-                                                                              .center,
-                                                                          style: TextStyle(
-                                                                            color: Colors
-                                                                                .black,
-                                                                          )),
-                                                                    );
-                                                                    //Text("Rawen Mersani ",style: TextStyle(color: Colors.black)),
-                                                                  }),
+                                                                      scrollDirection: Axis
+                                                                          .vertical,
+                                                                      //shrinkWrap: true,
+                                                                      padding: EdgeInsets.only(
+                                                                          top:
+                                                                              5.0),
+                                                                      itemCount: widget
+                                                                          .UserTonotif
+                                                                          .length,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              s) {
+                                                                        return Container(
+                                                                          padding:
+                                                                              EdgeInsets.only(top: 5.0),
+                                                                          child: Text(
+                                                                              widget.UserTonotif[s]["firstname"] + " " + widget.UserTonotif[s]["lastname"],
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(
+                                                                                color: Colors.black,
+                                                                              )),
+                                                                        );
+                                                                        //Text("Rawen Mersani ",style: TextStyle(color: Colors.black)),
+                                                                      }),
                                                             ),
                                                           ),
                                                         ),
@@ -339,8 +326,8 @@ class _DetailRequestState extends State<DetailRequest> {
                                                 )),
                                             Padding(
                                                 padding:
-                                                const EdgeInsets.fromLTRB(
-                                                    10, 10, 10, 0),
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 0),
                                                 child: Container(
                                                   height: 50,
                                                   // color: Colors.grey[200],
@@ -350,22 +337,22 @@ class _DetailRequestState extends State<DetailRequest> {
                                                       color: NeumorphicColors
                                                           .background,
                                                       boxShape:
-                                                      NeumorphicBoxShape
-                                                          .roundRect(
-                                                          BorderRadius
-                                                              .circular(
-                                                              8)),
+                                                          NeumorphicBoxShape
+                                                              .roundRect(
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
                                                     ),
                                                     child: Row(
                                                       mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                       children: <Widget>[
                                                         Padding(
                                                           padding:
-                                                          const EdgeInsets
-                                                              .only(
-                                                              left: 10),
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
                                                           child: Text(
                                                             "Number of requested days",
                                                             style: TextStyle(
@@ -375,32 +362,24 @@ class _DetailRequestState extends State<DetailRequest> {
                                                         ),
                                                         Padding(
                                                           padding:
-                                                          const EdgeInsets
-                                                              .only(
-                                                              right: 10),
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
                                                           child: (Operations[0]["OperationType"] ==
-                                                              "REMOTE_WORKING")
+                                                                  "REMOTE_WORKING")
                                                               ? Text(
-                                                              DateTime
-                                                                  .parse(
-                                                                  Operations[0]["date_fin"])
-                                                                  .difference(
-                                                                  DateTime
-                                                                      .parse(
-                                                                      Operations[0][
-                                                                      "date_debut"]))
-                                                                  .inDays
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black))
-                                                              : Text(
-                                                              ((Operations
-                                                                  .length) / 2)
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
+                                                                  DateTime.parse(Operations[0]["date_fin"])
+                                                                      .difference(DateTime.parse(Operations[0][
+                                                                          "date_debut"]))
+                                                                      .inDays
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black))
+                                                              : Text(((Operations.length) / 2).toString(),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black)),
                                                         )
                                                       ],
                                                     ),
@@ -426,7 +405,8 @@ class _DetailRequestState extends State<DetailRequest> {
                                     showWeekNumber: true,
                                     headerHeight: 30,
 
-                                    minDate: (Operations[0]["OperationType"] ==
+                                    minDate: new DateTime(2022, 04, 14),
+                                    /*     minDate: (Operations[0]["OperationType"] ==
                                         "REMOTE_WORKING") ? new DateTime(
                                         DateTime
                                             .parse(
@@ -459,7 +439,7 @@ class _DetailRequestState extends State<DetailRequest> {
                                             DateTime
                                                 .parse(
                                                 Operations[0]["date"])
-                                                .weekday),
+                                                .weekday),  */
                                     // minDate: Jiffy(DateTime.parse(Operations[0]["date"])).,
 
                                     // Jiffy(Dates[0]).week-1
@@ -472,7 +452,7 @@ class _DetailRequestState extends State<DetailRequest> {
                                     controller: _controller,
 
                                     backgroundColor:
-                                    NeumorphicColors.background,
+                                        NeumorphicColors.background,
                                     headerStyle: CalendarHeaderStyle(
                                         textAlign: TextAlign.start,
                                         textStyle: TextStyle(
@@ -501,11 +481,11 @@ class _DetailRequestState extends State<DetailRequest> {
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Padding(
                                             padding:
-                                            const EdgeInsets.only(left: 10),
+                                                const EdgeInsets.only(left: 10),
                                             child: Text(
                                               "My Comment",
                                               style: TextStyle(
@@ -515,14 +495,14 @@ class _DetailRequestState extends State<DetailRequest> {
                                           Container(
                                               width: 130,
                                               child: Text(widget.commentUser
-                                                  .toString() ==
-                                                  "null" ||
-                                                  widget.commentUser
-                                                      .toString() ==
-                                                      ""
+                                                              .toString() ==
+                                                          "null" ||
+                                                      widget.commentUser
+                                                              .toString() ==
+                                                          ""
                                                   ? "No comment"
                                                   : widget.commentUser
-                                                  .toString())),
+                                                      .toString())),
                                         ],
                                       ))),
                               Container(
@@ -540,11 +520,11 @@ class _DetailRequestState extends State<DetailRequest> {
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Padding(
                                             padding:
-                                            const EdgeInsets.only(left: 10),
+                                                const EdgeInsets.only(left: 10),
                                             child: Text(
                                               "Validator's comment",
                                               style: TextStyle(
@@ -554,14 +534,14 @@ class _DetailRequestState extends State<DetailRequest> {
                                           Container(
                                             width: 130,
                                             child: Text(widget.commentManager
-                                                .toString() ==
-                                                "null" ||
-                                                widget.commentManager
-                                                    .toString() ==
-                                                    ""
+                                                            .toString() ==
+                                                        "null" ||
+                                                    widget.commentManager
+                                                            .toString() ==
+                                                        ""
                                                 ? "No comment"
                                                 : widget.commentManager
-                                                .toString()),
+                                                    .toString()),
                                           ),
                                         ],
                                       ))),
@@ -574,22 +554,22 @@ class _DetailRequestState extends State<DetailRequest> {
                                       onPressed: () async {
                                         String OldDate = "";
                                         String Datee = "";
-                                        String DateeRemote="" ;
+                                        String DateeRemote = "";
                                         if (Operations[0]["OperationType"] ==
                                             "WFH") {
                                           for (var i = 0;
-                                          i < Operations.length;
-                                          i++) {
-
-                                            if (Jiffy(DateTime.now()
-                                                .add(Duration(days: -1)))
-                                                .isAfter(new DateFormat(
-                                                "yyyy-MM-dd")
-                                                .format(DateTime.parse(
-                                                Operations[i]["date"]
-                                                    .toString()
-                                                    .substring(
-                                                    0, 10)))) ==
+                                              i < Operations.length;
+                                              i++) {
+                                            if (Jiffy(DateTime.now().add(
+                                                        Duration(days: -1)))
+                                                    .isAfter(new DateFormat(
+                                                            "yyyy-MM-dd")
+                                                        .format(DateTime.parse(
+                                                            Operations[i]
+                                                                    ["date"]
+                                                                .toString()
+                                                                .substring(
+                                                                    0, 10)))) ==
                                                 true) {
                                               OldDate = "yes";
                                             } else {
@@ -599,16 +579,16 @@ class _DetailRequestState extends State<DetailRequest> {
                                           if (Datee == "yes") {
                                             SweetAlert.show(context,
                                                 subtitle:
-                                                "Do you want to delete this Operation",
+                                                    "Do you want to delete this Operation",
                                                 style: SweetAlertStyle.confirm,
                                                 confirmButtonColor:
-                                                LightColors.kRed,
-                                                cancelButtonColor: Colors
-                                                    .white12,
+                                                    LightColors.kRed,
+                                                cancelButtonColor:
+                                                    Colors.white12,
                                                 showCancelButton: true,
                                                 onPress: (bool isConfirm) {
-                                                  if (isConfirm) {
-                                                    _requestService.CancelRequet(
+                                              if (isConfirm) {
+                                                _requestService.CancelRequet(
                                                         widget.Request_id,
                                                         tokenLogin)
                                                     .then((value) {
@@ -643,93 +623,92 @@ class _DetailRequestState extends State<DetailRequest> {
                                                   }
                                                 });
                                               } else {
-                                                    return true;
-                                                  }
-                                                  // return false to keep dialog
-                                                  return false;
-                                                });
+                                                return true;
+                                              }
+                                              // return false to keep dialog
+                                              return false;
+                                            });
                                           } else {
                                             SweetAlert.show(context,
                                                 subtitle:
-                                                "You cannot cancel this request because it contains older slots!",
+                                                    "You cannot cancel this request because it contains older slots!",
+                                                style: SweetAlertStyle.error);
+                                          }
+                                        } else {
+                                          if (Jiffy(DateTime.now()
+                                                      .add(Duration(days: -1)))
+                                                  .isAfter(new DateFormat(
+                                                          "yyyy-MM-dd")
+                                                      .format(DateTime.parse(
+                                                          Operations[0]
+                                                                  ["date_debut"]
+                                                              .toString()
+                                                              .substring(
+                                                                  0, 10)))) ==
+                                              true) {
+                                            OldDate = "yes";
+                                          } else {
+                                            DateeRemote = "yes";
+                                          }
+                                          if (DateeRemote == "yes") {
+                                            SweetAlert.show(context,
+                                                subtitle:
+                                                    "Do you want to delete this Operation",
+                                                style: SweetAlertStyle.confirm,
+                                                confirmButtonColor:
+                                                    LightColors.kRed,
+                                                cancelButtonColor:
+                                                    Colors.white12,
+                                                showCancelButton: true,
+                                                onPress: (bool isConfirm) {
+                                              if (isConfirm) {
+                                                _requestService.CancelRequet(
+                                                        widget.Request_id,
+                                                        tokenLogin)
+                                                    .then((value) {
+                                                  if (value["status"]
+                                                          .toString() ==
+                                                      "200") {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    Myrequests(
+                                                                        1)));
+                                                    SweetAlert.show(context,
+                                                        subtitle: "Deleting...",
+                                                        style: SweetAlertStyle
+                                                            .loading);
+                                                    new Future.delayed(
+                                                        new Duration(
+                                                            seconds: 2), () {
+                                                      SweetAlert.show(context,
+                                                          subtitle: "Done !",
+                                                          style: SweetAlertStyle
+                                                              .success);
+                                                    });
+                                                  } else {
+                                                    SweetAlert.show(context,
+                                                        subtitle:
+                                                            "Ooops! Something Went Wrong!!",
+                                                        style: SweetAlertStyle
+                                                            .error);
+                                                  }
+                                                });
+                                              } else {
+                                                return true;
+                                              }
+                                              // return false to keep dialog
+                                              return false;
+                                            });
+                                          } else if (Datee == "") {
+                                            SweetAlert.show(context,
+                                                subtitle:
+                                                    "You cannot cancel this request !",
                                                 style: SweetAlertStyle.error);
                                           }
                                         }
-                                        else {
-                                          if (Jiffy(DateTime.now().add(Duration(days: -1))).isAfter(new DateFormat("yyyy-MM-dd").format(DateTime.parse(Operations[0]["date_debut"].toString().substring(
-                                              0,
-                                              10)))) ==
-                                              true) {
-                                            OldDate="yes";
-                                          }
-                                          else {
-                                            DateeRemote="yes";
-                                          }
-                                          if(DateeRemote=="yes")
-                                          {
-                                            SweetAlert.show(context,
-                                                subtitle:
-                                                "Do you want to delete this Operation",
-                                                style: SweetAlertStyle.confirm,
-                                                confirmButtonColor:
-                                                LightColors.kRed,
-                                                cancelButtonColor: Colors
-                                                    .white12,
-                                                showCancelButton: true,
-                                                onPress: (bool isConfirm) {
-                                                  if (isConfirm) {
-                                                    _requestService
-                                                        .CancelRequet(
-                                                        widget.Request_id,
-                                                        tokenLogin)
-                                                        .then((value) {
-                                                      if (value["status"]
-                                                          .toString() ==
-                                                          "200") {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    Myrequests(
-                                                                        1)));
-                                                        SweetAlert.show(context,
-                                                            subtitle: "Deleting...",
-                                                            style: SweetAlertStyle
-                                                                .loading);
-                                                        new Future.delayed(
-                                                            new Duration(
-                                                                seconds: 2), () {
-                                                          SweetAlert.show(
-                                                              context,
-                                                              subtitle: "Done !",
-                                                              style: SweetAlertStyle
-                                                                  .success);
-                                                        });
-                                                      } else {
-                                                        SweetAlert.show(context,
-                                                            subtitle:
-                                                            "Ooops! Something Went Wrong!!",
-                                                            style: SweetAlertStyle
-                                                                .error);
-                                                      }
-                                                    });
-
-                                                  } else {
-                                                    return true;
-                                                  }
-                                                  // return false to keep dialog
-                                                  return false;
-                                                });
-
-                                          }
-                                          else if(Datee=="")
-                                          {
-                                            SweetAlert.show(context,subtitle: "You cannot cancel this request !", style: SweetAlertStyle.error);
-
-                                          }
-                                        }
-
                                       },
                                       style: NeumorphicStyle(
                                         shape: NeumorphicShape.convex,
@@ -772,15 +751,8 @@ class _DetailRequestState extends State<DetailRequest> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      navigationScreen(
-                          0,
-                          null,
-                          null,
-                          0,
-                          null,
-                          selectedDate,
-                          "homework")));
+                  builder: (context) => navigationScreen(
+                      0, null, null, 0, null, selectedDate, "homework")));
         },
       ),
     );
@@ -793,15 +765,9 @@ class _DetailRequestState extends State<DetailRequest> {
     Operations.forEach((element) async {
       if (element["OperationType"] == "WFH") {
         var Date = element["date"].toString().substring(0, 10);
-        var month = DateTime
-            .parse(Date)
-            .month;
-        var day = DateTime
-            .parse(Date)
-            .day;
-        var year = DateTime
-            .parse(Date)
-            .year;
+        var month = DateTime.parse(Date).month;
+        var day = DateTime.parse(Date).day;
+        var year = DateTime.parse(Date).year;
         if (element["timeslot"] == "AM") {
           StartTime = 8;
           EndTime = 12;
@@ -822,26 +788,14 @@ class _DetailRequestState extends State<DetailRequest> {
         ));
       } else {
         var Datedebut = element["date_debut"].toString().substring(0, 10);
-        var monthdebut = DateTime
-            .parse(Datedebut)
-            .month;
-        var daydebut = DateTime
-            .parse(Datedebut)
-            .day;
-        var yeardebut = DateTime
-            .parse(Datedebut)
-            .year;
+        var monthdebut = DateTime.parse(Datedebut).month;
+        var daydebut = DateTime.parse(Datedebut).day;
+        var yeardebut = DateTime.parse(Datedebut).year;
 
         var Datefin = element["date_fin"].toString().substring(0, 10);
-        var monthfin = DateTime
-            .parse(Datefin)
-            .month;
-        var dayfin = DateTime
-            .parse(Datefin)
-            .day;
-        var yearfin = DateTime
-            .parse(Datefin)
-            .year;
+        var monthfin = DateTime.parse(Datefin).month;
+        var dayfin = DateTime.parse(Datefin).day;
+        var yearfin = DateTime.parse(Datefin).year;
 
         appointments.add(Appointment(
             startTime: new DateTime(yeardebut, monthdebut, daydebut),
@@ -851,9 +805,9 @@ class _DetailRequestState extends State<DetailRequest> {
             startTimeZone: '',
             endTimeZone: '',
             isAllDay: true
-          //  notes: 'Desk : 05.W.02.01 ',
-          //  location:   "0"
-        ));
+            //  notes: 'Desk : 05.W.02.01 ',
+            //  location:   "0"
+            ));
       }
     });
 

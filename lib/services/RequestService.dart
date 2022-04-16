@@ -15,32 +15,21 @@ class RequestService {
   Future<dynamic> addRequest(Requests request, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
     response = await dio.post(link.linkw + "/api/Request/addRequest",
-        data:json.encode(request),
+        data: json.encode(request),
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
-    //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
     return response.data;
-/*    Response res = await post(
-      Uri.parse(link.linkw + "/api/Request/addRequest"),
-      body: json.encode(request),
-      headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        'x-access-token': token
-      },
-    );
-    dynamic body = jsonDecode(res.body);
-    return body;*/
   }
 
   Future<dynamic> getRequestByUser(String user, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Request/getRequestsByUser/" + user,
-        options: Dio.Options(headers: {
-          'x-access-token': token,
-        }));
+    response =
+        await dio.get(link.linkw + "/api/Request/getRequestsByUser/" + user,
+            options: Dio.Options(headers: {
+              //  'x-access-token': token,
+            }));
     //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
     return response.data;
@@ -57,7 +46,8 @@ class RequestService {
 
   Future<dynamic> getRequestByManager(String user, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.get(link.linkw + "/api/Request/getPendingRequestsByManager/" + user,
+    response = await dio.get(
+        link.linkw + "/api/Request/getPendingRequestsByManager/" + user,
         options: Dio.Options(headers: {
           'x-access-token': token,
         }));
@@ -82,15 +72,15 @@ class RequestService {
 
     dynamic Response;
     if (commentManager.isEmpty == true) {
-
-      response = await dio.put(link.linkw + "/api/Request/updateRequest/" + requets,
-          data: jsonEncode(<String, String>{
-            // "id":requets,
-            'status': Status,
-          }),
-          options: Dio.Options(headers: {
-            'x-access-token': token,
-          }));
+      response =
+          await dio.put(link.linkw + "/api/Request/updateRequest/" + requets,
+              data: jsonEncode(<String, String>{
+                // "id":requets,
+                'status': Status,
+              }),
+              options: Dio.Options(headers: {
+                'x-access-token': token,
+              }));
       //dynamic body = jsonDecode(response);
       print("response operation" + response.data.toString());
 
@@ -107,15 +97,16 @@ class RequestService {
         },
       );*/
     } else {
-      response = await dio.put(link.linkw + "/api/Request/updateRequest/" + requets,
-          data: jsonEncode(<String, String>{
-            // "id":requets,
-            'status': Status,
-            "commentManager": commentManager
-          }),
-          options: Dio.Options(headers: {
-            'x-access-token': token,
-          }));
+      response =
+          await dio.put(link.linkw + "/api/Request/updateRequest/" + requets,
+              data: jsonEncode(<String, String>{
+                // "id":requets,
+                'status': Status,
+                "commentManager": commentManager
+              }),
+              options: Dio.Options(headers: {
+                'x-access-token': token,
+              }));
       //dynamic body = jsonDecode(response);
       print("response operation" + response.data.toString());
 
@@ -141,12 +132,13 @@ class RequestService {
 
   Future<dynamic> CancelRequet(String request, String tokenLogin) async {
     final token = await _storage.read(key: 'token');
-    response = await dio.delete(link.linkw + "/api/Request/cancelRequest/" + request,
-        options: Dio.Options(headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json',
-          'x-access-token': token,
-        }));
+    response =
+        await dio.delete(link.linkw + "/api/Request/cancelRequest/" + request,
+            options: Dio.Options(headers: {
+              'Content-type': 'application/json',
+              'Accept': 'application/json',
+              'x-access-token': token,
+            }));
     //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
     return response.data;

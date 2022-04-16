@@ -10,96 +10,76 @@ import '../detail mission/stepperpage.dart';
 class ListMissions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-
         Padding(
-          padding: EdgeInsets.only(bottom: _height/500),
+          padding: EdgeInsets.only(bottom: _height / 500),
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Navbartravel(1)),
               );
             },
             child: Container(
-              margin: EdgeInsets.fromLTRB(10,25,10,25),
-              height: _height/7,
+              margin: EdgeInsets.fromLTRB(10, 25, 10, 25),
+              height: _height / 7,
               width: width,
-              child:Neumorphic(
+              child: Neumorphic(
                   style: NeumorphicStyle(
                     color: NeumorphicColors.background,
                   ),
-                  child:Container(
+                  child: Container(
                     //  margin: EdgeInsets.all(30),
-                    child:Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Neumorphic(
                             style: NeumorphicStyle(
                               shape: NeumorphicShape.flat,
                               depth: 20,
-
                             ),
-
                             child: Container(
                               width: 80,
                               height: 80,
-                              child:Center(
+                              child: Center(
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           "FEB",
                                           style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .Lviolet,
+                                              color: LightColors.Lviolet,
                                               fontSize: 15),
                                         ),
-                                        Text(
-                                          "10",
+                                        Text("10",
                                             style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .LLviolet,
+                                              color: LightColors.LLviolet,
                                               fontSize: 18,
                                             )),
                                       ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           "FEB",
                                           style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .Lviolet,
+                                              color: LightColors.Lviolet,
                                               fontSize: 15),
                                         ),
-                                        Text(
-                                            "30",
+                                        Text("30",
                                             style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .LLviolet,
+                                              color: LightColors.LLviolet,
                                               fontSize: 18,
                                             )),
                                       ],
@@ -108,46 +88,63 @@ class ListMissions extends StatelessWidget {
                                 ),
                               ),
                             )),
-
                         Container(
-                          width: width/2.3,
-                          height: _height/7.2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left:30.0),
-                                  child: Center(
-                                    child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text('Audit SG',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold),)]
-                                    ),
-                                  ),
+                          width: width / 2.3,
+                          height: _height / 7.2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30.0),
+                                child: Center(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          'Audit SG',
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ]),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left:20.0),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Icon(Icons.location_on,color: Colors.black54,),
-                                      Text('Paris , France',style: TextStyle(color: Colors.black54))]
                               ),
-                                  ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Center(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.location_on,
+                                          color: Colors.black54,
+                                        ),
+                                        Text('Paris , France',
+                                            style: TextStyle(
+                                                color: Colors.black54))
+                                      ]),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left:20.0),
-                                  child: Center(
-                                    child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(Icons.arrow_forward,color: Colors.black54,),
-                                          Text('Processing',style: TextStyle(color: Colors.black54))]
-                                    ),
-                                  ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Center(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.black54,
+                                        ),
+                                        Text('Processing',
+                                            style: TextStyle(
+                                                color: Colors.black54))
+                                      ]),
                                 ),
+                              ),
                               /*                               ListTile(
 
                                   leading: Icon(Icons.location_on),
@@ -157,19 +154,16 @@ class ListMissions extends StatelessWidget {
                                   leading: Icon(Icons.arrow_forward),
                                   title: Text('Facility processing'),
                                 ),*/
-                              ],
-                            ),
+                            ],
+                          ),
 
-
-                            /* Text("travel" ,  style: GoogleFonts.belleza(
+                          /* Text("travel" ,  style: GoogleFonts.belleza(
                                               fontSize: 25,
                                                 fontWeight: FontWeight.w200,
                                                 color: LightColors.violet ??
                                                     Theme.of(context).textTheme.bodyText1.color,
                                               ),),*/
-
                         ),
-
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -179,20 +173,19 @@ class ListMissions extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   FittedBox(
-                                    fit: BoxFit.fitWidth,
-                                    child:
-                                    AutoSizeText("In progress ",style: TextStyle(color: Colors.green),))
-                                ,
+                                      fit: BoxFit.fitWidth,
+                                      child: AutoSizeText(
+                                        "In progress ",
+                                        style: TextStyle(color: Colors.green),
+                                      )),
                                   Padding(
                                       padding:
-                                      const EdgeInsets.fromLTRB(
-                                          0, 0, 5, 0),
+                                          const EdgeInsets.fromLTRB(0, 0, 5, 0),
                                       child: Container(
                                         decoration: BoxDecoration(
                                             color: Colors.green,
-                                            shape: BoxShape.circle
-                                        ),
-                                        child:Text("  "),
+                                            shape: BoxShape.circle),
+                                        child: Text("  "),
                                       )),
                                 ],
                               ),
@@ -200,91 +193,77 @@ class ListMissions extends StatelessWidget {
                             ],
                           ),
                         )
-
                       ],
-                    ),)),
-
+                    ),
+                  )),
             ),
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: _height/500),
+          padding: EdgeInsets.only(bottom: _height / 500),
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Navbartravel(1)),
               );
             },
             child: Container(
-              margin: EdgeInsets.fromLTRB(10,25,10,25),
-              height: _height/7,
+              margin: EdgeInsets.fromLTRB(10, 25, 10, 25),
+              height: _height / 7,
               width: width,
-              child:Neumorphic(
+              child: Neumorphic(
                   style: NeumorphicStyle(
                     color: NeumorphicColors.background,
                   ),
-                  child:Container(
+                  child: Container(
                     //  margin: EdgeInsets.all(30),
-                    child:Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Neumorphic(
                             style: NeumorphicStyle(
                               shape: NeumorphicShape.flat,
                               depth: 20,
-
                             ),
-
                             child: Container(
                               width: 80,
                               height: 80,
-                              child:Center(
+                              child: Center(
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           "SEP",
                                           style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .Lviolet,
+                                              color: LightColors.Lviolet,
                                               fontSize: 15),
                                         ),
-                                        Text(
-                                            "18",
+                                        Text("18",
                                             style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .LLviolet,
+                                              color: LightColors.LLviolet,
                                               fontSize: 18,
                                             )),
                                       ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           "SEP",
                                           style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .Lviolet,
+                                              color: LightColors.Lviolet,
                                               fontSize: 15),
                                         ),
-                                        Text(
-                                            "25",
+                                        Text("25",
                                             style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .LLviolet,
+                                              color: LightColors.LLviolet,
                                               fontSize: 18,
                                             )),
                                       ],
@@ -293,51 +272,67 @@ class ListMissions extends StatelessWidget {
                                 ),
                               ),
                             )),
-
                         Container(
-                          width: width/2.3,
-                          height: _height/7.2,
+                          width: width / 2.3,
+                          height: _height / 7.2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left:30.0),
+                                padding: const EdgeInsets.only(left: 30.0),
                                 child: Center(
                                   child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
-
-                                        Text('Audit AXA',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold),)]
-                                  ),
+                                        Text(
+                                          'Audit AXA',
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ]),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left:20.0),
+                                padding: const EdgeInsets.only(left: 20.0),
                                 child: Center(
                                   child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Icon(Icons.location_on,color: Colors.black54,),
-                                        Text('Marseille , France',style: TextStyle(color: Colors.black54))]
-                                  ),
+                                        Icon(
+                                          Icons.location_on,
+                                          color: Colors.black54,
+                                        ),
+                                        Text('Marseille , France',
+                                            style: TextStyle(
+                                                color: Colors.black54))
+                                      ]),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left:20.0),
+                                padding: const EdgeInsets.only(left: 20.0),
                                 child: Center(
                                   child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Icon(Icons.arrow_forward,color: Colors.black54,),
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.black54,
+                                        ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text('Awaiting closure',style: TextStyle(color: Colors.black54)),
-
+                                            Text('Awaiting closure',
+                                                style: TextStyle(
+                                                    color: Colors.black54)),
                                           ],
-                                        )]
-                                  ),
+                                        )
+                                      ]),
                                 ),
                               ),
                               /*                               ListTile(
@@ -352,14 +347,12 @@ class ListMissions extends StatelessWidget {
                             ],
                           ),
 
-
                           /* Text("travel" ,  style: GoogleFonts.belleza(
                                               fontSize: 25,
                                                 fontWeight: FontWeight.w200,
                                                 color: LightColors.violet ??
                                                     Theme.of(context).textTheme.bodyText1.color,
                                               ),),*/
-
                         ),
                         Spacer(),
                         Column(
@@ -368,17 +361,18 @@ class ListMissions extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Text("Pending  ",style: TextStyle(color: Colors.orange),),
+                                Text(
+                                  "Pending  ",
+                                  style: TextStyle(color: Colors.orange),
+                                ),
                                 Padding(
                                     padding:
-                                    const EdgeInsets.fromLTRB(
-                                        0, 0, 5, 0),
+                                        const EdgeInsets.fromLTRB(0, 0, 5, 0),
                                     child: Container(
                                       decoration: BoxDecoration(
                                           color: Colors.orange,
-                                          shape: BoxShape.circle
-                                      ),
-                                      child:Text("  "),
+                                          shape: BoxShape.circle),
+                                      child: Text("  "),
                                     )),
                               ],
                             ),
@@ -390,39 +384,34 @@ class ListMissions extends StatelessWidget {
                                 tooltip: 'remboursement',
                                 color: Colors.green,
                                 iconSize: 26,
-                                onPressed: () {
-
-                                },
+                                onPressed: () {},
                               ),
                             ),
                           ],
                         )
-
                       ],
-                    ),)),
-
+                    ),
+                  )),
             ),
           ),
         ),
-     /*   Padding(
-          padding: EdgeInsets.only(bottom: _height/500),
+        Padding(
+          padding: EdgeInsets.only(bottom: _height / 500),
           child: InkWell(
-              onTap: (){
-                _openPopup(context);
-
-              },
+            onTap: () {
+              _openPopup(context);
+            },
             child: Container(
-              margin: EdgeInsets.fromLTRB(10,25,10,25),
-              height: _height/7.2,
+              margin: EdgeInsets.fromLTRB(10, 25, 10, 25),
+              height: _height / 7.2,
               width: width,
-              child:Neumorphic(
+              child: Neumorphic(
                   style: NeumorphicStyle(
                       color: NeumorphicColors.background,
-                      lightSource:LightSource.top
-                  ),
-                  child:Container(
+                      lightSource: LightSource.top),
+                  child: Container(
                     //  margin: EdgeInsets.all(30),
-                    child:Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Neumorphic(
@@ -430,56 +419,44 @@ class ListMissions extends StatelessWidget {
                               shape: NeumorphicShape.flat,
                               depth: 20,
                             ),
-
                             child: Container(
                               width: 80,
                               height: 80,
-                              child:Center(
+                              child: Center(
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           "10",
                                           style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .Lviolet,
+                                              color: LightColors.Lviolet,
                                               fontSize: 18),
                                         ),
-                                        Text(
-                                            "FEB",
+                                        Text("FEB",
                                             style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .LLviolet,
+                                              color: LightColors.LLviolet,
                                               fontSize: 15,
                                             )),
                                       ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           "30",
                                           style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .Lviolet,
+                                              color: LightColors.Lviolet,
                                               fontSize: 18),
                                         ),
-                                        Text(
-                                            "FEB",
+                                        Text("FEB",
                                             style: TextStyle(
-                                              color:
-                                              LightColors
-                                                  .LLviolet,
+                                              color: LightColors.LLviolet,
                                               fontSize: 15,
                                             )),
                                       ],
@@ -488,7 +465,7 @@ class ListMissions extends StatelessWidget {
                                 ),
                               ),
                             )),
-                        SizedBox(width: width/6),
+                        SizedBox(width: width / 6),
                         Container(
                           width: 140,
                           height: 130,
@@ -499,8 +476,7 @@ class ListMissions extends StatelessWidget {
                                 AutoSizeText(
                                   "Missions 2",
                                   style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20),
+                                      color: Colors.black, fontSize: 20),
                                   maxLines: 1,
                                   minFontSize: 13,
                                 ),
@@ -509,19 +485,19 @@ class ListMissions extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 16,
-                                  )    ,
+                                  ),
                                   maxLines: 1,
-                                  minFontSize: 10,)
+                                  minFontSize: 10,
+                                )
                               ],
                             ),
 
-
-                            *//* Text("travel" ,  style: GoogleFonts.belleza(
+                            /*   Text("travel" ,  style: GoogleFonts.belleza(
                                               fontSize: 25,
                                                 fontWeight: FontWeight.w200,
                                                 color: LightColors.violet ??
                                                     Theme.of(context).textTheme.bodyText1.color,
-                                              ),),*//*
+                                              ),),*/
                           ),
                         ),
                         Spacer(),
@@ -530,51 +506,39 @@ class ListMissions extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Padding(
-                                padding:
-                                const EdgeInsets.fromLTRB(
-                                    0, 0, 5, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: Colors.green,
-                                      shape: BoxShape.circle
-                                  ),
-                                  child:Text("  "),
+                                      shape: BoxShape.circle),
+                                  child: Text("  "),
                                 )),
                             Spacer(),
                             Padding(
-                                padding:
-                                const EdgeInsets.fromLTRB(
-                                    0, 0, 5, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                                 child: Container(
-
-                                  child:        IconButton(
-                                    icon: const Icon(Icons.monetization_on_rounded),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                        Icons.monetization_on_rounded),
                                     tooltip: 'remboursement',
                                     color: Colors.green,
                                     iconSize: 26,
-                                    onPressed: () {
-
-                                    },
+                                    onPressed: () {},
                                   ),
                                 )),
                           ],
                         )
                       ],
-                    ),)),
-
+                    ),
+                  )),
             ),
           ),
-        ),*/
+        ),
       ],
     );
-
-
-
-
-
   }
-  _openPopup(context)
-  {
+
+  _openPopup(context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -583,8 +547,7 @@ class ListMissions extends StatelessWidget {
       isCloseButton: true,
       //isOverlayTapDismiss: true,
       backgroundColor: Colors.black12,
-      titleStyle : TextStyle(color: Colors.white,
-          fontWeight: FontWeight.bold),
+      titleStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       descTextAlign: TextAlign.start,
       animationDuration: Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
@@ -594,58 +557,62 @@ class ListMissions extends StatelessWidget {
         ),
       ),
       descStyle: TextStyle(
-        color:LightColors.kbluen,
+        color: LightColors.kbluen,
       ),
       alertAlignment: Alignment.center,
     );
     Alert(
         context: context,
         title: "Details",
-        type:AlertType.info ,
-        style:alertStyle,
-    //    desc:"Choose your time slot",
+        type: AlertType.info,
+        style: alertStyle,
+        //    desc:"Choose your time slot",
 
-        content:StatefulBuilder(builder: (context, StateSetter setState) {
-          return Container(
-            height: height/2,
-            width: width,
-            child: Stepper(
-
-              steps: [
-                Step(
-                    title: Text("First Step",style: TextStyle(color: Colors.white),),
-                    subtitle: Text("Done ",style: TextStyle(color: Colors.white)),
-                    content: Text("you've completed the first step successfully",style: TextStyle(color: Colors.white,fontSize: 10)),
-                    isActive: true,
-                    state: StepState.complete
-                ),
-                Step(
-                    title: Text("Second",style: TextStyle(color: Colors.white)),
-                    subtitle: Text("waitting",style: TextStyle(color: Colors.white)),
-                    content: Text("Let's look at its construtor.",style: TextStyle(color: Colors.white)),
-                    state: StepState.editing,
-                    isActive: true
-                ),
-                Step(
-                    title: Text("Third",style: TextStyle(color: Colors.white)),
-                    subtitle: Text("Constructor",style: TextStyle(color: Colors.white)),
-                    content: Text("Let's look at its construtor.",style: TextStyle(color: Colors.white)),
-                    state: StepState.disabled),
-
-              ],
-              controlsBuilder: (BuildContext context,
-                  {VoidCallback onStepContinue, VoidCallback onStepCancel}) =>
-                  Container(),
-            ),
-          );
-        },
+        content: StatefulBuilder(
+          builder: (context, StateSetter setState) {
+            return Container(
+              height: height / 2,
+              width: width,
+              child: Stepper(
+                steps: [
+                  Step(
+                      title: Text(
+                        "First Step",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      subtitle:
+                          Text("Done ", style: TextStyle(color: Colors.white)),
+                      content: Text(
+                          "you've completed the first step successfully",
+                          style: TextStyle(color: Colors.white, fontSize: 10)),
+                      isActive: true,
+                      state: StepState.complete),
+                  Step(
+                      title:
+                          Text("Second", style: TextStyle(color: Colors.white)),
+                      subtitle: Text("waitting",
+                          style: TextStyle(color: Colors.white)),
+                      content: Text("Let's look at its construtor.",
+                          style: TextStyle(color: Colors.white)),
+                      state: StepState.editing,
+                      isActive: true),
+                  Step(
+                      title:
+                          Text("Third", style: TextStyle(color: Colors.white)),
+                      subtitle: Text("Constructor",
+                          style: TextStyle(color: Colors.white)),
+                      content: Text("Let's look at its construtor.",
+                          style: TextStyle(color: Colors.white)),
+                      state: StepState.disabled),
+                ],
+                controlsBuilder: (BuildContext context,
+                        {VoidCallback onStepContinue,
+                        VoidCallback onStepCancel}) =>
+                    Container(),
+              ),
+            );
+          },
         ),
-        buttons:[
-        ]
-
-
-    ).show();
+        buttons: []).show();
   }
-
-
 }
