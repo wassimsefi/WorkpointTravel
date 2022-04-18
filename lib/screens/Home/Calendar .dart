@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweetalert/sweetalert.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -44,6 +45,9 @@ class _ListReservationState extends State<ListReservation> {
   String tokenLogin;
   String company;
   var Date;
+  var DateStart;
+  var DateEnd;
+
   var Operation_id;
   String idUser;
   bool isAllday = false;
@@ -64,6 +68,7 @@ class _ListReservationState extends State<ListReservation> {
   var notes;
   List Operations = [];
   var manager;
+  var location;
 
   var startTime;
   var endTime;
@@ -321,15 +326,13 @@ class _ListReservationState extends State<ListReservation> {
                       if (_controller.view != CalendarView.month &&
                           _controller.view != CalendarView.schedule) {
                         return GestureDetector(
-                          child: (meeting.isAllDay != true)
+                          child: (meeting.isAllDay != false)
                               ? Container(
                                   height: 120,
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
                                         Container(
-                                            padding: EdgeInsets.all(3),
-                                            height: 80,
                                             alignment: Alignment.topLeft,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.rectangle,
@@ -347,13 +350,23 @@ class _ListReservationState extends State<ListReservation> {
                                                       size: 20,
                                                     ),
                                                   )
-                                                : Center(
-                                                    child: Icon(
-                                                      Icons.apartment_outlined,
-                                                      color: Colors.white,
-                                                      size: 20,
-                                                    ),
-                                                  )),
+                                                : (meeting.color ==
+                                                        LightColors.LLviolet)
+                                                    ? Center(
+                                                        child: Icon(
+                                                        Icons
+                                                            .airplanemode_active,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      ))
+                                                    : Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .apartment_outlined,
+                                                          color: Colors.white,
+                                                          size: 20,
+                                                        ),
+                                                      )),
                                       ],
                                     ),
                                   ),
@@ -370,16 +383,20 @@ class _ListReservationState extends State<ListReservation> {
                                 ),
                           onTap: () {
                             if (meeting != null) {
+                              print("**********" + meeting.toString());
                               setState(() {
                                 clicked = true;
                                 this.detail = meeting.color;
-
+                                this.location = meeting.location;
                                 this.manager = meeting.subject;
                                 this.startTime = meeting.startTime;
                                 this.endTime = meeting.endTime;
 
                                 // detail.appointments.map( (entry) => this.detail.add(entry.subject)).toList();
                                 Date = meeting.startTime.toString();
+                                DateStart = meeting.startTime.toString();
+                                DateEnd = meeting.endTime.toString();
+
                                 Operation_id = meeting.notes;
                                 status = meeting.location;
                               });
@@ -432,16 +449,31 @@ class _ListReservationState extends State<ListReservation> {
                                                       size: 30,
                                                     ),
                                                   ))
-                                              : Container(
-                                                  width: width * 0.2,
-                                                  height: _height / 7.6,
-                                                  child: Center(
-                                                    child: Icon(
-                                                      Icons.apartment_outlined,
-                                                      color: LightColors.OnSite,
-                                                      size: 30,
-                                                    ),
-                                                  )),
+                                              : (detail == LightColors.LLviolet)
+                                                  ? Container(
+                                                      width: width * 0.2,
+                                                      height: _height / 7.6,
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .airplanemode_active,
+                                                          color: LightColors
+                                                              .LLviolet,
+                                                          size: 30,
+                                                        ),
+                                                      ))
+                                                  : Container(
+                                                      width: width * 0.2,
+                                                      height: _height / 7.6,
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .apartment_outlined,
+                                                          color: LightColors
+                                                              .OnSite,
+                                                          size: 30,
+                                                        ),
+                                                      )),
                                           Container(
                                               width: width * 0.4,
                                               height: 80,
@@ -567,7 +599,8 @@ class _ListReservationState extends State<ListReservation> {
                                                                   height: 15.0,
                                                                 ),
                                                                 AutoSizeText(
-                                                                  "EY Tower",
+                                                                  "TRAVEL : " +
+                                                                      manager,
                                                                   style: TextStyle(
                                                                       color: Colors
                                                                           .black,
@@ -578,7 +611,7 @@ class _ListReservationState extends State<ListReservation> {
                                                                       13,
                                                                 ),
                                                                 AutoSizeText(
-                                                                  manager
+                                                                  location
                                                                       .toString(),
                                                                   style: TextStyle(
                                                                       color: Colors
@@ -590,10 +623,15 @@ class _ListReservationState extends State<ListReservation> {
                                                                       13,
                                                                 ),
                                                                 AutoSizeText(
-                                                                  Date.toString()
-                                                                      .substring(
-                                                                          0,
-                                                                          16),
+                                                                  DateStart.toString()
+                                                                          .substring(
+                                                                              0,
+                                                                              10) +
+                                                                      " / " +
+                                                                      DateEnd.toString()
+                                                                          .substring(
+                                                                              0,
+                                                                              10),
                                                                   style:
                                                                       TextStyle(
                                                                     color: Colors
@@ -912,6 +950,51 @@ class _ListReservationState extends State<ListReservation> {
             startTimeZone: '',
             endTimeZone: '',
             location: element["request"]["status"],
+            //      notes: element["idReciever"] ["firstname"] +" "+ element["idReciever"] ["lastname"],
+            notes: element["_id"],
+            isAllDay: true
+            //  location:   "0"
+
+            ));
+      } else if (element["OperationType"].toString() == "TRAVEL") {
+        var Start = element["date_debut"].toString().substring(0, 10);
+        var Startmonth = DateTime.parse(Start).month;
+        var Startday = DateTime.parse(Start).day;
+        var Startyear = DateTime.parse(Start).year;
+
+        var Fin = element["date_fin"].toString().substring(0, 10);
+        var Finmonth = DateTime.parse(Fin).month;
+        var Finday = DateTime.parse(Fin).day;
+        var Finyear = DateTime.parse(Fin).year;
+        appointments.add(Appointment(
+            startTime: new DateTime(
+              Startyear,
+              Startmonth,
+              Startday,
+            ),
+            endTime: new DateTime(
+              Finyear,
+              Finmonth,
+              Finday,
+            ),
+            subject: (element["request"]["mission"]["title"] != null)
+                ? element["request"]["mission"]["title"]
+                : "",
+            color: LightColors.LLviolet,
+            startTimeZone: '',
+            endTimeZone: '',
+            location: (element["request"]["mission"]["destinationCountryAller"]
+                            ["name"] !=
+                        null &&
+                    element["request"]["mission"]["destinationCountryAller"]
+                            ["name"] !=
+                        null)
+                ? element["request"]["mission"]["departureCountryAller"]
+                        ["name"] +
+                    " To " +
+                    element["request"]["mission"]["destinationCountryAller"]
+                        ["name"]
+                : "",
             //      notes: element["idReciever"] ["firstname"] +" "+ element["idReciever"] ["lastname"],
             notes: element["_id"],
             isAllDay: true

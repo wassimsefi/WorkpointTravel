@@ -478,7 +478,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                               ),
                               Container(
                                   padding: EdgeInsets.all(10),
-                                  height: 400,
+                                  height: 430,
                                   child: Neumorphic(
                                       style: NeumorphicStyle(
                                         depth: 1,
@@ -721,7 +721,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     const EdgeInsets.fromLTRB(
                                                         10, 10, 10, 0),
                                                 child: Container(
-                                                  height: 50,
+                                                  height: 80,
                                                   // color: Colors.grey[200],
                                                   child: Neumorphic(
                                                     style: NeumorphicStyle(
@@ -1524,6 +1524,51 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
           //  notes: 'Desk : 05.W.02.01 ',
           //  location:   "0"
         ));
+      } else if (element["OperationType"].toString() == "TRAVEL") {
+        var Start = element["date_debut"].toString().substring(0, 10);
+        var Startmonth = DateTime.parse(Start).month;
+        var Startday = DateTime.parse(Start).day;
+        var Startyear = DateTime.parse(Start).year;
+
+        var Fin = element["date_fin"].toString().substring(0, 10);
+        var Finmonth = DateTime.parse(Fin).month;
+        var Finday = DateTime.parse(Fin).day;
+        var Finyear = DateTime.parse(Fin).year;
+        appointments.add(Appointment(
+            startTime: new DateTime(
+              Startyear,
+              Startmonth,
+              Startday,
+            ),
+            endTime: new DateTime(
+              Finyear,
+              Finmonth,
+              Finday,
+            ),
+            subject: (element["request"]["mission"]["title"] != null)
+                ? element["request"]["mission"]["title"]
+                : "",
+            color: LightColors.LLviolet,
+            startTimeZone: '',
+            endTimeZone: '',
+            location: (element["request"]["mission"]["destinationCountryAller"]
+                            ["name"] !=
+                        null &&
+                    element["request"]["mission"]["destinationCountryAller"]
+                            ["name"] !=
+                        null)
+                ? element["request"]["mission"]["departureCountryAller"]
+                        ["name"] +
+                    " To " +
+                    element["request"]["mission"]["destinationCountryAller"]
+                        ["name"]
+                : "",
+            //      notes: element["idReciever"] ["firstname"] +" "+ element["idReciever"] ["lastname"],
+            notes: element["_id"],
+            isAllDay: true
+            //  location:   "0"
+
+            ));
       } else {
         var Datedebut = element["date_debut"].toString().substring(0, 10);
         var monthdebut = DateTime.parse(Datedebut).month;

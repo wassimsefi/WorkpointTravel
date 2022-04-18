@@ -261,6 +261,7 @@ class _StepperWidgetState extends State<StepperWidget>
                 operation.request = value["data"]["_id"];
                 operation.OperationType = "TRAVEL";
                 operation.status = "ACTIVE";
+                operation.user = User_id;
                 operation.date_debut = StartDate;
                 operation.date_fin = EndDate;
 
