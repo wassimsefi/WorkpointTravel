@@ -296,7 +296,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                 fit: BoxFit.fitWidth,
                                                                                 child: Icon(
                                                                                   Icons.airplanemode_active,
-                                                                                  color: LightColors.Telework,
+                                                                                  color: LightColors.LLviolet,
                                                                                   size: 30,
                                                                                 ),
                                                                               )
@@ -636,7 +636,7 @@ class _MyrequestsState extends State<Myrequests> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: LightColors.Telework,
+          backgroundColor: LightColors.kDarkBlue,
           child: Icon(Icons.add),
           onPressed: () {
             Navigator.push(

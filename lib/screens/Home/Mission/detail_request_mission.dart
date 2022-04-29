@@ -8,6 +8,7 @@ import 'package:sweetalert/sweetalert.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:vato/constants/light_colors.dart';
 import 'package:vato/constants/link.dart';
+import 'package:vato/screens/Home/Mission/detail_mission.dart';
 import 'package:vato/screens/search/My%20Requests/myrequests.dart';
 import 'package:vato/services/OperationsService.dart';
 import 'package:vato/services/RequestService.dart';
@@ -131,6 +132,28 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15),
                                 maxLines: 1,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: InkWell(
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.details),
+                                        Text("Show >>")
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () => {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailMission()),
+                                    )
+                                  },
+                                ),
                               ),
                               Row(
                                 children: [
@@ -1483,14 +1506,14 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: LightColors.Telework,
+        backgroundColor: LightColors.kDarkBlue,
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => navigationScreen(
-                      0, null, null, 0, null, selectedDate, "homework")));
+                      0, null, null, 0, null, selectedDate, "addmission")));
         },
       ),
     );

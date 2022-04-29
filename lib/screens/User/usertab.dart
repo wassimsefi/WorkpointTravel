@@ -66,12 +66,11 @@ class _UsertabState extends State<Usertab> {
   String endDate;
   String startDate;
   final DateRangePickerController _controllerRange =
-  DateRangePickerController();
+      DateRangePickerController();
 
   UserService rs = new UserService();
   ServiceLineService Ss = new ServiceLineService();
   DeskServices _deskServices = new DeskServices();
-
 
   VoidCallback onClicked;
 
@@ -103,10 +102,10 @@ class _UsertabState extends State<Usertab> {
       }
     });
   }
+
   Map<String, dynamic> payload;
 
   Future<void> upload() async {
-
     String base64Image = base64Encode(_imagefile.readAsBytesSync());
     String fileName = _imagefile.path.split("/").last;
 
@@ -120,11 +119,11 @@ class _UsertabState extends State<Usertab> {
       print(err);
     });
   }
+
   Future<dynamic> getProfil;
-  Future <dynamic>getUserProfil(){
-     rs.getUserProfil(iduser.toString(), tokenLogin).then((value) {
-      setState(()
-      {
+  Future<dynamic> getUserProfil() {
+    rs.getUserProfil(iduser.toString(), tokenLogin).then((value) {
+      setState(() {
         if (value["data"]["photo"] != null) {
           photo = value["data"]["photo"].toString();
         }
@@ -139,16 +138,14 @@ class _UsertabState extends State<Usertab> {
           SUBSERVICElINE = value["data"]["subServiceLine"].toString() + "/";
         }
         if (value["data"]["spot"] != null) {
-          print("sssssspoottttttttttt"+value["data"]["spot"].toString());
+          print("sssssspoottttttttttt" + value["data"]["spot"].toString());
           setState(() {
             spotname = value["data"]["spot"]["name"].toString();
             spotid = value["data"]["spot"]["_id"].toString();
-            startFreeDate= value["data"]["spot"]["startFreeDate"].toString();
-            endFreeDate= value["data"]["spot"]["endFreeDate"].toString();
+            startFreeDate = value["data"]["spot"]["startFreeDate"].toString();
+            endFreeDate = value["data"]["spot"]["endFreeDate"].toString();
           });
         }
-
-
       });
     });
   }
@@ -175,16 +172,14 @@ class _UsertabState extends State<Usertab> {
         firstname = prefs.get("firstname");
         lastname = prefs.get("lastname");
         email = prefs.get("Email");
-       // role = prefs.get("role");
+        // role = prefs.get("role");
         iduser = prefs.get("_id");
         tokenLogin = prefs.get("token");
-getProfil=getUserProfil();
+        getProfil = getUserProfil();
         var newFormat = DateFormat("yyyy-MM-dd");
         startDate = newFormat.format(FormatStartDate);
         endDate = newFormat.format(FormatSndDate);
         visible = false;
-
-
       });
     });
   }
@@ -360,36 +355,41 @@ getProfil=getUserProfil();
                   color: Colors.white,
                 )),
             onTap: () async {
-              SharedPreferences preferences = await SharedPreferences.getInstance();
+              SharedPreferences preferences =
+                  await SharedPreferences.getInstance();
               await preferences.clear();
               final _storage = const FlutterSecureStorage();
-             await _storage.deleteAll();
-              DateTime selectedDate=   DateTime.now();
+              await _storage.deleteAll();
+              DateTime selectedDate = DateTime.now();
 
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => SignInScreen(selectedDate)));
+                      builder: (BuildContext context) =>
+                          SignInScreen(selectedDate)));
             },
           ),
-          SizedBox(height: 25,),
-       GestureDetector(
+          SizedBox(
+            height: 25,
+          ),
+          GestureDetector(
             child: Container(
-                margin: EdgeInsets.all(8),
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  child:(spotname!=null)? Image(
-                    image: AssetImage("assets/images/parkingLogo.png"),
-                  ): Container(
-                  ),
-                ),
+              margin: EdgeInsets.all(8),
+              child: Container(
+                width: 30,
+                height: 30,
+                child: (spotname != null)
+                    ? Image(
+                        image: AssetImage("assets/images/parkingLogo.png"),
+                      )
+                    : Container(),
+              ),
             ),
             onTap: () async {
-              if (startFreeDate=="null" || endFreeDate=="null" )
-              {_openPopupFreeParking();}
-              else {
-                _CancelFreeParking(startFreeDate,endFreeDate);
+              if (startFreeDate == "null" || endFreeDate == "null") {
+                _openPopupFreeParking();
+              } else {
+                _CancelFreeParking(startFreeDate, endFreeDate);
               }
             },
           )
@@ -397,18 +397,11 @@ getProfil=getUserProfil();
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
     );
-
   }
-  _openPopupFreeParking() {
 
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+  _openPopupFreeParking() {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     bool PMVAL = false;
     bool AMVAL = false;
@@ -417,6 +410,7 @@ getProfil=getUserProfil();
         PMVAL = !PMVAL;
       });
     }
+
     void STATEAM(setState) {
       setState(() {
         AMVAL = !AMVAL;
@@ -426,11 +420,9 @@ getProfil=getUserProfil();
     var alertStyle = AlertStyle(
       animationType: AnimationType.shrink,
       isCloseButton: true,
-
       isOverlayTapDismiss: true,
       backgroundColor: Colors.black12,
-      titleStyle : TextStyle(color: Colors.white,
-          fontWeight: FontWeight.bold),
+      titleStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       descTextAlign: TextAlign.center,
       animationDuration: Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
@@ -449,7 +441,7 @@ getProfil=getUserProfil();
         title: spotname,
         type: AlertType.none,
         style: alertStyle,
-        desc: "Select a priod to free your spot" ,
+        desc: "Select a priod to free your spot",
         content: StatefulBuilder(
           builder: (context2, StateSetter setState) {
             return Container(
@@ -458,103 +450,110 @@ getProfil=getUserProfil();
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                SizedBox(height: 5,),
+                    SizedBox(
+                      height: 5,
+                    ),
                     SfDateRangePicker(
                       controller: _controllerRange,
                       backgroundColor: Colors.black12,
                       view: DateRangePickerView.month,
-                        minDate: DateTime.now().add(Duration(days: 1)),
-                        headerStyle: DateRangePickerHeaderStyle(textStyle: TextStyle(color: Colors.white)),
+                      minDate: DateTime.now().add(Duration(days: 1)),
+                      headerStyle: DateRangePickerHeaderStyle(
+                          textStyle: TextStyle(color: Colors.white)),
                       selectionColor: Colors.blue,
                       startRangeSelectionColor: NeumorphicColors.background,
-                      selectionTextStyle: TextStyle(color: LightColors.kDarkBlue),
+                      selectionTextStyle:
+                          TextStyle(color: LightColors.kDarkBlue),
                       endRangeSelectionColor: NeumorphicColors.background,
                       rangeSelectionColor: Colors.white,
-                      rangeTextStyle: const TextStyle(color: Colors.blueAccent, fontSize: 18),                     //   todayHighlightColor: Colors.red,
+                      rangeTextStyle: const TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 18), //   todayHighlightColor: Colors.red,
 
-
-                        monthCellStyle:  DateRangePickerMonthCellStyle(
-                       //   specialDatesTextStyle: const TextStyle(color: Colors.red) ,
-                         // weekendTextStyle: const TextStyle(color: Colors.red),
-                          trailingDatesDecoration: BoxDecoration(
-                              color: const Color(0xFFDFDFDF),
-                              border: Border.all(color: const Color(0xFFB6B6B6), width: 1),
-                              shape: BoxShape.circle),
-                          trailingDatesTextStyle:TextStyle(color: Colors.white) ,
-                          disabledDatesDecoration:BoxDecoration(
-                              color: const Color(0xFFDFDFDF),
-                              border: Border.all(color: const Color(0xFFB6B6B6), width: 1),
-                              shape: BoxShape.circle),
-                         // disabledDatesTextStyle: const TextStyle(color: Colors.red),
-                          leadingDatesDecoration:BoxDecoration(
-                              color: const Color(0xFFDFDFDF),
-                              border: Border.all(color: const Color(0xFFB6B6B6), width: 1),
-                              shape: BoxShape.circle),
-                          leadingDatesTextStyle: const TextStyle(color: Colors.white),
-                          textStyle: const TextStyle(color: Colors.white),
-                          todayCellDecoration: BoxDecoration(
-                              color: const Color(0xFFDFDFDF),
-                              border: Border.all(color: const Color(0xFFB6B6B6), width: 1),
-                              shape: BoxShape.circle),
+                      monthCellStyle: DateRangePickerMonthCellStyle(
+                        //   specialDatesTextStyle: const TextStyle(color: Colors.red) ,
+                        // weekendTextStyle: const TextStyle(color: Colors.red),
+                        trailingDatesDecoration: BoxDecoration(
+                            color: const Color(0xFFDFDFDF),
+                            border: Border.all(
+                                color: const Color(0xFFB6B6B6), width: 1),
+                            shape: BoxShape.circle),
+                        trailingDatesTextStyle: TextStyle(color: Colors.white),
+                        disabledDatesDecoration: BoxDecoration(
+                            color: const Color(0xFFDFDFDF),
+                            border: Border.all(
+                                color: const Color(0xFFB6B6B6), width: 1),
+                            shape: BoxShape.circle),
+                        // disabledDatesTextStyle: const TextStyle(color: Colors.red),
+                        leadingDatesDecoration: BoxDecoration(
+                            color: const Color(0xFFDFDFDF),
+                            border: Border.all(
+                                color: const Color(0xFFB6B6B6), width: 1),
+                            shape: BoxShape.circle),
+                        leadingDatesTextStyle:
+                            const TextStyle(color: Colors.white),
+                        textStyle: const TextStyle(color: Colors.white),
+                        todayCellDecoration: BoxDecoration(
+                            color: const Color(0xFFDFDFDF),
+                            border: Border.all(
+                                color: const Color(0xFFB6B6B6), width: 1),
+                            shape: BoxShape.circle),
                         //  blackoutDateTextStyle: const TextStyle(color: Colors.purple),
                         //  todayTextStyle: const TextStyle(color: Colors.green),
-                        ),
+                      ),
                       selectionMode: DateRangePickerSelectionMode.range,
                       onSelectionChanged: selectionChangedrange,
                       monthViewSettings: DateRangePickerMonthViewSettings(
-                        viewHeaderStyle: DateRangePickerViewHeaderStyle(textStyle: TextStyle(color: Colors.white)),
+                          viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                              textStyle: TextStyle(color: Colors.white)),
                           enableSwipeSelection: true),
                     ),
-                    SizedBox(height: 5,),
-
+                    SizedBox(
+                      height: 5,
+                    ),
                     DialogButton(
-                  width: width / 3,
-                  color: LightColors.kDarkBlue,
-                  onPressed: () async {
-                    _deskServices.FreeSpot(startDate, endDate, spotid, tokenLogin).then((value)
-                    {
-                      Navigator.pop(context);
+                      width: width / 3,
+                      color: LightColors.kDarkBlue,
+                      onPressed: () async {
+                        _deskServices.FreeSpot(
+                                startDate, endDate, spotid, tokenLogin)
+                            .then((value) {
+                          Navigator.pop(context);
 
-                      SweetAlert.show(context2, subtitle: "loading ...",
-                          style: SweetAlertStyle.loading);
-                      new Future.delayed(new Duration(seconds: 2), () {
-                      if (value["status"].toString()=="200")
-                      {getUserProfil();
-                        SweetAlert.show(context2, subtitle: "Done!",
-                          style: SweetAlertStyle.success);}
-                      else{
-                        {SweetAlert.show(context2, subtitle: "Ooops! Something Went Wrong!!",
-                            style: SweetAlertStyle.error);}
-                      }
-                      });
-                    });
-                  },
-                  child: Text(
-                    "SUBMIT",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                )
-              ]
-              ),
+                          SweetAlert.show(context2,
+                              subtitle: "loading ...",
+                              style: SweetAlertStyle.loading);
+                          new Future.delayed(new Duration(seconds: 2), () {
+                            if (value["status"].toString() == "200") {
+                              getUserProfil();
+                              SweetAlert.show(context2,
+                                  subtitle: "Done!",
+                                  style: SweetAlertStyle.success);
+                            } else {
+                              {
+                                SweetAlert.show(context2,
+                                    subtitle: "Ooops! Something Went Wrong!!",
+                                    style: SweetAlertStyle.error);
+                              }
+                            }
+                          });
+                        });
+                      },
+                      child: Text(
+                        "SUBMIT",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    )
+                  ]),
             );
           },
         ),
-        buttons:[
-        ]
-
-
-    ).show();
+        buttons: []).show();
   }
-  _CancelFreeParking(startDate,EndDate) {
 
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+  _CancelFreeParking(startDate, EndDate) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     bool PMVAL = false;
     bool AMVAL = false;
@@ -563,6 +562,7 @@ getProfil=getUserProfil();
         PMVAL = !PMVAL;
       });
     }
+
     void STATEAM(setState) {
       setState(() {
         AMVAL = !AMVAL;
@@ -572,11 +572,9 @@ getProfil=getUserProfil();
     var alertStyle = AlertStyle(
       animationType: AnimationType.shrink,
       isCloseButton: true,
-
       isOverlayTapDismiss: true,
       backgroundColor: Colors.black12,
-      titleStyle : TextStyle(color: Colors.white,
-          fontWeight: FontWeight.bold),
+      titleStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       descTextAlign: TextAlign.center,
       animationDuration: Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
@@ -609,40 +607,45 @@ getProfil=getUserProfil();
                       text: TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: ("You have freed up your parking spot from "),
-                            style: TextStyle(color: Colors.white,fontSize: 18)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                         TextSpan(
                             text: startDate.substring(0, 10),
-                            style: TextStyle(color: Colors.white,fontSize: 18)),
-
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                         TextSpan(
                             text: " until  ",
-                            style: TextStyle(color: Colors.white,fontSize: 18)),
-
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                         TextSpan(
                             text: EndDate.substring(0, 10),
-                            style: TextStyle(color: Colors.white,fontSize: 18)),
-
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                       ]),
                     ),
-
                     DialogButton(
                       width: width / 3,
                       color: LightColors.kDarkBlue,
                       onPressed: () async {
-                        _deskServices.CancelFreeSpot( spotid, tokenLogin).then((value)
-                        {
+                        _deskServices.CancelFreeSpot(spotid, tokenLogin)
+                            .then((value) {
                           Navigator.pop(context);
 
-                          SweetAlert.show(context2, subtitle: "loading ...",
+                          SweetAlert.show(context2,
+                              subtitle: "loading ...",
                               style: SweetAlertStyle.loading);
                           new Future.delayed(new Duration(seconds: 2), () {
-                            if (value["status"].toString()=="200")
-                            {getUserProfil();
-                              SweetAlert.show(context2, subtitle: "Done!",
-                                style: SweetAlertStyle.success);}
-                            else{
-                              {SweetAlert.show(context2, subtitle: "Ooops! Something Went Wrong!!",
-                                  style: SweetAlertStyle.error);}
+                            if (value["status"].toString() == "200") {
+                              getUserProfil();
+                              SweetAlert.show(context2,
+                                  subtitle: "Done!",
+                                  style: SweetAlertStyle.success);
+                            } else {
+                              {
+                                SweetAlert.show(context2,
+                                    subtitle: "Ooops! Something Went Wrong!!",
+                                    style: SweetAlertStyle.error);
+                              }
                             }
                           });
                         });
@@ -652,16 +655,11 @@ getProfil=getUserProfil();
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     )
-                  ]
-              ),
+                  ]),
             );
           },
         ),
-        buttons:[
-        ]
-
-
-    ).show();
+        buttons: []).show();
   }
 
   Widget buildImage() {
@@ -714,14 +712,16 @@ getProfil=getUserProfil();
       },
     );
   }
+
   void selectionChangedrange(DateRangePickerSelectionChangedArgs args) {
     PickerDateRange ranges = args.value;
 
     setState(() {
       startDate = ranges.startDate.toString();
-       endDate = ranges.endDate.toString();
+      endDate = ranges.endDate.toString();
     });
   }
+
   Widget buildEditIcon(Color color) => buildCircle(
         color: Colors.white,
         all: 2,

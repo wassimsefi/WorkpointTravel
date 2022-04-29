@@ -12,9 +12,9 @@ class TopContainerTravel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding:
-      padding != null ? padding : EdgeInsets.symmetric(horizontal: 20.0),
+          padding != null ? padding : EdgeInsets.symmetric(horizontal: 20.0),
       decoration: BoxDecoration(
-          color: LightColors.violet,
+          color: LightColors.kDarkBlue,
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(40.0),
             bottomLeft: Radius.circular(59.0),

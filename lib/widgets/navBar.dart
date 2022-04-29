@@ -16,6 +16,7 @@ import 'package:vato/screens/Home/Reservation/search_screen.dart';
 import 'package:vato/screens/Home/WFH/request_w_f_h.dart';
 import 'package:vato/screens/Login/SignInScreen.dart';
 import 'package:vato/travel/Home/list_missions.dart';
+import 'package:vato/travel/user/tab_bar_user.dart';
 import '../screens/Home/Mission/detail_mission.dart';
 import 'package:vato/screens/User/usertab.dart';
 import 'package:vato/screens/search/FirstPage/list_resources.dart';
@@ -221,7 +222,7 @@ class _navigationScreenState extends State<navigationScreen> {
       return notif.Notification();
     }
     if (page == 3) {
-      return Usertab();
+      return TabBarUser();
     }
   }
 }
