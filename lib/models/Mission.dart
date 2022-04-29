@@ -22,6 +22,10 @@ class Missions {
   String validtePassport;
   String visa;
   bool obtenirVisa;
+  String departureCountryRetour;
+  String departureCityRetour;
+  String destinationCountryRetour;
+  String destinationCityRetour;
 
   List<Map<dynamic, dynamic>> documents_visa = [];
   List<Map<dynamic, dynamic>> vaccin = [];
@@ -51,7 +55,11 @@ class Missions {
         visa = map["visa"],
         obtenirVisa = map["obtenirVisa"],
         documents_visa = map["documents_visa"],
-        vaccin = map["vaccin"];
+        vaccin = map["vaccin"],
+        destinationCityRetour = map["destinationCityRetour"],
+        destinationCountryRetour = map["destinationCountryRetour"],
+        departureCityRetour = map["departureCityRetour"],
+        departureCountryRetour = map["departureCountryRetour"];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -81,7 +89,13 @@ class Missions {
     data["obtenirVisa"] = obtenirVisa;
     data["documents_visa"] = documents_visa;
     data["vaccin"] = vaccin;
+    data["destinationCityRetour"] = destinationCityRetour;
 
+    data["destinationCountryRetour"] = destinationCountryRetour;
+
+    data["departureCityRetour"] = departureCityRetour;
+
+    data["departureCountryRetour"] = departureCountryRetour;
     return data;
   }
 

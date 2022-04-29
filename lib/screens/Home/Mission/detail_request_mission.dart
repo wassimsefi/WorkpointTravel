@@ -296,7 +296,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     const EdgeInsets.fromLTRB(
                                                         10, 10, 10, 0),
                                                 child: Container(
-                                                  height: 50,
+                                                  height: 70,
                                                   // color: Colors.grey[200],
                                                   child: Neumorphic(
                                                     style: NeumorphicStyle(
@@ -310,81 +310,133 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .circular(
                                                                           8)),
                                                     ),
-                                                    child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: <Widget>[
-                                                          Expanded(
-                                                            child: Row(
-                                                              children: [
-                                                                AutoSizeText(
-                                                                    widget.mission[
-                                                                            "departureCountryAller"]
-                                                                        [
-                                                                        "name"],
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black54,
-                                                                        fontSize:
-                                                                            16)),
-                                                                AutoSizeText(
-                                                                    " ( " +
-                                                                        widget.mission["departureCityAller"]
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Expanded(
+                                                                child: Row(
+                                                                  children: [
+                                                                    AutoSizeText(
+                                                                        widget.mission["departureCountryAller"]
                                                                             [
-                                                                            "name"] +
-                                                                        " )",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black54,
-                                                                        fontSize:
-                                                                            14))
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 0,
-                                                          ),
+                                                                            "name"],
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            fontSize: 16)),
+                                                                    AutoSizeText(
+                                                                        " ( " +
+                                                                            widget.mission["departureCityAller"][
+                                                                                "name"] +
+                                                                            " )",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            fontSize: 14))
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 0,
+                                                              ),
 
-                                                          Icon(
-                                                            Icons
-                                                                .compare_arrows,
-                                                            color: Colors.black,
-                                                          ),
+                                                              Icon(
+                                                                Icons
+                                                                    .compare_arrows,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
 
-                                                          Expanded(
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                AutoSizeText(
-                                                                    widget.mission[
-                                                                            "destinationCountryAller"]
-                                                                        [
-                                                                        "name"],
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black54,
-                                                                        fontSize:
-                                                                            16)),
-                                                                AutoSizeText(
-                                                                    " ( " +
-                                                                        widget.mission["destinationCityAller"]
+                                                              Expanded(
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    AutoSizeText(
+                                                                        widget.mission["destinationCountryAller"]
                                                                             [
-                                                                            "name"] +
-                                                                        " )",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black54,
-                                                                        fontSize:
-                                                                            14))
-                                                              ],
-                                                            ),
-                                                          ),
+                                                                            "name"],
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            fontSize: 16)),
+                                                                    AutoSizeText(
+                                                                        " ( " +
+                                                                            widget.mission["destinationCityAller"][
+                                                                                "name"] +
+                                                                            " )",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            fontSize: 14))
+                                                                  ],
+                                                                ),
+                                                              ),
 
-                                                          //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                        ]),
+                                                              //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
+                                                            ]),
+                                                        widget.mission[
+                                                                    "allerRetour"] ==
+                                                                true
+                                                            ? Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: <
+                                                                    Widget>[
+                                                                    Expanded(
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          AutoSizeText(
+                                                                              widget.mission["departureCountryRetour"]["name"],
+                                                                              style: TextStyle(color: Colors.black54, fontSize: 16)),
+                                                                          AutoSizeText(
+                                                                              " ( " + widget.mission["departureCityRetour"]["name"] + " )",
+                                                                              style: TextStyle(color: Colors.black54, fontSize: 14))
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 0,
+                                                                    ),
+
+                                                                    Icon(
+                                                                      Icons
+                                                                          .compare_arrows,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+
+                                                                    Expanded(
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          AutoSizeText(
+                                                                              widget.mission["destinationCountryRetour"]["name"],
+                                                                              style: TextStyle(color: Colors.black54, fontSize: 16)),
+                                                                          AutoSizeText(
+                                                                              " ( " + widget.mission["destinationCityRetour"]["name"] + " )",
+                                                                              style: TextStyle(color: Colors.black54, fontSize: 14))
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                    //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
+                                                                  ])
+                                                            : Container(),
+                                                      ],
+                                                    ),
                                                   ),
                                                 )),
                                             Padding(

@@ -218,6 +218,13 @@ class _StepperWidgetState extends State<StepperWidget>
         missions.destinationCountryAller = pays_destination["_id"];
         missions.destinationCityAller = city_destination["_id"];
 
+        if (round_trip == true) {
+          missions.departureCountryRetour = pays_depart_retour["_id"];
+          missions.departureCityRetour = city_depart_retour["_id"];
+          missions.destinationCountryRetour = pays_destination_retour["_id"];
+          missions.destinationCityRetour = city_destination_retour["_id"];
+        }
+
         missions.hotel = hotelPreference;
         missions.rateHotelMax = Mximum_rate_per_night;
 

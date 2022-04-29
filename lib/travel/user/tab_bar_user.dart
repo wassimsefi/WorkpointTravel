@@ -186,6 +186,10 @@ class _TabBarUserState extends State<TabBarUser> {
         if (value["data"]["photo"] != null) {
           photo = value["data"]["photo"].toString();
         }
+        if (value["data"]["role"] != null) {
+          role = value["data"]["role"].toString();
+        }
+
         if (value["data"]["visa"] != null) {
           visas = value["data"]["visa"];
         }
@@ -388,6 +392,40 @@ class _TabBarUserState extends State<TabBarUser> {
                                   maxFontSize: 20.0,
                                   minFontSize: 6,
                                 ),
+                              ),
+                              SizedBox(
+                                height: height / 20,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: new EdgeInsets.only(left: 90),
+                                    child: AutoSizeText(
+                                      "Role : ",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      maxLines: 1,
+                                      maxFontSize: 20.0,
+                                      minFontSize: 6,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: AutoSizeText(
+                                      role.toString(),
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      maxLines: 1,
+                                      maxFontSize: 20.0,
+                                      minFontSize: 6,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           )

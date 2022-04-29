@@ -363,28 +363,57 @@ class _MyrequestsState extends State<Myrequests> {
                                                                               40.0),
                                                                       child: (filtred[x]["name"].toString() ==
                                                                               "Mission")
-                                                                          ? Center(
-                                                                              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                                                                                Expanded(
-                                                                                  child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: 0,
-                                                                                ),
+                                                                          ? Column(
+                                                                              children: [
+                                                                                Center(
+                                                                                  child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                                                                    Expanded(
+                                                                                      child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: 0,
+                                                                                    ),
 
-                                                                                Icon(
-                                                                                  Icons.compare_arrows,
-                                                                                  color: Colors.black54,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: 2,
-                                                                                ),
-                                                                                Expanded(
-                                                                                  child: AutoSizeText(filtred[x]["mission"]["destinationCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                ),
+                                                                                    Icon(
+                                                                                      Icons.compare_arrows,
+                                                                                      color: Colors.black54,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: 2,
+                                                                                    ),
+                                                                                    Expanded(
+                                                                                      child: AutoSizeText(filtred[x]["mission"]["destinationCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                    ),
 
-                                                                                //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                                              ]),
+                                                                                    //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
+                                                                                  ]),
+                                                                                ),
+                                                                                filtred[x]["mission"]["allerRetour"] == true
+                                                                                    ? Center(
+                                                                                        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                                                                          Expanded(
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["departureCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 0,
+                                                                                          ),
+
+                                                                                          Icon(
+                                                                                            Icons.compare_arrows,
+                                                                                            color: Colors.black54,
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 2,
+                                                                                          ),
+                                                                                          Expanded(
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["destinationCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                          ),
+
+                                                                                          //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
+                                                                                        ]),
+                                                                                      )
+                                                                                    : Container(),
+                                                                              ],
                                                                             )
                                                                           : Container()),
                                                                   Padding(
