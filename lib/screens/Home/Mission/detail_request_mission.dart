@@ -68,6 +68,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
   @override
   void initState() {
     print("*****" + widget.commentUser.toString());
+    print("******" + widget.mission["visaValidation"].toString());
+
     _prefs = SharedPreferences.getInstance();
     _prefs.then((SharedPreferences prefs) {
       setState(() {
@@ -150,7 +152,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetailMission()),
+                                              DetailMission(widget.mission)),
                                     )
                                   },
                                 ),

@@ -16,15 +16,14 @@ class DetailMission extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TopContainerTravel(
-            height: _height/5.5,
+            height: _height / 5.5,
             width: width,
-            child:Padding(
-              padding: const EdgeInsets.only(top:20.0),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
               child: Row(
-
                 children: [
                   Expanded(
-                    flex:2,
+                    flex: 2,
                     child: Column(
                       children: [
                         Column(
@@ -32,45 +31,46 @@ class DetailMission extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
-                              height: _height*0.035,
+                              height: _height * 0.035,
                             ),
                             Container(
-                              width: width/2.5,
-                              height: _height/20,
+                              width: width / 2.5,
+                              height: _height / 20,
                               child: Image(
                                 image: AssetImage("assets/images/top.png"),
                               ),
                             ),
                             SizedBox(
-                              height: _height*0.01,
-
+                              height: _height * 0.01,
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Container(
-                                width: width/3,
-                                height: _height/25,
+                                width: width / 3,
+                                height: _height / 25,
                                 child: Image(
-                                  image: AssetImage("assets/images/travelblanc.png"),
+                                  image: AssetImage(
+                                      "assets/images/travelblanc.png"),
                                 ),
                               ),
                             ),
                             SizedBox(
-                              height: _height*0.005,
-
+                              height: _height * 0.005,
                             ),
                           ],
                         )
                       ],
                     ),
                   ),
-
                   Expanded(
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: PopupMenuButton<int>(
-                        icon: Icon(Icons.adaptive.more,color: Colors.white,),
+                        icon: Icon(
+                          Icons.adaptive.more,
+                          color: Colors.white,
+                        ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
@@ -92,7 +92,6 @@ class DetailMission extends StatelessWidget {
               ),
             ),
           ),
-
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
@@ -101,7 +100,7 @@ class DetailMission extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0))),
-              child:  DefaultTabController(
+              child: DefaultTabController(
                 length: 2,
                 child: Scaffold(
                     backgroundColor: NeumorphicColors.background,
@@ -109,17 +108,19 @@ class DetailMission extends StatelessWidget {
                       indicatorWeight: 2,
                       indicatorColor: LightColors.violet,
                       tabs: [
-                        Tab(child: Text("DetailMission",style: TextStyle(color: Colors.black),)),
-                        Tab(child: Text("Document",style: TextStyle(color: Colors.black))),
+                        Tab(
+                            child: Text(
+                          "DetailMission",
+                          style: TextStyle(color: Colors.black),
+                        )),
+                        Tab(
+                            child: Text("Document",
+                                style: TextStyle(color: Colors.black))),
                       ],
                     ),
                     body: TabBarView(
-                      children: [
-                        Stepperpage(),
-                        Documents()
-
-                      ],
-                    )),
+                        // children: [Stepperpage(), Documents()],
+                        )),
               ),
             ),
           )

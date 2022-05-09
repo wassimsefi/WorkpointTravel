@@ -15,8 +15,9 @@ class Profiltravel extends StatefulWidget {
   int nbrMissionComleted;
   int nbrCurrentMission;
   String mat;
+  String passportValidity;
   Profiltravel(this.telephone, this.grade, this.nbrMissionComleted,
-      this.nbrCurrentMission, this.mat,
+      this.nbrCurrentMission, this.mat, this.passportValidity,
       {Key key})
       : super(key: key);
 
@@ -25,6 +26,13 @@ class Profiltravel extends StatefulWidget {
 }
 
 class _ProfiltravelState extends State<Profiltravel> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("object : " + widget.passportValidity.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -167,11 +175,28 @@ class _ProfiltravelState extends State<Profiltravel> {
                       color: LightColors.kDarkBlue,
                     ),
                     title: Text(
-                      'telephone number',
+                      'Telephone number',
                       style: TextStyle(color: Colors.black54, fontSize: 15),
                     ),
                     trailing: Text(
                       widget.telephone,
+                      style: TextStyle(color: Colors.black54, fontSize: 15),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: NeumorphicColors.background,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.credit_card,
+                      color: LightColors.kDarkBlue,
+                    ),
+                    title: Text(
+                      'Passport validity',
+                      style: TextStyle(color: Colors.black54, fontSize: 15),
+                    ),
+                    trailing: Text(
+                      widget.passportValidity,
                       style: TextStyle(color: Colors.black54, fontSize: 15),
                     ),
                   ),
@@ -222,7 +247,7 @@ class _ProfiltravelState extends State<Profiltravel> {
                       color: LightColors.kDarkBlue,
                     ),
                     title: Text(
-                      'change your password',
+                      'Change your password',
                       style: TextStyle(color: Colors.black54, fontSize: 15),
                     ),
                     trailing: Icon(

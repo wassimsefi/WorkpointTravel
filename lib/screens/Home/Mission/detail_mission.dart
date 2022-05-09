@@ -6,7 +6,14 @@ import 'package:vato/travel/detail%20mission/stepperpage.dart';
 import 'package:vato/widgets/topContainerBack.dart';
 import 'package:vato/widgets/topContainerScan.dart';
 
-class DetailMission extends StatelessWidget {
+class DetailMission extends StatefulWidget {
+  dynamic mission;
+  DetailMission(this.mission, {Key key}) : super(key: key);
+  @override
+  _DetailMissionState createState() => _DetailMissionState();
+}
+
+class _DetailMissionState extends State<DetailMission> {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -44,7 +51,7 @@ class DetailMission extends StatelessWidget {
                       ],
                     ),
                     body: TabBarView(
-                      children: [Stepperpage(), Documents()],
+                      children: [Stepperpage(widget.mission), Documents()],
                     )),
               ),
             ),

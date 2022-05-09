@@ -186,9 +186,9 @@ class _navigationScreenState extends State<navigationScreen> {
         return AddMissions();
       }
 
-      if (home == "Dmission") {
+      /* if (home == "Dmission") {
         return DetailMission();
-      }
+      }*/
       if (home == "map") {
         return FloorPlanScreen(Floors, floor, keys, selectedDate, floor_type);
       }

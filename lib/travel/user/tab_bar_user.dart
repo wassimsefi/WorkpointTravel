@@ -67,6 +67,8 @@ class _TabBarUserState extends State<TabBarUser> {
 
   String role;
 
+  String passportValidity = "";
+
   String iduser;
 
   String tokenLogin;
@@ -192,6 +194,14 @@ class _TabBarUserState extends State<TabBarUser> {
 
         if (value["data"]["visa"] != null) {
           visas = value["data"]["visa"];
+        }
+        if (value["data"]["passportValidity"] != null) {
+          passportValidity = value["data"]["passportValidity"].substring(0, 10);
+
+          /* String datep = value["data"]["passportValidity"].substring(0, 10);
+          passportValidity = DateTime.parse(datep);
+
+          print("******** date ********** " + passportValidity.toString());*/
         }
 
         if (value["data"]["vaccine"] != null) {
@@ -466,7 +476,7 @@ class _TabBarUserState extends State<TabBarUser> {
                       body: TabBarView(
                         children: [
                           Profiltravel(telephone, grade, nbrMissionComleted,
-                              nbrCurrentMission, mat),
+                              nbrCurrentMission, mat, passportValidity),
                           VaccinVisa(visas, vaccines),
                           Historique(missions)
                         ],
