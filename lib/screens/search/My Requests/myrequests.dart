@@ -241,7 +241,6 @@ class _MyrequestsState extends State<Myrequests> {
                                                                 ["testt 111", "test 2222"],
                                                                 filtred[x]["status"].toString(),
                                                                 filtred[x]["idReciever"]["photo"],
-                                                                filtred[x]["mission"]["departureCountryAller"]["name"],
                                                                 filtred[x]["mission"]["comment"],
                                                                 filtred[x]["mission"]))
                                                         : MaterialPageRoute(builder: (context) => DetailRequest(filtred[x]["_id"], filtred[x]["idReciever"]["firstname"] + " " + filtred[x]["idReciever"]["lastname"], new DateFormat('yyyy-MM-dd HH:mm').format(DateTime.tryParse(filtred[x]["createdAt"])).toString(), filtred[x]["UserNotif"], filtred[x]["status"].toString(), filtred[x]["idReciever"]["photo"], filtred[x]["commentUser"], filtred[x]["commentManager"])));
@@ -366,27 +365,31 @@ class _MyrequestsState extends State<Myrequests> {
                                                                           ? Column(
                                                                               children: [
                                                                                 Center(
-                                                                                  child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                                                                                    Expanded(
-                                                                                      child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 0,
-                                                                                    ),
+                                                                                  child: filtred[x]["mission"]["departureCountryAller"] == null
+                                                                                      ? Expanded(
+                                                                                          child: AutoSizeText("pas de deolacement", style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                        )
+                                                                                      : Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                                                                          Expanded(
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 0,
+                                                                                          ),
 
-                                                                                    Icon(
-                                                                                      Icons.compare_arrows,
-                                                                                      color: Colors.black54,
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 2,
-                                                                                    ),
-                                                                                    Expanded(
-                                                                                      child: AutoSizeText(filtred[x]["mission"]["destinationCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                    ),
+                                                                                          Icon(
+                                                                                            Icons.compare_arrows,
+                                                                                            color: Colors.black54,
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 2,
+                                                                                          ),
+                                                                                          Expanded(
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["destinationCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                          ),
 
-                                                                                    //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                                                  ]),
+                                                                                          //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
+                                                                                        ]),
                                                                                 ),
                                                                                 filtred[x]["mission"]["allerRetour"] == true
                                                                                     ? Center(

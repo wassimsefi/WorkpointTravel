@@ -36,6 +36,18 @@ class MissionService {
     return response.data;
   }
 
+  Future<dynamic> getFormulabyName(name) async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/Formula/getId/" + name,
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+
+    return response.data;
+  }
+
   Future<dynamic> getAllHotel() async {
     //final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/Hotel/all",

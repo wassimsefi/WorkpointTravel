@@ -134,7 +134,7 @@ class _StepperWidgetState extends State<StepperWidget>
   dynamic visaId;
   Future<dynamic> getVisa;
   String missionVisa = "";
-  String idVisa = "";
+  String idVisa = null;
 
   List<dynamic> listVaccin = [];
 
@@ -144,8 +144,8 @@ class _StepperWidgetState extends State<StepperWidget>
   final List<DropdownMenuItem> pays = [];
 
   String idHotel;
-  String altitudeHotel = "36.806389";
-  String longitudeHotel = "10.181667";
+  double altitudeHotel = 36.806389;
+  double longitudeHotel = 10.181667;
 
   int nbrDoc = 0;
   int nbrVaccin = 0;
@@ -210,23 +210,29 @@ class _StepperWidgetState extends State<StepperWidget>
         missions.perdiem = " test perdiem";
         missions.amount = double.parse(amount);
         missions.comment = comment;
-        missions.needTransport = transport_required;
+        missions.needTransport = testTransport;
         missions.allerRetour = round_trip;
 
-        missions.departureCountryAller = pays_depart["_id"];
-        missions.departureCityAller = city_depart["_id"];
-        missions.destinationCountryAller = pays_destination["_id"];
-        missions.destinationCityAller = city_destination["_id"];
+        if (testTransport == true) {
+          missions.departureCountryAller = pays_depart["_id"];
+          missions.departureCityAller = city_depart["_id"];
+          missions.destinationCountryAller = pays_destination["_id"];
+          missions.destinationCityAller = city_destination["_id"];
 
-        if (round_trip == true) {
-          missions.departureCountryRetour = pays_depart_retour["_id"];
-          missions.departureCityRetour = city_depart_retour["_id"];
-          missions.destinationCountryRetour = pays_destination_retour["_id"];
-          missions.destinationCityRetour = city_destination_retour["_id"];
+          if (round_trip == true) {
+            missions.departureCountryRetour = pays_depart_retour["_id"];
+            missions.departureCityRetour = city_depart_retour["_id"];
+            missions.destinationCountryRetour = pays_destination_retour["_id"];
+            missions.destinationCityRetour = city_destination_retour["_id"];
+          }
         }
 
-        missions.hotel = hotelPreference;
-        missions.rateHotelMax = Mximum_rate_per_night;
+        if (testAccomdation == true) {
+          missions.hotel = hotelPreference;
+          missions.rateHotelMax = Mximum_rate_per_night;
+          missions.altitude = altitudeHotel;
+          missions.longitude = longitudeHotel;
+        }
 
         missions.validtePassport = " 2058-28-02";
         missions.visa = idVisa;
@@ -237,17 +243,18 @@ class _StepperWidgetState extends State<StepperWidget>
           missions.documents_visa[i] = VisaList[i];
         }*/
 
-        print("***" + VisaList.toString());
-        print("***" + VisaList.runtimeType.toString());
+        // print("***" + VisaList.toString());
+        //   print("***" + VisaList.runtimeType.toString());
+        print("object ....*****........");
 
-        for (var i = 0; i < nbrDoc; i++) {
+        /* for (var i = 0; i < nbrDoc; i++) {
           missions.documents_visa.add(VisaList[i]);
         }
 
         for (var i = 0; i < nbrVaccin; i++) {
           missions.vaccin.add(VaccinList[i]);
         }
-
+*/
         Requests request = new Requests();
         request.idSender = User_id;
         request.idReciever = selectedValueManger["_id"];
@@ -319,7 +326,58 @@ class _StepperWidgetState extends State<StepperWidget>
     setState(() {});
   }
 
+  bool testTransport = false;
+  bool testAccomdation = false;
+
   MissionService _missionService = new MissionService();
+  List<Step> getSteps() => [
+        Step(
+            state: _currentStep <= 0 ? StepState.editing : StepState.complete,
+            isActive: _currentStep >= 0,
+            title: _currentStep == 0
+                ? const Text("Informations", style: TextStyle(fontSize: 14))
+                : Text(""),
+            content: _informationWidget()),
+        Step(
+          state: _currentStep <= 1 ? StepState.editing : StepState.complete,
+          isActive: _currentStep >= 1,
+          title: _currentStep == 1
+              ? const Text(
+                  "Expenses",
+                  style: TextStyle(fontSize: 14),
+                )
+              : Text(""),
+          content: _expensesWidget(),
+        ),
+        Step(
+          state: _currentStep <= 2 ? StepState.editing : StepState.complete,
+          isActive: _currentStep >= 2,
+          title: _currentStep == 2
+              ? const Text("Transport", style: TextStyle(fontSize: 14))
+              : Text(""),
+          content: testTransport == true
+              ? _TransportWidget()
+              : _TransportWidgetNul(),
+        ),
+        Step(
+          state: _currentStep <= 3 ? StepState.editing : StepState.complete,
+          isActive: _currentStep >= 3,
+          title: _currentStep == 3
+              ? const Text("Accomodation", style: TextStyle(fontSize: 14))
+              : Text(""),
+          content: testAccomdation == true
+              ? _AccomodationWidget()
+              : _AccomodationWidgetNul(),
+        ),
+        Step(
+          state: _currentStep <= 4 ? StepState.editing : StepState.complete,
+          isActive: _currentStep >= 4,
+          title: _currentStep == 4
+              ? const Text("Visa and vaccines", style: TextStyle(fontSize: 14))
+              : Text(""),
+          content: _visaVaccinetiWidget(),
+        )
+      ];
 
   @override
   void initState() {
@@ -405,6 +463,8 @@ class _StepperWidgetState extends State<StepperWidget>
     getMissionFormula = _missionService.getAllMissionFormula().then((value) {
       setState(() {
         missionFormula = value["data"];
+        //  testTransport = value["data"]["needTransport"];
+        // testAccomdation = value["data"]["needAccomdation"];
       });
 
       missionFormula.asMap().forEach((index, element) {
@@ -452,47 +512,6 @@ class _StepperWidgetState extends State<StepperWidget>
     _tabController = new TabController(length: 2, vsync: this);
   }
 
-  /*void loginUser() async {
-    const String apiUrl = "http://192.168.1.17:3000/demande/create";
-    DemandeElement demande = DemandeElement(
-      formule: formula!,
-      needTransport: isChecked,
-      title: title!,
-      type: type!,
-      category: category!,
-      city: city!,
-      comment: comment!,
-      country: country!,
-      date: DateTime.now(),
-      email: email!,
-      engagementManager: engagementManger!,
-      engagementPartner: engagementPartner!,
-    );
-    final Response = await http.post(apiUrl, body: demande.toJson());
-    print("helsdfsdflo");
-    if (Response.statusCode == 200) {
-      final String responseString = Response.body;
-      print("helllo it works ");
-      // return userModelFromJson(responseString);
-    } else if (Response.statusCode == 401) {
-      throw Exception(showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Log In Error'),
-          content: Text(
-            'Account is not activated! ou not found! ',
-            style: TextStyle(fontSize: 20.0, color: Colors.red),
-          ),
-          actions: <Widget>[
-            FlatButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: Text('OK'))
-          ],
-        ),
-      ));
-    }
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -533,50 +552,6 @@ class _StepperWidgetState extends State<StepperWidget>
     );
   }
 
-  List<Step> getSteps() => [
-        Step(
-            state: _currentStep <= 0 ? StepState.editing : StepState.complete,
-            isActive: _currentStep >= 0,
-            title: _currentStep == 0
-                ? const Text("Informations", style: TextStyle(fontSize: 14))
-                : Text(""),
-            content: _informationWidget()),
-        Step(
-          state: _currentStep <= 1 ? StepState.editing : StepState.complete,
-          isActive: _currentStep >= 1,
-          title: _currentStep == 1
-              ? const Text(
-                  "Expenses",
-                  style: TextStyle(fontSize: 14),
-                )
-              : Text(""),
-          content: _expensesWidget(),
-        ),
-        Step(
-          state: _currentStep <= 2 ? StepState.editing : StepState.complete,
-          isActive: _currentStep >= 2,
-          title: _currentStep == 2
-              ? const Text("Transport", style: TextStyle(fontSize: 14))
-              : Text(""),
-          content: _TransportWidget(),
-        ),
-        Step(
-          state: _currentStep <= 3 ? StepState.editing : StepState.complete,
-          isActive: _currentStep >= 3,
-          title: _currentStep == 3
-              ? const Text("Accomodation", style: TextStyle(fontSize: 14))
-              : Text(""),
-          content: _AccomodationWidget(),
-        ),
-        Step(
-          state: _currentStep <= 4 ? StepState.editing : StepState.complete,
-          isActive: _currentStep >= 4,
-          title: _currentStep == 4
-              ? const Text("Visa and vaccines", style: TextStyle(fontSize: 14))
-              : Text(""),
-          content: _visaVaccinetiWidget(),
-        )
-      ];
   final _formKey = GlobalKey<FormState>();
 
   Widget _informationWidget() {
@@ -639,6 +614,140 @@ class _StepperWidgetState extends State<StepperWidget>
                   setState(() {
                     formula = value;
                     print("-----------" + formula.toString());
+                    testTransport = value["needTransport"];
+                    testAccomdation = value["needAccomdation"];
+
+                    /*  _missionService
+                        .getFormulabyName(formula["name"])
+                        .then((value) {
+                      setState(() {
+                        testTransport = value["needTransport"];
+                        testAccomdation = value["needAccomdation"];
+                        print("*****testTransport 1 *****" +
+                            testTransport.toString());
+                        print("*****testTransport 2 *****" +
+                            value["needTransport"].toString());
+                      });
+                    });*/
+                  });
+                },
+                isExpanded: true,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SearchChoices.single(
+                items: countryMission,
+                value: pays_destination,
+                hint: "Destination country",
+                searchHint: "Select your Destination country ",
+                onChanged: (value) {
+                  setState(() async {
+                    pays_destination = value;
+
+                    getIdCountry = _missionService
+                        .getCountryNyName(value["name"])
+                        .then((value) {
+                      missionIdCountry = value["data"];
+
+//Get Visa
+                      visaId = missionIdCountry[0]["visa"];
+
+                      listVaccin = missionIdCountry[0]["vaccine"];
+
+                      listDocVisa.clear();
+                      listNumDocVisa.clear();
+
+                      if (visaId == null) {
+                        nbrDoc = 0;
+                      } else {
+                        getVisa =
+                            _missionService.getVisaById(visaId).then((value) {
+                          idVisa = value["data"]["_id"];
+
+                          missionVisa = value["data"]["name"];
+
+                          nbrDoc = value["data"]["documents_list"].length;
+                          for (var i = 0;
+                              i < value["data"]["documents_list"].length;
+                              i++) {
+                            var map = {};
+                            map['document'] = value["data"]["_id"];
+
+                            map['name'] =
+                                value["data"]["documents_list"][i]["document"];
+                            map['nbrDoc'] = value["data"]["documents_list"][i]
+                                ["number_of_document"];
+                            map['isChecked'] = false;
+                            VisaList.add(map);
+
+                            _missionService
+                                .getDocVisaById(value["data"]["documents_list"]
+                                    [i]["document"])
+                                .then((value) {
+                              listDocVisa.add(value["data"]["name"]);
+                              map['name'] = value["data"]["name"];
+                              map['document'] = value["data"]["_id"];
+                            });
+
+                            listNumDocVisa.add(value["data"]["documents_list"]
+                                [i]["number_of_document"]);
+                          }
+                        });
+                      }
+
+// Get List Vaccin
+                      nbrVaccin = value["data"][0]["vaccine"].length;
+                      vaccineMission.clear();
+                      for (var i = 0; i < listVaccin.length; i++) {
+                        _missionService.getVaccine(listVaccin[i]).then((value) {
+                          vaccineMission.add(value["data"]["name"]);
+
+                          var map = {};
+                          print("........." + value["data"].toString());
+                          map['idVaccin'] = value["data"]["_id"];
+
+                          map['name'] = value["data"]["name"];
+                          map['isChecked'] = false;
+                          VaccinList.add(map);
+                        });
+                      }
+
+//Get Cite
+                      _missionService
+                          .getCiteByCountry(missionIdCountry[0]["_id"])
+                          .then((value) {
+                        for (var i = 0; i < missionCiteDes.length; i++) {
+                          citeDesMission.removeLast();
+                        }
+                        setState(() {
+                          missionCiteDes = value["data"];
+                        });
+
+                        int i = 0;
+
+                        missionCiteDes.asMap().forEach((index, element) {
+                          i++;
+                          citeDesMission.add(
+                            DropdownMenuItem(
+                                child: Text("" + element["name"]),
+                                value: element),
+                          );
+                        });
+                      });
+
+//Get CityCap
+
+                      getCityCap = _missionService
+                          .getCityCapByCountry(missionIdCountry[0]["_id"])
+                          .then((value) {
+                        Mximum_rate_per_night =
+                            value["data"]["Mximum_rate_per_night"];
+                        //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
+                      });
+                    });
+
+                    //  print("Country !!!!  2 : " + missionIdCountry);
                   });
                 },
                 isExpanded: true,
@@ -921,124 +1030,36 @@ class _StepperWidgetState extends State<StepperWidget>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: countryMission,
-                value: pays_destination,
-                hint: "Destination country",
-                searchHint: "Select your Destination country ",
-                onChanged: (value) {
-                  setState(() async {
-                    pays_destination = value;
-
-                    getIdCountry = _missionService
-                        .getCountryNyName(value["name"])
-                        .then((value) {
-                      missionIdCountry = value["data"];
-
-//Get Visa
-                      visaId = missionIdCountry[0]["visa"];
-
-                      listVaccin = missionIdCountry[0]["vaccine"];
-
-                      listDocVisa.clear();
-                      listNumDocVisa.clear();
-
-                      if (visaId == null) {
-                        nbrDoc = 0;
-                      } else {
-                        getVisa =
-                            _missionService.getVisaById(visaId).then((value) {
-                          idVisa = value["data"]["_id"];
-
-                          missionVisa = value["data"]["name"];
-
-                          nbrDoc = value["data"]["documents_list"].length;
-                          for (var i = 0;
-                              i < value["data"]["documents_list"].length;
-                              i++) {
-                            var map = {};
-                            map['document'] = value["data"]["_id"];
-
-                            map['name'] =
-                                value["data"]["documents_list"][i]["document"];
-                            map['nbrDoc'] = value["data"]["documents_list"][i]
-                                ["number_of_document"];
-                            map['isChecked'] = false;
-                            VisaList.add(map);
-
-                            _missionService
-                                .getDocVisaById(value["data"]["documents_list"]
-                                    [i]["document"])
-                                .then((value) {
-                              listDocVisa.add(value["data"]["name"]);
-                              map['name'] = value["data"]["name"];
-                              map['document'] = value["data"]["_id"];
-                            });
-
-                            listNumDocVisa.add(value["data"]["documents_list"]
-                                [i]["number_of_document"]);
-                          }
-                        });
-                      }
-
-// Get List Vaccin
-                      nbrVaccin = value["data"][0]["vaccine"].length;
-                      vaccineMission.clear();
-                      for (var i = 0; i < listVaccin.length; i++) {
-                        _missionService.getVaccine(listVaccin[i]).then((value) {
-                          vaccineMission.add(value["data"]["name"]);
-
-                          var map = {};
-                          print("........." + value["data"].toString());
-                          map['idVaccin'] = value["data"]["_id"];
-
-                          map['name'] = value["data"]["name"];
-                          map['isChecked'] = false;
-                          VaccinList.add(map);
-                        });
-                      }
-
-//Get Cite
-                      _missionService
-                          .getCiteByCountry(missionIdCountry[0]["_id"])
-                          .then((value) {
-                        for (var i = 0; i < missionCiteDes.length; i++) {
-                          citeDesMission.removeLast();
-                        }
-                        setState(() {
-                          missionCiteDes = value["data"];
-                        });
-
-                        int i = 0;
-
-                        missionCiteDes.asMap().forEach((index, element) {
-                          i++;
-                          citeDesMission.add(
-                            DropdownMenuItem(
-                                child: Text("" + element["name"]),
-                                value: element),
-                          );
-                        });
-                      });
-
-//Get CityCap
-
-                      getCityCap = _missionService
-                          .getCityCapByCountry(missionIdCountry[0]["_id"])
-                          .then((value) {
-                        Mximum_rate_per_night =
-                            value["data"]["Mximum_rate_per_night"];
-                        //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
-                      });
-                    });
-
-                    //  print("Country !!!!  2 : " + missionIdCountry);
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 50,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Pays de destination :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Text(pays_destination["name"].toString(),
+                              style: TextStyle(color: Colors.black)),
+                        )
+                      ],
+                    ),
+                  ),
+                )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SearchChoices.single(
@@ -1221,6 +1242,14 @@ class _StepperWidgetState extends State<StepperWidget>
     );
   }
 
+  Widget _TransportWidgetNul() {
+    DateTime selectedDate = DateTime.now();
+
+    return SingleChildScrollView(
+      child: Form(key: _formKeys[2], child: Container()),
+    );
+  }
+
   Widget _AccomodationWidget() {
     return SingleChildScrollView(
       child: Form(
@@ -1325,6 +1354,14 @@ class _StepperWidgetState extends State<StepperWidget>
           ],
         ),
       ),
+    );
+  }
+
+  Widget _AccomodationWidgetNul() {
+    DateTime selectedDate = DateTime.now();
+
+    return SingleChildScrollView(
+      child: Form(key: _formKeys[3], child: Container()),
     );
   }
 

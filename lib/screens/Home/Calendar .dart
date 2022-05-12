@@ -983,18 +983,21 @@ class _ListReservationState extends State<ListReservation> {
             color: LightColors.LLviolet,
             startTimeZone: '',
             endTimeZone: '',
-            location: (element["request"]["mission"]["destinationCountryAller"]
-                            ["name"] !=
-                        null &&
-                    element["request"]["mission"]["destinationCountryAller"]
-                            ["name"] !=
-                        null)
-                ? element["request"]["mission"]["departureCountryAller"]
-                        ["name"] +
-                    " To " +
-                    element["request"]["mission"]["destinationCountryAller"]
-                        ["name"]
-                : "",
+            location:
+                element["request"]["mission"]["destinationCountryAller"] == null
+                    ? ""
+                    : (element["request"]["mission"]["destinationCountryAller"]
+                                    ["name"] !=
+                                null &&
+                            element["request"]["mission"]
+                                    ["destinationCountryAller"]["name"] !=
+                                null)
+                        ? element["request"]["mission"]["departureCountryAller"]
+                                ["name"] +
+                            " To " +
+                            element["request"]["mission"]
+                                ["destinationCountryAller"]["name"]
+                        : "",
             //      notes: element["idReciever"] ["firstname"] +" "+ element["idReciever"] ["lastname"],
             notes: element["_id"],
             isAllDay: true

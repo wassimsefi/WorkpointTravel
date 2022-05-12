@@ -34,7 +34,6 @@ class DetailRequestMission extends StatefulWidget {
       this.UserTonotif,
       this.StatusRequest,
       this.image,
-      this.commentUser,
       this.commentManager,
       this.mission,
       {Key key})
@@ -312,97 +311,40 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .circular(
                                                                           8)),
                                                     ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Row(
+                                                    child: widget.mission[
+                                                                "departureCountryAller"] ==
+                                                            null
+                                                        ? Center(
+                                                            child: Expanded(
+                                                              child: AutoSizeText(
+                                                                  "pas de deolacement",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black54,
+                                                                      fontSize:
+                                                                          10)),
+                                                            ),
+                                                          )
+                                                        : Column(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: <Widget>[
-                                                              Expanded(
-                                                                child: Row(
-                                                                  children: [
-                                                                    AutoSizeText(
-                                                                        widget.mission["departureCountryAller"]
-                                                                            [
-                                                                            "name"],
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black54,
-                                                                            fontSize: 16)),
-                                                                    AutoSizeText(
-                                                                        " ( " +
-                                                                            widget.mission["departureCityAller"][
-                                                                                "name"] +
-                                                                            " )",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black54,
-                                                                            fontSize: 14))
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 0,
-                                                              ),
-
-                                                              Icon(
-                                                                Icons
-                                                                    .compare_arrows,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
-
-                                                              Expanded(
-                                                                child: Row(
+                                                                    .center,
+                                                            children: [
+                                                              Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
-                                                                          .end,
-                                                                  children: [
-                                                                    AutoSizeText(
-                                                                        widget.mission["destinationCountryAller"]
-                                                                            [
-                                                                            "name"],
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black54,
-                                                                            fontSize: 16)),
-                                                                    AutoSizeText(
-                                                                        " ( " +
-                                                                            widget.mission["destinationCityAller"][
-                                                                                "name"] +
-                                                                            " )",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black54,
-                                                                            fontSize: 14))
-                                                                  ],
-                                                                ),
-                                                              ),
-
-                                                              //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                            ]),
-                                                        widget.mission[
-                                                                    "allerRetour"] ==
-                                                                true
-                                                            ? Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: <
-                                                                    Widget>[
+                                                                          .spaceBetween,
+                                                                  children: <
+                                                                      Widget>[
                                                                     Expanded(
                                                                       child:
                                                                           Row(
                                                                         children: [
                                                                           AutoSizeText(
-                                                                              widget.mission["departureCountryRetour"]["name"],
+                                                                              widget.mission["departureCountryAller"]["name"],
                                                                               style: TextStyle(color: Colors.black54, fontSize: 16)),
                                                                           AutoSizeText(
-                                                                              " ( " + widget.mission["departureCityRetour"]["name"] + " )",
+                                                                              " ( " + widget.mission["departureCityAller"]["name"] + " )",
                                                                               style: TextStyle(color: Colors.black54, fontSize: 14))
                                                                         ],
                                                                       ),
@@ -425,20 +367,62 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                             MainAxisAlignment.end,
                                                                         children: [
                                                                           AutoSizeText(
-                                                                              widget.mission["destinationCountryRetour"]["name"],
+                                                                              widget.mission["destinationCountryAller"]["name"],
                                                                               style: TextStyle(color: Colors.black54, fontSize: 16)),
                                                                           AutoSizeText(
-                                                                              " ( " + widget.mission["destinationCityRetour"]["name"] + " )",
+                                                                              " ( " + widget.mission["destinationCityAller"]["name"] + " )",
                                                                               style: TextStyle(color: Colors.black54, fontSize: 14))
                                                                         ],
                                                                       ),
                                                                     ),
 
                                                                     //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                                  ])
-                                                            : Container(),
-                                                      ],
-                                                    ),
+                                                                  ]),
+                                                              widget.mission[
+                                                                          "allerRetour"] ==
+                                                                      true
+                                                                  ? Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: <
+                                                                          Widget>[
+                                                                          Expanded(
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                AutoSizeText(widget.mission["departureCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 16)),
+                                                                                AutoSizeText(" ( " + widget.mission["departureCityRetour"]["name"] + " )", style: TextStyle(color: Colors.black54, fontSize: 14))
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                0,
+                                                                          ),
+
+                                                                          Icon(
+                                                                            Icons.compare_arrows,
+                                                                            color:
+                                                                                Colors.black,
+                                                                          ),
+
+                                                                          Expanded(
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              children: [
+                                                                                AutoSizeText(widget.mission["destinationCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 16)),
+                                                                                AutoSizeText(" ( " + widget.mission["destinationCityRetour"]["name"] + " )", style: TextStyle(color: Colors.black54, fontSize: 14))
+                                                                              ],
+                                                                            ),
+                                                                          ),
+
+                                                                          //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
+                                                                        ])
+                                                                  : Container(),
+                                                            ],
+                                                          ),
                                                   ),
                                                 )),
                                             Padding(
@@ -731,7 +715,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                   right: 10),
                                                           child: Text(
                                                               widget.mission[
-                                                                  "hotel"],
+                                                                      "hotel"]
+                                                                  .toString(),
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .black)),
@@ -980,20 +965,38 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                     .black54),
                                                           ),
                                                         ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  right: 10),
-                                                          child: Text(
-                                                              widget.mission[
-                                                                      "visa"]
-                                                                      ["name"]
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
-                                                        )
+                                                        widget.mission[
+                                                                    "visa"] ==
+                                                                null
+                                                            ? Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        right:
+                                                                            10),
+                                                                child: Text(
+                                                                    "null",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black)),
+                                                              )
+                                                            : Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        right:
+                                                                            10),
+                                                                child: Text(
+                                                                    widget
+                                                                        .mission[
+                                                                            "visa"]
+                                                                            [
+                                                                            "name"]
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black)),
+                                                              )
                                                       ],
                                                     ),
                                                   ),
