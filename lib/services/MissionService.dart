@@ -96,6 +96,38 @@ class MissionService {
     return response.data;
   }
 
+  Future<dynamic> getCountry(id) async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/Country/search/" + id,
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response Country" + response.data.toString());
+
+    return response.data;
+  }
+
+  Future<dynamic> getPerdiem(region, formulat, grade) async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(
+        link.linkw +
+            "/api/PerDiemPolicy/getperdiem/" +
+            region +
+            "/" +
+            formulat +
+            "/" +
+            grade +
+            "/",
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response Country" + response.data.toString());
+
+    return response.data;
+  }
+
   Future<dynamic> getCountryNyName(pays) async {
     //final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/Country/getId/" + pays,
