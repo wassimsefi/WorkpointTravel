@@ -66,14 +66,16 @@ class _StepperWidgetState extends State<StepperWidget>
   String city;
   String code;
   String visa;
-  String comment;
+  String expensesComment;
+  String transportationComment;
+
   String labeDateMission;
   String labeDatePasseport;
 
   dynamic object;
   dynamic formula;
 
-  dynamic amount;
+  String amount;
   dynamic perdiem;
   final List<DropdownMenuItem> manager = [];
 
@@ -117,7 +119,7 @@ class _StepperWidgetState extends State<StepperWidget>
   final List<DropdownMenuItem> citeMission = [];
 
   Future<dynamic> getCityCap;
-  dynamic Mximum_rate_per_night = 0;
+  dynamic Mximum_rate_per_night;
 
   Future<dynamic> getCiteRetour;
   List<dynamic> missionCiteRetour = [];
@@ -209,23 +211,30 @@ class _StepperWidgetState extends State<StepperWidget>
         missions.title = title;
         missions.MissionFormula = formula["_id"];
         missions.MissionObjet = object["_id"];
+
         missions.manager = selectedValueManger["_id"];
         missions.partner = selectedValuePartner["_id"];
         missions.dateDebut = StartDate;
         missions.dateFinal = EndDate;
         if (peridemObject == null) {
-          missions.perdiem = " No perdiem";
+          missions.perdiem = null;
         } else {
-          missions.perdiem = peridemObject[0]["indemnity"].toString();
+          missions.perdiem = peridemObject[0]["_id"];
         }
-        missions.amount = double.parse(amount);
-        missions.comment = comment;
+        missions.amount = amount;
+        missions.expensesComment = expensesComment;
+        missions.transportationComment = transportationComment;
+
         missions.needTransport = testTransport;
         missions.allerRetour = round_trip;
 
+        print("testAccomdation" + testAccomdation.toString());
+        print("testTransport" + testTransport.toString());
+        print("round_trip" + testAccomdation.toString());
+
         if (testAccomdation == true) {
           missions.hotel = hotelPreference;
-          missions.rateHotelMax = Mximum_rate_per_night;
+          missions.rateHotelMax = Mximum_rate_per_night["_id"];
           missions.altitude = altitudeHotel;
           missions.longitude = longitudeHotel;
         }
@@ -262,6 +271,7 @@ class _StepperWidgetState extends State<StepperWidget>
         Requests request = new Requests();
         request.idSender = User_id;
         request.idReciever = selectedValueManger["_id"];
+        print("********" + nbrDoc.toString());
 
         _missionService.addMission(missions, tokenLogin).then((value) async {
           print("okay !!!!");
@@ -347,9 +357,9 @@ class _StepperWidgetState extends State<StepperWidget>
         print("tatattata : " + tabController.index.toString());
 
         if (tabController.index == 0) {
-          round_trip = true;
-        } else {
           round_trip = false;
+        } else {
+          round_trip = true;
         }
       }
     }
@@ -700,7 +710,7 @@ class _StepperWidgetState extends State<StepperWidget>
 
                           var map = {};
                           print("........." + value["data"].toString());
-                          map['idVaccin'] = value["data"]["_id"];
+                          map['idVaccine'] = value["data"]["_id"];
 
                           map['name'] = value["data"]["name"];
                           map['isChecked'] = false;
@@ -747,8 +757,7 @@ class _StepperWidgetState extends State<StepperWidget>
                       getCityCap = _missionService
                           .getCityCapByCountry(missionIdCountry[0]["_id"])
                           .then((value) {
-                        Mximum_rate_per_night =
-                            value["data"]["Mximum_rate_per_night"];
+                        Mximum_rate_per_night = value["data"];
                         //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
                       });
                     });
@@ -800,8 +809,10 @@ class _StepperWidgetState extends State<StepperWidget>
                 onChanged: (value) {
                   setState(() {
                     formula = value;
-                    print("-----------" + formula.toString());
-                    testTransport = value["needTransport"];
+                    print("-----------" +
+                        value["needTransportation"].toString() +
+                        value["needAccomdation"].toString());
+                    testTransport = value["needTransportation"];
                     testAccomdation = value["needAccomdation"];
                   });
                 },
@@ -909,6 +920,126 @@ class _StepperWidgetState extends State<StepperWidget>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Container(
+                padding: EdgeInsets.all(10),
+                height: 350,
+                child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: 1,
+
+                      //shape: NeumorphicShape.convex,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.all(Radius.elliptical(20, 20))),
+                    ),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Expenses ",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: Container(
+                                height: 50,
+                                // color: Colors.grey[200],
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                    //     shape: NeumorphicShape.flat,
+                                    color: NeumorphicColors.background,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(8)),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "Applicable perdiem :",
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0.8, left: 12, right: 10),
+                                        child: peridemObject == null
+                                            ? Text("No Perdiem")
+                                            : Text("" +
+                                                peridemObject[0]["indemnity"]
+                                                    .toString()),
+                                        //  child: Text("Your Perdiem : "),
+                                      ),
+                                      /*  Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text("eeeee",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )*/
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: Container(
+                                height: 100,
+                                // color: Colors.grey[200],
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                    //     shape: NeumorphicShape.flat,
+                                    color: NeumorphicColors.background,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(8)),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "Applicable perdiem :",
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField(
+                                          initialValue: amount,
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          onChanged: (val) => amount = val,
+                                          decoration: InputDecoration(
+                                            labelText: '  Amount ',
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                        ),
+                                      ),
+                                      /*  Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text("eeeee",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )*/
+                                    ],
+                                  ),
+                                ),
+                              )),
+                        ]))),
             Padding(
               padding: const EdgeInsets.only(top: 0.8, left: 12),
               child: peridemObject == null
@@ -924,9 +1055,7 @@ class _StepperWidgetState extends State<StepperWidget>
               child: TextFormField(
                 initialValue: amount,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (val) => val.isEmpty ? 'Entrez amount' : null,
                 onChanged: (val) => amount = val,
-                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: '  Amount ',
                   hintStyle: TextStyle(color: Colors.grey),
@@ -936,6 +1065,7 @@ class _StepperWidgetState extends State<StepperWidget>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                initialValue: expensesComment,
                 minLines: 2,
                 maxLines: 5,
                 keyboardType: TextInputType.multiline,
@@ -943,7 +1073,7 @@ class _StepperWidgetState extends State<StepperWidget>
                   labelText: 'Comment expense',
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
-                onChanged: (val) => comment = val,
+                onChanged: (val) => expensesComment = val,
               ),
             ),
           ],
@@ -987,6 +1117,7 @@ class _StepperWidgetState extends State<StepperWidget>
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             //   SizedBox(height: 50),
+
             Container(
               // height: 50,
               width: MediaQuery.of(context).size.height,
@@ -1010,10 +1141,10 @@ class _StepperWidgetState extends State<StepperWidget>
                       controller: tabController,
                       tabs: [
                         Tab(
-                          text: 'Round trip',
+                          text: 'One way',
                         ),
                         Tab(
-                          text: 'One way',
+                          text: 'Round trip',
                         ),
                       ],
                     ),
@@ -1025,8 +1156,8 @@ class _StepperWidgetState extends State<StepperWidget>
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  _TansportWidget2(),
                   _TansportWidget1(),
+                  _TansportWidget2(),
                 ],
               ),
             )
@@ -1058,7 +1189,7 @@ class _StepperWidgetState extends State<StepperWidget>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            /*   Padding(
+            /* Padding(
               padding: const EdgeInsets.all(8.0),
               child: SearchChoices.single(
                 items: hotelMission,
@@ -1074,7 +1205,7 @@ class _StepperWidgetState extends State<StepperWidget>
               ),
             ),*/
 
-            Padding(
+            /*     Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text("Select Preference Hotel :"),
             ),
@@ -1119,12 +1250,14 @@ class _StepperWidgetState extends State<StepperWidget>
               padding: const EdgeInsets.all(8.0),
               child: Center(child: Text("" + hotelPreference)),
             ),
-            /*     Padding(
+       */
+
+            Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 initialValue: hotelPreference,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (val) => val.isEmpty ? 'Entrez titel' : null,
+                //  autovalidateMode: AutovalidateMode.onUserInteraction,
+// validator: (val) => val.isEmpty ? 'Entrez titel' : null,
                 onChanged: (val) => hotelPreference = val,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
@@ -1133,11 +1266,10 @@ class _StepperWidgetState extends State<StepperWidget>
                 ),
               ),
             ),
-       */
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 12),
               child: Text("Mximum rate per night : " +
-                  Mximum_rate_per_night.toString()),
+                  Mximum_rate_per_night["Mximum_rate_per_night"].toString()),
             ),
             SizedBox(height: 10),
             Padding(
@@ -1761,6 +1893,21 @@ class _StepperWidgetState extends State<StepperWidget>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              initialValue: transportationComment,
+              minLines: 2,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                labelText: 'Comment transportation',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              onChanged: (val) => transportationComment = val,
+            ),
+          ),
+          SizedBox(height: 10),
           Text("Aller : "),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -2005,6 +2152,21 @@ class _StepperWidgetState extends State<StepperWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              initialValue: transportationComment,
+              minLines: 2,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                labelText: 'Comment transportation',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              onChanged: (val) => transportationComment = val,
+            ),
+          ),
           SizedBox(height: 10),
           Text("Aller : "),
           Padding(

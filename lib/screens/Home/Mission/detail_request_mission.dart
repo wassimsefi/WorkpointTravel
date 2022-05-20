@@ -246,15 +246,14 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                              widget.mission["dateDebut"],
+                                              widget.mission["startDate"],
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 13)),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                              widget.mission["dateFinal"],
+                                          child: Text(widget.mission["endDate"],
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 13)),
@@ -267,7 +266,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                               ),
                               Container(
                                   padding: EdgeInsets.all(10),
-                                  height: 270,
+                                  height: 350,
                                   child: Neumorphic(
                                       style: NeumorphicStyle(
                                         depth: 1,
@@ -312,8 +311,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                           8)),
                                                     ),
                                                     child: widget.mission[
-                                                                "departureCountryAller"] ==
-                                                            null
+                                                                "needTransportation"] ==
+                                                            false
                                                         ? Center(
                                                             child: Expanded(
                                                               child: AutoSizeText(
@@ -341,10 +340,10 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                           Row(
                                                                         children: [
                                                                           AutoSizeText(
-                                                                              widget.mission["departureCountryAller"]["name"],
+                                                                              widget.mission["onewayDepartureCountry"]["name"],
                                                                               style: TextStyle(color: Colors.black54, fontSize: 16)),
                                                                           AutoSizeText(
-                                                                              " ( " + widget.mission["departureCityAller"]["name"] + " )",
+                                                                              " ( " + widget.mission["onewayDepartureCity"]["name"] + " )",
                                                                               style: TextStyle(color: Colors.black54, fontSize: 14))
                                                                         ],
                                                                       ),
@@ -367,10 +366,10 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                             MainAxisAlignment.end,
                                                                         children: [
                                                                           AutoSizeText(
-                                                                              widget.mission["destinationCountryAller"]["name"],
+                                                                              widget.mission["onewayDestinationCountry"]["name"],
                                                                               style: TextStyle(color: Colors.black54, fontSize: 16)),
                                                                           AutoSizeText(
-                                                                              " ( " + widget.mission["destinationCityAller"]["name"] + " )",
+                                                                              " ( " + widget.mission["onewayDestinationCity"]["name"] + " )",
                                                                               style: TextStyle(color: Colors.black54, fontSize: 14))
                                                                         ],
                                                                       ),
@@ -379,7 +378,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                     //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
                                                                   ]),
                                                               widget.mission[
-                                                                          "allerRetour"] ==
+                                                                          "roundTrip"] ==
                                                                       true
                                                                   ? Row(
                                                                       mainAxisAlignment:
@@ -391,8 +390,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                             child:
                                                                                 Row(
                                                                               children: [
-                                                                                AutoSizeText(widget.mission["departureCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 16)),
-                                                                                AutoSizeText(" ( " + widget.mission["departureCityRetour"]["name"] + " )", style: TextStyle(color: Colors.black54, fontSize: 14))
+                                                                                AutoSizeText(widget.mission["returnDepartureCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 16)),
+                                                                                AutoSizeText(" ( " + widget.mission["returnDepartureCity"]["name"] + " )", style: TextStyle(color: Colors.black54, fontSize: 14))
                                                                               ],
                                                                             ),
                                                                           ),
@@ -412,8 +411,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                                 Row(
                                                                               mainAxisAlignment: MainAxisAlignment.end,
                                                                               children: [
-                                                                                AutoSizeText(widget.mission["destinationCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 16)),
-                                                                                AutoSizeText(" ( " + widget.mission["destinationCityRetour"]["name"] + " )", style: TextStyle(color: Colors.black54, fontSize: 14))
+                                                                                AutoSizeText(widget.mission["returnDestinationCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 16)),
+                                                                                AutoSizeText(" ( " + widget.mission["returnDestinationCity"]["name"] + " )", style: TextStyle(color: Colors.black54, fontSize: 14))
                                                                               ],
                                                                             ),
                                                                           ),
@@ -533,6 +532,59 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     ),
                                                   ),
                                                 )),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 0),
+                                                child: Container(
+                                                  height: 50,
+                                                  // color: Colors.grey[200],
+                                                  child: Neumorphic(
+                                                    style: NeumorphicStyle(
+                                                      //     shape: NeumorphicShape.flat,
+                                                      color: NeumorphicColors
+                                                          .background,
+                                                      boxShape:
+                                                          NeumorphicBoxShape
+                                                              .roundRect(
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
+                                                          child: Text(
+                                                            "transportation Comment :",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black54),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
+                                                          child: Text(
+                                                              widget.mission[
+                                                                      "transportationComment"]
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
                                           ]))),
                               SizedBox(
                                 height: 5,
@@ -605,13 +657,24 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                               const EdgeInsets
                                                                       .only(
                                                                   right: 10),
-                                                          child: Text(
-                                                              widget.mission[
-                                                                      "perdiem"]
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
+                                                          child: widget.mission[
+                                                                      "perdiem"] ==
+                                                                  null
+                                                              ? Text(
+                                                                  "No perdieme",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black))
+                                                              : Text(
+                                                                  widget
+                                                                      .mission[
+                                                                          "perdiem"]
+                                                                          [
+                                                                          "indemnity"]
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black)),
                                                         )
                                                       ],
                                                     ),
@@ -660,10 +723,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                   right: 10),
                                                           child: Text(
                                                               widget.mission[
-                                                                          "amount"]
-                                                                      [
-                                                                      "\$numberDecimal"] +
-                                                                  " \$",
+                                                                      "extraExpenses"]
+                                                                  .toString(),
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .black)),
@@ -715,7 +776,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                   right: 10),
                                                           child: Text(
                                                               widget.mission[
-                                                                      "hotel"]
+                                                                      "accomodationComment"]
                                                                   .toString(),
                                                               style: TextStyle(
                                                                   color: Colors
@@ -766,13 +827,24 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                               const EdgeInsets
                                                                       .only(
                                                                   right: 10),
-                                                          child: Text(
-                                                              widget.mission[
-                                                                      "rateHotelMax"]
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
+                                                          child: widget.mission[
+                                                                      "cityCap"] ==
+                                                                  null
+                                                              ? Text(
+                                                                  "No CityCap",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black))
+                                                              : Text(
+                                                                  widget
+                                                                      .mission[
+                                                                          "cityCap"]
+                                                                          [
+                                                                          "Mximum_rate_per_night"]
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black)),
                                                         )
                                                       ],
                                                     ),
@@ -831,7 +903,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                               child: Text(
                                                                   widget
                                                                       .mission[
-                                                                          "comment"]
+                                                                          "expensesComment"]
                                                                       .toString(),
                                                                   style: TextStyle(
                                                                       color: Colors
@@ -1045,7 +1117,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                             Container(
                                                               height: widget
                                                                           .mission[
-                                                                              "documents_visa"]
+                                                                              "visaDocuments"]
                                                                           .length *
                                                                       20.0 +
                                                                   35,
@@ -1064,7 +1136,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       scrollDirection: Axis.vertical,
                                                                       //shrinkWrap: true,
                                                                       padding: EdgeInsets.only(top: 5.0),
-                                                                      itemCount: widget.mission["documents_visa"].length,
+                                                                      itemCount: widget.mission["visaDocuments"].length,
                                                                       itemBuilder: (context, s) {
                                                                         return Container(
                                                                           padding:
@@ -1074,12 +1146,12 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                             mainAxisAlignment:
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             children: [
-                                                                              Text(widget.mission["documents_visa"][s]["nbrDoc"].toString() + " " + widget.mission["documents_visa"][s]["name"].toString(),
+                                                                              Text(widget.mission["visaDocuments"][s]["nbrDoc"].toString() + " " + widget.mission["visaDocuments"][s]["name"].toString(),
                                                                                   textAlign: TextAlign.center,
                                                                                   style: TextStyle(
                                                                                     color: Colors.black,
                                                                                   )),
-                                                                              widget.mission["documents_visa"][s]["isChecked"] == true
+                                                                              widget.mission["visaDocuments"][s]["isChecked"] == true
                                                                                   ? Icon(
                                                                                       Icons.check,
                                                                                       color: Colors.green,
@@ -1146,7 +1218,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                             Container(
                                                               height: widget
                                                                           .mission[
-                                                                              "vaccin"]
+                                                                              "vaccines"]
                                                                           .length *
                                                                       20.0 +
                                                                   35,
@@ -1165,7 +1237,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       scrollDirection: Axis.vertical,
                                                                       //shrinkWrap: true,
                                                                       padding: EdgeInsets.only(top: 5.0),
-                                                                      itemCount: widget.mission["vaccin"].length,
+                                                                      itemCount: widget.mission["vaccines"].length,
                                                                       itemBuilder: (context, s) {
                                                                         return Container(
                                                                           padding:
@@ -1175,12 +1247,12 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                             mainAxisAlignment:
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             children: [
-                                                                              Text(widget.mission["vaccin"][s]["name"].toString(),
+                                                                              Text(widget.mission["vaccines"][s]["name"].toString(),
                                                                                   textAlign: TextAlign.center,
                                                                                   style: TextStyle(
                                                                                     color: Colors.black,
                                                                                   )),
-                                                                              widget.mission["vaccin"][s]["isChecked"] == true
+                                                                              widget.mission["vaccines"][s]["isChecked"] == true
                                                                                   ? Icon(
                                                                                       Icons.check,
                                                                                       color: Colors.green,
@@ -1631,18 +1703,20 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
             color: LightColors.LLviolet,
             startTimeZone: '',
             endTimeZone: '',
-            location: (element["request"]["mission"]["destinationCountryAller"]
-                            ["name"] !=
-                        null &&
-                    element["request"]["mission"]["destinationCountryAller"]
-                            ["name"] !=
-                        null)
-                ? element["request"]["mission"]["departureCountryAller"]
-                        ["name"] +
-                    " To " +
-                    element["request"]["mission"]["destinationCountryAller"]
-                        ["name"]
-                : "",
+            location: widget.mission["needTransportation"] == true
+                ? (element["request"]["mission"]["onewayDepartureCountry"]
+                                ["name"] !=
+                            null &&
+                        element["request"]["mission"]
+                                ["onewayDestinationCountry"]["name"] !=
+                            null)
+                    ? element["request"]["mission"]["onewayDepartureCountry"]
+                            ["name"] +
+                        " To " +
+                        element["request"]["mission"]
+                            ["onewayDestinationCountry"]["name"]
+                    : ""
+                : "Pas de Deplacemment",
             //      notes: element["idReciever"] ["firstname"] +" "+ element["idReciever"] ["lastname"],
             notes: element["_id"],
             isAllDay: true

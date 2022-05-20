@@ -4,11 +4,15 @@ class Missions {
   String MissionObjet;
   String partner;
   String manager;
+  String user;
+
   String dateDebut;
   String dateFinal;
   String perdiem;
-  double amount;
-  String comment;
+  String amount;
+  String expensesComment;
+  String transportationComment;
+
   bool needTransport;
   bool allerRetour;
   String departureCountryAller;
@@ -16,7 +20,7 @@ class Missions {
   String destinationCountryAller;
   String destinationCityAller;
   String hotel;
-  int rateHotelMax;
+  String rateHotelMax;
   double longitude;
   double altitude;
   String validtePassport;
@@ -36,30 +40,31 @@ class Missions {
         MissionObjet = map["MissionObjet"],
         partner = map["partner"],
         manager = map["manager"],
-        dateDebut = map["dateDebut"],
-        dateFinal = map["dateFinal"],
+        dateDebut = map["startDate"],
+        dateFinal = map["endDate"],
         perdiem = map["perdiem"],
-        amount = map["amount"],
-        comment = map["comment"],
-        needTransport = map["needTransport"],
-        allerRetour = map["allerRetour"],
-        departureCountryAller = map["departureCountryAller"],
-        departureCityAller = map["departureCityAller"],
-        destinationCountryAller = map["destinationCountryAller"],
-        destinationCityAller = map["destinationCityAller"],
-        hotel = map["hotel"],
-        rateHotelMax = map["rateHotelMax"],
+        amount = map["extraExpenses"],
+        expensesComment = map["expensesComment"],
+        transportationComment = map["transportationComment"],
+        needTransport = map["needTransportation"],
+        allerRetour = map["roundTrip"],
+        departureCountryAller = map["onewayDepartureCountry"],
+        departureCityAller = map["onewayDepartureCity"],
+        destinationCountryAller = map["onewayDestinationCountry"],
+        destinationCityAller = map["onewayDestinationCity"],
+        hotel = map["transportationComment"],
+        rateHotelMax = map["cityCap"],
         longitude = map["longitude"],
-        altitude = map["rateHotelMax"],
+        altitude = map["altitude"],
         validtePassport = map["validtePassport"],
         visa = map["visa"],
-        obtenirVisa = map["obtenirVisa"],
-        documents_visa = map["documents_visa"],
-        vaccin = map["vaccin"],
-        destinationCityRetour = map["destinationCityRetour"],
-        destinationCountryRetour = map["destinationCountryRetour"],
-        departureCityRetour = map["departureCityRetour"],
-        departureCountryRetour = map["departureCountryRetour"];
+        obtenirVisa = map["getVisa"],
+        documents_visa = map["visaDocuments"],
+        vaccin = map["vaccines"],
+        destinationCityRetour = map["returnDestinationCity"],
+        destinationCountryRetour = map["returnDestinationCountry"],
+        departureCityRetour = map["returnDepartureCity"],
+        departureCountryRetour = map["returnDepartureCountry"];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -68,34 +73,36 @@ class Missions {
     data["MissionObjet"] = MissionObjet;
     data["partner"] = partner;
     data["manager"] = manager;
-    data["dateDebut"] = dateDebut;
-    data["dateFinal"] = dateFinal;
+    data["startDate"] = dateDebut;
+    data["endDate"] = dateFinal;
     data["perdiem"] = perdiem;
-    data["amount"] = amount;
-    data["comment"] = comment;
-    data["needTransport"] = needTransport;
-    data["allerRetour"] = allerRetour;
-    data["departureCountryAller"] = departureCountryAller;
-    data["departureCityAller"] = departureCityAller;
-    data["destinationCountryAller"] = destinationCountryAller;
-    data["destinationCityAller"] = destinationCityAller;
+    data["extraExpenses"] = amount;
+    data["expensesComment"] = expensesComment;
+    data["transportationComment"] = transportationComment;
 
-    data["hotel"] = hotel;
-    data["rateHotelMax"] = rateHotelMax;
+    data["needTransportation"] = needTransport;
+    data["roundTrip"] = allerRetour;
+    data["onewayDepartureCountry"] = departureCountryAller;
+    data["onewayDepartureCity"] = departureCityAller;
+    data["onewayDestinationCountry"] = destinationCountryAller;
+    data["onewayDestinationCity"] = destinationCityAller;
+
+    data["accomodationComment"] = hotel;
+    data["cityCap"] = rateHotelMax;
     data["longitude"] = longitude;
     data["altitude"] = altitude;
     data["validtePassport"] = validtePassport;
     data["visa"] = visa;
-    data["obtenirVisa"] = obtenirVisa;
-    data["documents_visa"] = documents_visa;
-    data["vaccin"] = vaccin;
-    data["destinationCityRetour"] = destinationCityRetour;
+    data["getVisa"] = obtenirVisa;
+    data["visaDocuments"] = documents_visa;
+    data["vaccines"] = vaccin;
+    data["returnDestinationCity"] = destinationCityRetour;
 
-    data["destinationCountryRetour"] = destinationCountryRetour;
+    data["returnDestinationCountry"] = destinationCountryRetour;
 
-    data["departureCityRetour"] = departureCityRetour;
+    data["returnDepartureCity"] = departureCityRetour;
 
-    data["departureCountryRetour"] = departureCountryRetour;
+    data["returnDepartureCountry"] = departureCountryRetour;
     return data;
   }
 

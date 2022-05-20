@@ -112,6 +112,7 @@ class _MyrequestsState extends State<Myrequests> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: LightColors.kDarkBlue,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,13 +366,13 @@ class _MyrequestsState extends State<Myrequests> {
                                                                           ? Column(
                                                                               children: [
                                                                                 Center(
-                                                                                  child: filtred[x]["mission"]["departureCountryAller"] == null
+                                                                                  child: filtred[x]["mission"]["onewayDepartureCountry"] == null
                                                                                       ? Expanded(
                                                                                           child: AutoSizeText("pas de deolacement", style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                         )
                                                                                       : Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
                                                                                           Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["onewayDepartureCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                           ),
                                                                                           SizedBox(
                                                                                             width: 0,
@@ -385,17 +386,17 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                             width: 2,
                                                                                           ),
                                                                                           Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["destinationCountryAller"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["onewayDestinationCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                           ),
 
                                                                                           //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
                                                                                         ]),
                                                                                 ),
-                                                                                filtred[x]["mission"]["allerRetour"] == true
+                                                                                filtred[x]["mission"]["roundTrip"] == true
                                                                                     ? Center(
                                                                                         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
                                                                                           Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["departureCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["returnDepartureCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                           ),
                                                                                           SizedBox(
                                                                                             width: 0,
@@ -409,7 +410,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                             width: 2,
                                                                                           ),
                                                                                           Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["destinationCountryRetour"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
+                                                                                            child: AutoSizeText(filtred[x]["mission"]["returnDestinationCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                           ),
 
                                                                                           //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
@@ -633,11 +634,11 @@ class _MyrequestsState extends State<Myrequests> {
                                                                           ? Column(
                                                                               children: [
                                                                                 Text(
-                                                                                  new DateFormat('yyyy-MM-dd').format(DateTime.tryParse(filtred[x]["mission"]["dateDebut"])).toString(),
+                                                                                  new DateFormat('yyyy-MM-dd').format(DateTime.tryParse(filtred[x]["mission"]["startDate"])).toString(),
                                                                                   style: TextStyle(color: Colors.black54, fontSize: 12),
                                                                                 ),
                                                                                 Text(
-                                                                                  new DateFormat('yyyy-MM-dd').format(DateTime.tryParse(filtred[x]["mission"]["dateFinal"])).toString(),
+                                                                                  new DateFormat('yyyy-MM-dd').format(DateTime.tryParse(filtred[x]["mission"]["endDate"])).toString(),
                                                                                   style: TextStyle(color: Colors.black54, fontSize: 12),
                                                                                 ),
                                                                               ],
