@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart' as http;
@@ -48,7 +50,7 @@ class _StepperWidgetState extends State<StepperWidget>
   int _currentStep = 0;
   String title;
   String hotelPreference = "";
-
+  ScrollController _ScrollController;
   String email;
   String category;
   String type;
@@ -84,10 +86,13 @@ class _StepperWidgetState extends State<StepperWidget>
   dynamic pays_destination;
   dynamic city_destination;
 
-  dynamic pays_depart_retour;
-  dynamic city_depart_retour;
-  dynamic pays_destination_retour;
-  dynamic city_destination_retour;
+  dynamic departure_country;
+  dynamic departure_city;
+  dynamic destination_country;
+  dynamic destination_city;
+
+  dynamic pays_mission;
+  dynamic city_mission;
 
   dynamic vaccin;
   dynamic hotel;
@@ -118,6 +123,10 @@ class _StepperWidgetState extends State<StepperWidget>
   List<dynamic> missionCite = [];
   final List<DropdownMenuItem> citeMission = [];
 
+  Future<dynamic> getCiteMission;
+  List<dynamic> listMissionCite = [];
+  final List<DropdownMenuItem> listCiteMission = [];
+
   Future<dynamic> getCityCap;
   dynamic Mximum_rate_per_night;
 
@@ -133,6 +142,10 @@ class _StepperWidgetState extends State<StepperWidget>
   List<dynamic> missionCiteDesRetour = [];
 
   final List<DropdownMenuItem> citeDesMissionRetour = [];
+
+  final List<DropdownMenuItem> citeListMission = [];
+
+  List<dynamic> missionListCite = [];
 
   dynamic visaId;
   Future<dynamic> getVisa;
@@ -171,11 +184,10 @@ class _StepperWidgetState extends State<StepperWidget>
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
   ];
 
   TabController _tabController;
+  int _selectedIndex = 0;
 
   String tokenLogin;
   String User_id;
@@ -221,12 +233,14 @@ class _StepperWidgetState extends State<StepperWidget>
         } else {
           missions.perdiem = peridemObject[0]["_id"];
         }
-        missions.amount = amount;
+        missions.amount = double.parse(amount);
         missions.expensesComment = expensesComment;
         missions.transportationComment = transportationComment;
 
         missions.needTransport = testTransport;
         missions.allerRetour = round_trip;
+        missions.missionCountry = pays_mission["_id"];
+        missions.missionCity = city_mission["_id"];
 
         print("testAccomdation" + testAccomdation.toString());
         print("testTransport" + testTransport.toString());
@@ -239,22 +253,32 @@ class _StepperWidgetState extends State<StepperWidget>
           missions.longitude = longitudeHotel;
         }
         if (testTransport == true) {
-          missions.departureCountryAller = pays_depart["_id"];
+          /*  missions.departureCountryAller = pays_depart["_id"];
           missions.departureCityAller = city_depart["_id"];
           missions.destinationCountryAller = pays_destination["_id"];
-          missions.destinationCityAller = city_destination["_id"];
+          missions.destinationCityAller = city_destination["_id"];*/
 
-          if (round_trip == true) {
+          missions.departureCountryAller = departure_country["_id"];
+          missions.departureCityAller = departure_city["_id"];
+          missions.destinationCountryAller = destination_country["_id"];
+          missions.destinationCityAller = destination_city["_id"];
+          if (tabController.index == 0) {
+            round_trip = true;
+          } else {
+            round_trip = false;
+          }
+
+          /*  if (round_trip == true) {
             missions.departureCountryRetour = pays_destination["_id"];
             missions.departureCityRetour = city_depart["_id"];
             missions.destinationCountryRetour = pays_destination_retour["_id"];
             missions.destinationCityRetour = city_destination_retour["_id"];
-          }
+          }*/
         }
         missions.validtePassport = " 2058-28-02";
         missions.visa = idVisa;
         missions.obtenirVisa = visaB;
-        print("***********" + nbrDoc.toString());
+
         /* for (var i = 0; i < nbrDoc; i++) {
           print("***" + VisaList[i].toString());
           missions.documents_visa[i] = VisaList[i];
@@ -332,6 +356,13 @@ class _StepperWidgetState extends State<StepperWidget>
       setState(() {});
 
       print("***********_currentStep************" + _currentStep.toString());
+      if (_selectedIndex == 0) {
+        round_trip = true;
+      } else {
+        round_trip = false;
+      }
+      print("*****round_trip******" + round_trip.toString());
+
       if (_currentStep == 1) {
         setState(() {
           print("payyyyyyy :" + regionId.toString());
@@ -353,15 +384,6 @@ class _StepperWidgetState extends State<StepperWidget>
           }
         });
       }
-      if (_currentStep == 3) {
-        print("tatattata : " + tabController.index.toString());
-
-        if (tabController.index == 0) {
-          round_trip = false;
-        } else {
-          round_trip = true;
-        }
-      }
     }
   }
 
@@ -379,7 +401,8 @@ class _StepperWidgetState extends State<StepperWidget>
             state: _currentStep <= 0 ? StepState.editing : StepState.complete,
             isActive: _currentStep >= 0,
             title: _currentStep == 0
-                ? const Text("Informations", style: TextStyle(fontSize: 14))
+                ? const Text("General Information",
+                    style: TextStyle(fontSize: 14))
                 : Text(""),
             content: _informationWidget()),
         Step(
@@ -387,13 +410,13 @@ class _StepperWidgetState extends State<StepperWidget>
           isActive: _currentStep >= 1,
           title: _currentStep == 1
               ? const Text(
-                  "Expenses",
+                  "Details",
                   style: TextStyle(fontSize: 14),
                 )
               : Text(""),
           content: _expensesWidget(),
         ),
-        Step(
+        /*   Step(
           state: _currentStep <= 2 ? StepState.editing : StepState.complete,
           isActive: _currentStep >= 2,
           title: _currentStep == 2
@@ -412,12 +435,12 @@ class _StepperWidgetState extends State<StepperWidget>
           content: testAccomdation == true
               ? _AccomodationWidget()
               : _AccomodationWidgetNul(),
-        ),
+        ),*/
         Step(
-          state: _currentStep <= 4 ? StepState.editing : StepState.complete,
-          isActive: _currentStep >= 4,
-          title: _currentStep == 4
-              ? const Text("Visa and vaccines", style: TextStyle(fontSize: 14))
+          state: _currentStep <= 2 ? StepState.editing : StepState.complete,
+          isActive: _currentStep >= 2,
+          title: _currentStep == 2
+              ? const Text("Visa & vaccines", style: TextStyle(fontSize: 14))
               : Text(""),
           content: _visaVaccinetiWidget(),
         )
@@ -626,286 +649,496 @@ class _StepperWidgetState extends State<StepperWidget>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: title,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (val) => val.isEmpty ? 'Entrez titel' : null,
-                onChanged: (val) => title = val,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  labelText: '  Title mission ',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ),
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Title :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            initialValue: title,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (val) =>
+                                val.isEmpty ? 'Entrez titel' : null,
+                            onChanged: (val) => title = val,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              // labelText: '  Title  ',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        /*  Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text("eeeee",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )*/
+                      ],
+                    ),
+                  ),
+                )),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: countryMission,
-                value: pays_destination,
-                hint: "Destination country",
-                searchHint: "Select your Destination country ",
-                onChanged: (value) {
-                  setState(() async {
-                    pays_destination = value;
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Country :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchChoices.single(
+                            items: countryMission,
+                            value: pays_mission,
+                            hint: "Country",
+                            searchHint: "Select your mission country ",
+                            onChanged: (value) {
+                              setState(() async {
+                                pays_mission = value;
 
-                    getIdCountry = _missionService
-                        .getCountryNyName(value["name"])
-                        .then((value) {
-                      missionIdCountry = value["data"];
+                                getIdCountry = _missionService
+                                    .getCountryNyName(value["name"])
+                                    .then((value) {
+                                  missionIdCountry = value["data"];
 
 //Get Visa
-                      visaId = missionIdCountry[0]["visa"];
+                                  visaId = missionIdCountry[0]["visa"];
 
-                      listVaccin = missionIdCountry[0]["vaccine"];
+                                  listVaccin = missionIdCountry[0]["vaccine"];
 
-                      listDocVisa.clear();
-                      listNumDocVisa.clear();
+                                  listDocVisa.clear();
+                                  listNumDocVisa.clear();
 
-                      if (visaId == null) {
-                        nbrDoc = 0;
-                      } else {
-                        getVisa =
-                            _missionService.getVisaById(visaId).then((value) {
-                          idVisa = value["data"]["_id"];
+                                  if (visaId == null) {
+                                    nbrDoc = 0;
+                                  } else {
+                                    getVisa = _missionService
+                                        .getVisaById(visaId)
+                                        .then((value) {
+                                      idVisa = value["data"]["_id"];
 
-                          missionVisa = value["data"]["name"];
+                                      missionVisa = value["data"]["name"];
 
-                          nbrDoc = value["data"]["documents_list"].length;
-                          for (var i = 0;
-                              i < value["data"]["documents_list"].length;
-                              i++) {
-                            var map = {};
-                            map['document'] = value["data"]["_id"];
+                                      nbrDoc = value["data"]["documents_list"]
+                                          .length;
+                                      for (var i = 0;
+                                          i <
+                                              value["data"]["documents_list"]
+                                                  .length;
+                                          i++) {
+                                        var map = {};
+                                        map['document'] = value["data"]["_id"];
 
-                            map['name'] =
-                                value["data"]["documents_list"][i]["document"];
-                            map['nbrDoc'] = value["data"]["documents_list"][i]
-                                ["number_of_document"];
-                            map['isChecked'] = false;
-                            VisaList.add(map);
+                                        map['name'] = value["data"]
+                                            ["documents_list"][i]["document"];
+                                        map['nbrDoc'] = value["data"]
+                                                ["documents_list"][i]
+                                            ["number_of_document"];
+                                        map['isChecked'] = false;
+                                        VisaList.add(map);
 
-                            _missionService
-                                .getDocVisaById(value["data"]["documents_list"]
-                                    [i]["document"])
-                                .then((value) {
-                              listDocVisa.add(value["data"]["name"]);
-                              map['name'] = value["data"]["name"];
-                              map['document'] = value["data"]["_id"];
-                            });
+                                        _missionService
+                                            .getDocVisaById(value["data"]
+                                                    ["documents_list"][i]
+                                                ["document"])
+                                            .then((value) {
+                                          listDocVisa
+                                              .add(value["data"]["name"]);
+                                          map['name'] = value["data"]["name"];
+                                          map['document'] =
+                                              value["data"]["_id"];
+                                        });
 
-                            listNumDocVisa.add(value["data"]["documents_list"]
-                                [i]["number_of_document"]);
-                          }
-                        });
-                      }
+                                        listNumDocVisa.add(value["data"]
+                                                ["documents_list"][i]
+                                            ["number_of_document"]);
+                                      }
+                                    });
+                                  }
 
 // Get List Vaccin
-                      nbrVaccin = value["data"][0]["vaccine"].length;
-                      vaccineMission.clear();
-                      for (var i = 0; i < listVaccin.length; i++) {
-                        _missionService.getVaccine(listVaccin[i]).then((value) {
-                          vaccineMission.add(value["data"]["name"]);
+                                  nbrVaccin =
+                                      value["data"][0]["vaccine"].length;
+                                  vaccineMission.clear();
+                                  for (var i = 0; i < listVaccin.length; i++) {
+                                    _missionService
+                                        .getVaccine(listVaccin[i])
+                                        .then((value) {
+                                      vaccineMission.add(value["data"]["name"]);
 
-                          var map = {};
-                          print("........." + value["data"].toString());
-                          map['idVaccine'] = value["data"]["_id"];
+                                      var map = {};
+                                      print("........." +
+                                          value["data"].toString());
+                                      map['idVaccine'] = value["data"]["_id"];
 
-                          map['name'] = value["data"]["name"];
-                          map['isChecked'] = false;
-                          VaccinList.add(map);
-                        });
-                      }
+                                      map['name'] = value["data"]["name"];
+                                      map['isChecked'] = false;
+                                      VaccinList.add(map);
+                                    });
+                                  }
 
 //Get Cite
-                      _missionService
-                          .getCiteByCountry(missionIdCountry[0]["_id"])
-                          .then((value) {
-                        for (var i = 0; i < missionCiteDes.length; i++) {
-                          citeDesMission.removeLast();
-                        }
-                        setState(() {
-                          missionCiteDes = value["data"];
-                        });
+                                  _missionService
+                                      .getCiteByCountry(
+                                          missionIdCountry[0]["_id"])
+                                      .then((value) {
+                                    for (var i = 0;
+                                        i < missionListCite.length;
+                                        i++) {
+                                      citeListMission.removeLast();
+                                    }
+                                    setState(() {
+                                      missionListCite = value["data"];
+                                    });
 
-                        int i = 0;
+                                    int i = 0;
 
-                        missionCiteDes.asMap().forEach((index, element) {
-                          i++;
-                          citeDesMission.add(
-                            DropdownMenuItem(
-                                child: Text("" + element["name"]),
-                                value: element),
-                          );
-                        });
-                      });
+                                    missionListCite
+                                        .asMap()
+                                        .forEach((index, element) {
+                                      i++;
+                                      citeListMission.add(
+                                        DropdownMenuItem(
+                                            child: Text("" + element["name"]),
+                                            value: element),
+                                      );
+                                    });
+                                  });
 
 //Get Region
 
-                      _missionService
-                          .getCountry(missionIdCountry[0]["_id"])
-                          .then((value) {
-                        setState(() {
-                          regionId = value["data"]["region"];
-                          // print("***********region************" + value["data"]["region"].toString());
-                        });
-                      });
+                                  _missionService
+                                      .getCountry(missionIdCountry[0]["_id"])
+                                      .then((value) {
+                                    setState(() {
+                                      regionId = value["data"]["region"];
+                                      // print("***********region************" + value["data"]["region"].toString());
+                                    });
+                                  });
 
 //Get CityCap
 
-                      getCityCap = _missionService
-                          .getCityCapByCountry(missionIdCountry[0]["_id"])
-                          .then((value) {
-                        Mximum_rate_per_night = value["data"];
-                        //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
-                      });
-                    });
-
-                    //  print("Country !!!!  2 : " + missionIdCountry);
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: citeDesMission,
-                value: city_destination,
-                hint: "Destination city",
-                searchHint: "Select your perdiem ",
-                onChanged: (value) {
-                  setState(() {
-                    city_destination = value;
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: objectMission,
-                value: object,
-                hint: "Mission object",
-                searchHint: "Select your mission object ",
-                onChanged: (value) {
-                  setState(() {
-                    object = value;
-                    print("-----------" + object.toString());
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: formulaMission,
-                value: formula,
-                hint: "Mission formula",
-                searchHint: "Select your Mission formula",
-                onChanged: (value) {
-                  setState(() {
-                    formula = value;
-                    print("-----------" +
-                        value["needTransportation"].toString() +
-                        value["needAccomdation"].toString());
-                    testTransport = value["needTransportation"];
-                    testAccomdation = value["needAccomdation"];
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: manager,
-                value: selectedValueManger,
-                hint: "Manager",
-                searchHint: "Select your Manager",
-                onChanged: (value) {
-                  setState(() {
-                    selectedValueManger = value;
-                    print("-----------" + selectedValueManger.toString());
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SearchChoices.single(
-                items: partner,
-                value: selectedValuePartner,
-                hint: "Partner",
-                searchHint: "Select your partner",
-                onChanged: (value) {
-                  setState(() {
-                    selectedValuePartner = value;
-                  });
-                },
-                isExpanded: true,
-              ),
-            ),
-            Column(
-              children: [
-                Text("Date de mission :"),
-                Container(
-                    // width: MediaQuery.of(context).size.width,
-                    // height: MediaQuery.of(context).size.height ,
-                    child: Theme(
-                  data: Theme.of(context).copyWith(
-                      accentColor: LightColors.kDarkBlue,
-                      primaryColor: LightColors.kDarkBlue,
-                      buttonTheme: ButtonThemeData(
-                        highlightColor: LightColors.kDarkBlue,
-                        colorScheme: Theme.of(context).colorScheme.copyWith(
-                              secondary: LightColors.kDarkBlue,
-                              primary: LightColors.kDarkBlue,
-                              primaryVariant: LightColors.kDarkBlue,
-                            ),
-                      )),
-                  child: Builder(
-                      builder: (context) => TextButton.icon(
-                            label: Text(
-                              this.labeDateMission,
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            icon: Icon(
-                              Icons.date_range,
-                              color: Colors.black54,
-                            ),
-                            onPressed: () async {
-                              final List<DateTime> picked =
-                                  await DateRangePicker.showDatePicker(
-                                      context: context,
-                                      initialFirstDate: new DateTime.now(),
-                                      initialLastDate: (new DateTime.now())
-                                          .add(new Duration(days: 7)),
-                                      firstDate: new DateTime(2015),
-                                      lastDate: new DateTime(
-                                          DateTime.now().year + 2));
-                              if (picked != null && picked.length == 2) {
-                                print(picked.toList());
-                                StartDate =
-                                    DateFormat('yyyy-MM-dd').format(picked[0]);
-                                EndDate =
-                                    DateFormat('yyyy-MM-dd').format(picked[1]);
-
-                                setState(() {
-                                  this.labeDateMission = "From " +
-                                      this.StartDate +
-                                      "  To " +
-                                      EndDate;
+                                  getCityCap = _missionService
+                                      .getCityCapByCountry(
+                                          missionIdCountry[0]["_id"])
+                                      .then((value) {
+                                    Mximum_rate_per_night = value["data"];
+                                    //  print("................... 111" +value["data"]["Mximum_rate_per_night"].toString());
+                                  });
                                 });
-                              }
+
+                                //  print("Country !!!!  2 : " + missionIdCountry);
+                              });
                             },
-                          )),
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 )),
-              ],
+            Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "City :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchChoices.single(
+                            items: citeListMission,
+                            value: city_mission,
+                            hint: "City",
+                            searchHint: "Select your mission city ",
+                            onChanged: (value) {
+                              setState(() {
+                                city_mission = value;
+                              });
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Object :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchChoices.single(
+                            items: objectMission,
+                            value: object,
+                            hint: "Object",
+                            searchHint: "Select your mission object ",
+                            onChanged: (value) {
+                              setState(() {
+                                object = value;
+                                print("-----------" + object.toString());
+                              });
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Formula :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchChoices.single(
+                            items: formulaMission,
+                            value: formula,
+                            hint: "Formula",
+                            searchHint: "Select your Mission formula",
+                            onChanged: (value) {
+                              setState(() {
+                                formula = value;
+                                print("-----------" +
+                                    value["needTransportation"].toString() +
+                                    value["needAccomdation"].toString());
+                                testTransport = value["needTransportation"];
+                                testAccomdation = value["needAccomdation"];
+                              });
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Engagement manager :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchChoices.single(
+                            items: manager,
+                            value: selectedValueManger,
+                            hint: "Engagement manager",
+                            searchHint: "Select your engagement manager",
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueManger = value;
+                                print("-----------" +
+                                    selectedValueManger.toString());
+                              });
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  height: 105,
+                  // color: Colors.grey[200],
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      //     shape: NeumorphicShape.flat,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(8)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Engagement Partner :",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchChoices.single(
+                            items: partner,
+                            value: selectedValuePartner,
+                            hint: "Engagement Partner",
+                            searchHint: "Select your engagement partner",
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValuePartner = value;
+                              });
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+                // width: MediaQuery.of(context).size.width,
+                // height: MediaQuery.of(context).size.height ,
+                child: Theme(
+              data: Theme.of(context).copyWith(
+                  accentColor: LightColors.kDarkBlue,
+                  primaryColor: LightColors.kDarkBlue,
+                  buttonTheme: ButtonThemeData(
+                    highlightColor: LightColors.kDarkBlue,
+                    colorScheme: Theme.of(context).colorScheme.copyWith(
+                          secondary: LightColors.kDarkBlue,
+                          primary: LightColors.kDarkBlue,
+                          primaryVariant: LightColors.kDarkBlue,
+                        ),
+                  )),
+              child: Builder(
+                  builder: (context) => TextButton.icon(
+                        label: Text(
+                          this.labeDateMission,
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        icon: Icon(
+                          Icons.date_range,
+                          color: Colors.black54,
+                        ),
+                        onPressed: () async {
+                          final List<DateTime> picked =
+                              await DateRangePicker.showDatePicker(
+                                  context: context,
+                                  initialFirstDate: new DateTime.now(),
+                                  initialLastDate: (new DateTime.now())
+                                      .add(new Duration(days: 7)),
+                                  firstDate: new DateTime(2015),
+                                  lastDate:
+                                      new DateTime(DateTime.now().year + 2));
+                          if (picked != null && picked.length == 2) {
+                            print(picked.toList());
+                            StartDate =
+                                DateFormat('yyyy-MM-dd').format(picked[0]);
+                            EndDate =
+                                DateFormat('yyyy-MM-dd').format(picked[1]);
+
+                            setState(() {
+                              this.labeDateMission =
+                                  "From " + this.StartDate + "  To " + EndDate;
+                            });
+                          }
+                        },
+                      )),
+            )),
+            SizedBox(
+              height: 20,
             ),
           ],
         ),
@@ -915,14 +1148,16 @@ class _StepperWidgetState extends State<StepperWidget>
 
   Widget _expensesWidget() {
     return SingleChildScrollView(
+      controller: _ScrollController,
       child: Form(
         key: _formKeys[1],
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-                padding: EdgeInsets.all(10),
-                height: 350,
+                padding: EdgeInsets.all(0),
+                height: 400,
                 child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: 1,
@@ -933,14 +1168,26 @@ class _StepperWidgetState extends State<StepperWidget>
                           BorderRadius.all(Radius.elliptical(20, 20))),
                     ),
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        //    mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              "Expenses ",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.paid_outlined,
+                                  color: LightColors.kDarkBlue,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Expenses ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
@@ -962,10 +1209,21 @@ class _StepperWidgetState extends State<StepperWidget>
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          "Applicable perdiem :",
-                                          style:
-                                              TextStyle(color: Colors.black54),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.info_outlined,
+                                              color: LightColors.kDarkBlue,
+                                            ),
+                                            SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              "Applicable perdiem :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       Padding(
@@ -973,9 +1231,19 @@ class _StepperWidgetState extends State<StepperWidget>
                                             top: 0.8, left: 12, right: 10),
                                         child: peridemObject == null
                                             ? Text("No Perdiem")
-                                            : Text("" +
-                                                peridemObject[0]["indemnity"]
-                                                    .toString()),
+                                            : Row(
+                                                children: [
+                                                  Text("" +
+                                                      peridemObject[0]
+                                                              ["indemnity"]
+                                                          .toString()),
+                                                  Icon(
+                                                    Icons.euro,
+                                                    color:
+                                                        LightColors.kDarkBlue,
+                                                  ),
+                                                ],
+                                              ),
                                         //  child: Text("Your Perdiem : "),
                                       ),
                                       /*  Padding(
@@ -992,7 +1260,7 @@ class _StepperWidgetState extends State<StepperWidget>
                           Padding(
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                               child: Container(
-                                height: 100,
+                                height: 82,
                                 // color: Colors.grey[200],
                                 child: Neumorphic(
                                   style: NeumorphicStyle(
@@ -1002,31 +1270,52 @@ class _StepperWidgetState extends State<StepperWidget>
                                         BorderRadius.circular(8)),
                                   ),
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          "Applicable perdiem :",
+                                          "Requested additionel amount :",
                                           style:
                                               TextStyle(color: Colors.black54),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextFormField(
-                                          initialValue: amount,
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          onChanged: (val) => amount = val,
-                                          decoration: InputDecoration(
-                                            labelText: '  Amount ',
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: TextFormField(
+                                                  initialValue: amount,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  autovalidateMode:
+                                                      AutovalidateMode
+                                                          .onUserInteraction,
+                                                  onChanged: (val) =>
+                                                      amount = val,
+                                                  decoration: InputDecoration(
+                                                    // labelText: '  Amount ',
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.grey),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          Icon(
+                                            Icons.euro,
+                                            color: LightColors.kDarkBlue,
+                                          ),
+                                        ],
                                       ),
                                       /*  Padding(
                                         padding:
@@ -1039,50 +1328,783 @@ class _StepperWidgetState extends State<StepperWidget>
                                   ),
                                 ),
                               )),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: Container(
+                                height: 170,
+                                // color: Colors.grey[200],
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                    //     shape: NeumorphicShape.flat,
+                                    color: NeumorphicColors.background,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(8)),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "Comment :",
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField(
+                                          initialValue: expensesComment,
+                                          minLines: 2,
+                                          maxLines: 5,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            //  labelText: 'Comment expense',
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          onChanged: (val) =>
+                                              expensesComment = val,
+                                        ),
+                                      ),
+
+                                      /*  Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text("eeeee",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )*/
+                                    ],
+                                  ),
+                                ),
+                              )),
                         ]))),
-            Padding(
-              padding: const EdgeInsets.only(top: 0.8, left: 12),
-              child: peridemObject == null
-                  ? Text("Your Perdiem : No Perdiem")
-                  : Text("Your Perdiem : " +
-                      peridemObject[0]["name"].toString() +
-                      " ..." +
-                      peridemObject[0]["indemnity"].toString()),
-              //  child: Text("Your Perdiem : "),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: amount,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: (val) => amount = val,
-                decoration: InputDecoration(
-                  labelText: '  Amount ',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: expensesComment,
-                minLines: 2,
-                maxLines: 5,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  labelText: 'Comment expense',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-                onChanged: (val) => expensesComment = val,
-              ),
-            ),
+            SizedBox(height: 20),
+            testTransport == true
+                ? Container(
+                    padding: EdgeInsets.all(0),
+                    height: 900,
+                    child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: 1,
+
+                          //shape: NeumorphicShape.convex,
+                          color: NeumorphicColors.background,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.all(Radius.elliptical(20, 20))),
+                        ),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.flight_takeoff_outlined,
+                                      color: LightColors.kDarkBlue,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Transportation ",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 85,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SearchChoices.single(
+                                          items: countryMission,
+                                          value: pays_depart,
+                                          hint:
+                                              "Transportation departure country",
+                                          searchHint:
+                                              "Select your transportation departure country ",
+                                          onChanged: (value) {
+                                            //   setState(() async {
+                                            pays_depart = value;
+
+                                            departure_country = pays_depart;
+                                            getIdCountry = _missionService
+                                                .getCountryNyName(value["name"])
+                                                .then((value) {
+                                              missionIdCountry = value["data"];
+                                              //  print("Cite length : " + missionCite.length.toString());
+                                              // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + missionIdCountry.toString());
+                                              getCite = _missionService
+                                                  .getCiteByCountry(
+                                                      missionIdCountry[0]
+                                                          ["_id"])
+                                                  .then((value) {
+                                                for (var i = 0;
+                                                    i < missionCite.length;
+                                                    i++) {
+                                                  citeMission.removeLast();
+                                                }
+                                                setState(() {
+                                                  missionCite = value["data"];
+                                                  print("dataaaaaaaa :" +
+                                                      missionCite.length
+                                                          .toString());
+                                                });
+
+                                                int i = 0;
+                                                print("dataaaaaaaa 222 :" +
+                                                    citeMission.length
+                                                        .toString());
+                                                missionCite
+                                                    .asMap()
+                                                    .forEach((index, element) {
+                                                  i++;
+                                                  citeMission.add(
+                                                    DropdownMenuItem(
+                                                        child: Text("" +
+                                                            element["name"]),
+                                                        value: element),
+                                                  );
+                                                });
+
+                                                print("dataaaaaaaa 333 :" +
+                                                    citeMission.length
+                                                        .toString());
+                                              });
+                                            });
+
+                                            //  print("Country !!!!  2 : " + missionIdCountry);
+                                            //  });
+                                          },
+                                          isExpanded: true,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 85,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SearchChoices.single(
+                                          items: citeMission,
+                                          value: city_depart,
+                                          hint: "Transportation departure city",
+                                          searchHint:
+                                              "Select your transportation departure city ",
+                                          onChanged: (value) {
+                                            setState(() {
+                                              print("numbre : " +
+                                                  citeMission.length
+                                                      .toString());
+                                              city_depart = value;
+                                              departure_city = city_depart;
+                                            });
+                                          },
+                                          isExpanded: true,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 85,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SearchChoices.single(
+                                          items: countryMission,
+                                          value: pays_destination,
+                                          hint: "Destination country",
+                                          searchHint:
+                                              "Select your Destination country ",
+                                          onChanged: (value) {
+                                            setState(() async {
+                                              pays_destination = value;
+                                              destination_country =
+                                                  pays_destination;
+                                              getIdCountry = _missionService
+                                                  .getCountryNyName(
+                                                      value["name"])
+                                                  .then((value) {
+                                                missionIdCountry =
+                                                    value["data"];
+
+//Get Cite
+                                                _missionService
+                                                    .getCiteByCountry(
+                                                        missionIdCountry[0]
+                                                            ["_id"])
+                                                    .then((value) {
+                                                  for (var i = 0;
+                                                      i < missionCiteDes.length;
+                                                      i++) {
+                                                    citeDesMission.removeLast();
+                                                  }
+                                                  setState(() {
+                                                    missionCiteDes =
+                                                        value["data"];
+                                                  });
+
+                                                  int i = 0;
+
+                                                  missionCiteDes
+                                                      .asMap()
+                                                      .forEach(
+                                                          (index, element) {
+                                                    i++;
+                                                    citeDesMission.add(
+                                                      DropdownMenuItem(
+                                                          child: Text("" +
+                                                              element["name"]),
+                                                          value: element),
+                                                    );
+                                                  });
+                                                });
+                                              });
+
+                                              //  print("Country !!!!  2 : " + missionIdCountry);
+                                            });
+                                          },
+                                          isExpanded: true,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 85,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SearchChoices.single(
+                                          items: citeDesMission,
+                                          value: city_destination,
+                                          hint: "Destination city",
+                                          searchHint: "Select your perdiem ",
+                                          onChanged: (value) {
+                                            setState(() {
+                                              city_destination = value;
+                                              destination_city =
+                                                  city_destination;
+                                            });
+                                          },
+                                          isExpanded: true,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      //height: 60,
+                                      width: MediaQuery.of(context).size.width -
+                                          MediaQuery.of(context).size.width /
+                                              2.5,
+
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: NeumorphicToggle(
+                                              height: 50,
+                                              selectedIndex: _selectedIndex,
+                                              displayForegroundOnlyIfSelected:
+                                                  true,
+                                              alphaAnimationCurve:
+                                                  Curves.easeInCirc,
+                                              children: [
+                                                ToggleElement(
+                                                  background: Center(
+                                                      child: Text(
+                                                    "Round trip",
+                                                    style: TextStyle(
+                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  )),
+                                                  foreground: Center(
+                                                      child: Text(
+                                                    "Round trip",
+                                                    style: TextStyle(
+                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  )),
+                                                ),
+                                                ToggleElement(
+                                                  background: Center(
+                                                      child: Text(
+                                                    "One way",
+                                                    style: TextStyle(
+                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  )),
+                                                  foreground: Center(
+                                                      child: Text(
+                                                    "One way",
+                                                    style: TextStyle(
+                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  )),
+                                                )
+                                              ],
+                                              thumb: Neumorphic(
+                                                style: NeumorphicStyle(
+                                                  boxShape: NeumorphicBoxShape
+                                                      .roundRect(
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  12))),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedIndex = value;
+                                                });
+                                                /*   if (_selectedIndex == 1) {
+                                      Dates = [];
+                                      setState(() {
+                                        SelectDates = "Select a period";
+                                      });
+                                    }
+                                    if (_selectedIndex == 0) {
+                                      setState(() {
+                                        SelectDates = "Select a week";
+                                      });
+                                    }*/
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (city_depart == departure_city) {
+                                            destination_country = pays_depart;
+                                            destination_city = city_depart;
+
+                                            departure_country =
+                                                pays_destination;
+                                            departure_city = city_destination;
+                                          } else {
+                                            destination_country =
+                                                pays_destination;
+                                            destination_city = city_destination;
+
+                                            departure_country = pays_depart;
+                                            departure_city = city_depart;
+                                          }
+                                        });
+                                      },
+                                      child: Image(
+                                          color: Colors.black54,
+                                          width: 50,
+                                          height: 50,
+                                          image: AssetImage(
+                                              'assets/images/doubleFleche.png')),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 85,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: Text(
+                                              "Transportation :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Flexible(
+                                                          child: departure_city ==
+                                                                  null
+                                                              ? Text(
+                                                                  "Select depart",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black54),
+                                                                )
+                                                              : Text("" +
+                                                                  departure_country[
+                                                                          "name"]
+                                                                      .toString() +
+                                                                  " ( " +
+                                                                  departure_city[
+                                                                          "name"]
+                                                                      .toString() +
+                                                                  " )")),
+                                                      _selectedIndex == 0
+                                                          ? Icon(
+                                                              Icons
+                                                                  .compare_arrows,
+                                                              color: Colors
+                                                                  .black54,
+                                                            )
+                                                          : Icon(
+                                                              Icons
+                                                                  .arrow_forward,
+                                                              color: Colors
+                                                                  .black54,
+                                                            ),
+                                                      SizedBox(
+                                                        width: 20,
+                                                      ),
+                                                      Flexible(
+                                                          child: destination_city ==
+                                                                  null
+                                                              ? Text(
+                                                                  "Select destination",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black54),
+                                                                )
+                                                              : Text("" +
+                                                                  destination_country[
+                                                                          "name"]
+                                                                      .toString() +
+                                                                  " ( " +
+                                                                  destination_city[
+                                                                          "name"]
+                                                                      .toString() +
+                                                                  " )")),
+                                                    ],
+                                                  ))),
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 170,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: Text(
+                                              "Comment :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              initialValue:
+                                                  transportationComment,
+                                              minLines: 2,
+                                              maxLines: 5,
+                                              keyboardType: TextInputType.text,
+                                              decoration: InputDecoration(
+                                                //  labelText: 'Comment expense',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                              onChanged: (val) =>
+                                                  transportationComment = val,
+                                            ),
+                                          ),
+
+                                          /*  Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text("eeeee",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )*/
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                            ])))
+                : Container(),
+            SizedBox(height: 20),
+            testAccomdation == true
+                ? Container(
+                    padding: EdgeInsets.all(0),
+                    height: 800,
+                    child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: 1,
+
+                          //shape: NeumorphicShape.convex,
+                          color: NeumorphicColors.background,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.all(Radius.elliptical(20, 20))),
+                        ),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.hotel_outlined,
+                                      color: LightColors.kDarkBlue,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Accomodation ",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 50,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.info_outlined,
+                                                  color: LightColors.kDarkBlue,
+                                                ),
+                                                SizedBox(
+                                                  width: 2,
+                                                ),
+                                                Text(
+                                                  "Max rate/night :",
+                                                  style: TextStyle(
+                                                      color: Colors.black54),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 0.8, left: 12, right: 10),
+                                            child: peridemObject == null
+                                                ? Text("No Perdiem")
+                                                : Text("" +
+                                                    Mximum_rate_per_night[
+                                                            "Mximum_rate_per_night"]
+                                                        .toString()),
+                                            //  child: Text("Your Perdiem : "),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 170,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: Text(
+                                              "Comment :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              initialValue: hotelPreference,
+                                              minLines: 2,
+                                              maxLines: 5,
+                                              keyboardType: TextInputType.text,
+                                              decoration: InputDecoration(
+                                                //  labelText: 'Comment expense',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                              onChanged: (val) =>
+                                                  hotelPreference = val,
+                                            ),
+                                          ),
+
+                                          /*  Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text("eeeee",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )*/
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Container(
+                                    height: 500,
+                                    // color: Colors.grey[200],
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        //     shape: NeumorphicShape.flat,
+                                        color: NeumorphicColors.background,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(8)),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(
+                                              "You can pick your preferred location for hotel booking :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 20, left: 12),
+                                            child: MapScreen(
+                                                altitudeHotel: "36.258",
+                                                longitudeHotel: "9.589"),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                            ])))
+                : Container(),
+            SizedBox(height: 50),
           ],
         ),
       ),
     );
   }
 
-  Widget _TransportWidget() {
+  /* Widget _TransportWidget() {
     DateTime selectedDate = DateTime.now();
 
     Future<void> _selectDate(BuildContext context) async {
@@ -1180,9 +2202,9 @@ class _StepperWidgetState extends State<StepperWidget>
             ),
           )),
     );
-  }
+  }*/
 
-  Widget _AccomodationWidget() {
+  /*Widget _AccomodationWidget() {
     return SingleChildScrollView(
       child: Form(
         key: _formKeys[3],
@@ -1304,59 +2326,204 @@ class _StepperWidgetState extends State<StepperWidget>
           )),
     );
   }
-
+*/
   Widget _visaVaccinetiWidget() {
     return SingleChildScrollView(
       child: Form(
-        key: _formKeys[4],
+        key: _formKeys[2],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            /*     SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                             // The checkboxes will be here
-                      Column(
-                          children: availableHobbies.map((hobby) {
-                        return CheckboxListTile(
-                            value: hobby["isChecked"],
-                            title: Text(hobby["name"]),
-                            onChanged: (newValue) {
-                              setState(() {
-                                hobby["isChecked"] = newValue;
-                              });
-                            });
-                      }).toList()),
+            Container(
+                padding: EdgeInsets.all(10),
+                height: 400,
+                child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: 1,
 
-                      // Display the result here
-                      const SizedBox(height: 10),
-                      const Divider(),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        children: availableHobbies.map((hobby) {
-                          if (hobby["isChecked"] == true) {
-                            return Card(
-                              elevation: 3,
-                              color: Colors.amber,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(hobby["name"]),
-                              ),
-                            );
-                          }
-
-                          return Container();
-                        }).toList(),
-                      )
-
-                      
-                    ]),
-              ),
-            ), */
-            Row(
+                      //shape: NeumorphicShape.convex,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.all(Radius.elliptical(20, 20))),
+                    ),
+                    child: Column(
+                        //  mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Visa ",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: Container(
+                                height: 50,
+                                // color: Colors.grey[200],
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                    //     shape: NeumorphicShape.flat,
+                                    color: NeumorphicColors.background,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(8)),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.info_outline,
+                                              color: LightColors.kDarkBlue,
+                                            ),
+                                            SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              "Your passport validity :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0.8, left: 12, right: 10),
+                                          child: User != null
+                                              ? Text("" +
+                                                  User["passportValidity"]
+                                                      .substring(0, 10)
+                                                      .toString())
+                                              : Text("null"),
+                                          //  child: Text("Your Perdiem : "),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: Container(
+                                height: 50,
+                                // color: Colors.grey[200],
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                    //     shape: NeumorphicShape.flat,
+                                    color: NeumorphicColors.background,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(8)),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.info_outline,
+                                              color: LightColors.kDarkBlue,
+                                            ),
+                                            SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              "Applicable visa for mission country :",
+                                              style: TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0.8, left: 12, right: 10),
+                                        child: nbrDoc == 0
+                                            ? Text("Null")
+                                            : Text("" + missionVisa),
+                                        //  child: Text("Your Perdiem : "),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Expanded(
+                            child: Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                  //  hoverColor: LightColors.kDarkBlue,
+                                  //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                  value: visaB,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      visaB = value;
+                                    });
+                                  },
+                                ),
+                                Flexible(
+                                  child: AutoSizeText(
+                                    "I want to get this visa requested documents. ",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          visaB == true
+                              ? nbrDoc == 0
+                                  ? Center(child: Text("aucun visa"))
+                                  : Expanded(
+                                      child: SizedBox(
+                                        height: 50,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            itemCount: nbrDoc,
+                                            itemBuilder: (context, i) {
+                                              return Card(
+                                                color:
+                                                    NeumorphicColors.background,
+                                                child: ListTile(
+                                                  subtitle: Text(
+                                                      "number of document : " +
+                                                          VisaList[i]["nbrDoc"]
+                                                              .toString()),
+                                                  title: Text(
+                                                      "" + VisaList[i]["name"]),
+                                                  leading:
+                                                      Icon(Icons.file_copy),
+                                                  trailing: Checkbox(
+                                                    //  hoverColor: LightColors.kDarkBlue,
+                                                    //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                                    value: VisaList[i]
+                                                        ["isChecked"],
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        VisaList[i]
+                                                                ["isChecked"] =
+                                                            newValue;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    )
+                              : new Container(),
+                        ]))),
+            /*    Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Validité du passeport : 24/08/2026"),
@@ -1418,47 +2585,72 @@ class _StepperWidgetState extends State<StepperWidget>
                             ),
                           );
                         })
-                : new Container(),
+                : new Container(),*/
+
             SizedBox(
               height: 20,
             ),
-            Row(
-              //    mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("List vaccin :"),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            vaccineMission.length == 0
-                ? Center(child: Text("aucun vaccin"))
-                : ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: nbrVaccin,
-                    itemBuilder: (context, i) {
-                      return Card(
-                          color: NeumorphicColors.background,
-                          child: ListTile(
-                            title: Text("" + VaccinList[i]["name"]),
-                            leading: Icon(Icons.medication),
-                            trailing: Checkbox(
-                              //  hoverColor: LightColors.kDarkBlue,
-                              //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                              value: VaccinList[i]["isChecked"],
-                              onChanged: (newValue) {
-                                setState(() {
-                                  VaccinList[i]["isChecked"] = newValue;
-                                  print("test test test ::: " +
-                                      VaccinList.toString());
-                                });
-                              },
+            Container(
+                padding: EdgeInsets.all(10),
+                height: 250,
+                child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: 1,
+
+                      //shape: NeumorphicShape.convex,
+                      color: NeumorphicColors.background,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.all(Radius.elliptical(20, 20))),
+                    ),
+                    child: Column(
+                        //  mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Vaccines ",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
                             ),
-                          ));
-                    },
-                  )
+                          ),
+                          vaccineMission.length == 0
+                              ? Center(child: Text("aucun vaccines"))
+                              : Expanded(
+                                  child: SizedBox(
+                                    child: ListView.builder(
+                                      // physics: NeverScrollableScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: nbrVaccin,
+                                      itemBuilder: (context, i) {
+                                        return Card(
+                                            color: NeumorphicColors.background,
+                                            child: ListTile(
+                                              title: Text(
+                                                  "" + VaccinList[i]["name"]),
+                                              leading: Icon(Icons.medication),
+                                              trailing: Checkbox(
+                                                //  hoverColor: LightColors.kDarkBlue,
+                                                //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                                value: VaccinList[i]
+                                                    ["isChecked"],
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    VaccinList[i]["isChecked"] =
+                                                        newValue;
+                                                    print(
+                                                        "test test test ::: " +
+                                                            VaccinList
+                                                                .toString());
+                                                  });
+                                                },
+                                              ),
+                                            ));
+                                      },
+                                    ),
+                                  ),
+                                )
+                        ]))),
           ],
         ),
       ),
@@ -1879,8 +3071,7 @@ class _StepperWidgetState extends State<StepperWidget>
   }
 
 */
-
-  Widget _TansportWidget1() {
+/*Widget _TansportWidget1() {
     /*  @override
     void initState() {
      
@@ -2622,7 +3813,7 @@ class _StepperWidgetState extends State<StepperWidget>
       ),
     );
   }
-
+*/
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
           child: Text(
         item,

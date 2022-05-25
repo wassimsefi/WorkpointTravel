@@ -475,8 +475,15 @@ class _TabBarUserState extends State<TabBarUser> {
                       ),
                       body: TabBarView(
                         children: [
-                          Profiltravel(telephone, grade, nbrMissionComleted,
-                              nbrCurrentMission, mat, passportValidity),
+                          Profiltravel(
+                              telephone,
+                              grade,
+                              nbrMissionComleted,
+                              nbrCurrentMission,
+                              mat,
+                              passportValidity,
+                              firstname,
+                              lastname),
                           VaccinVisa(visas, vaccines),
                           Historique(missions)
                         ],

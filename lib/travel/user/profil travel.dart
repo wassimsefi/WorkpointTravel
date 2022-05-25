@@ -7,6 +7,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vato/constants/light_colors.dart';
 import 'package:vato/services/UserServices.dart';
+import 'package:vato/travel/user/qrcode_user.dart';
 import 'package:vato/widgets/top_container_travel.dart';
 
 class Profiltravel extends StatefulWidget {
@@ -16,8 +17,18 @@ class Profiltravel extends StatefulWidget {
   int nbrCurrentMission;
   String mat;
   String passportValidity;
-  Profiltravel(this.telephone, this.grade, this.nbrMissionComleted,
-      this.nbrCurrentMission, this.mat, this.passportValidity,
+  String firstname;
+  String lastname;
+
+  Profiltravel(
+      this.telephone,
+      this.grade,
+      this.nbrMissionComleted,
+      this.nbrCurrentMission,
+      this.mat,
+      this.passportValidity,
+      this.firstname,
+      this.lastname,
       {Key key})
       : super(key: key);
 
@@ -43,7 +54,7 @@ class _ProfiltravelState extends State<Profiltravel> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
-            height: height / 1.5,
+            //   height: height / 1.5,
             // padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
             child: Column(
               children: <Widget>[
@@ -238,7 +249,31 @@ class _ProfiltravelState extends State<Profiltravel> {
                     //   trailing: Text(telephone.toString(),style: TextStyle(color: LightColors.kbluel,fontSize: 15),),
                   ),
                 ),
-
+                Card(
+                  color: NeumorphicColors.background,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.qr_code_2_outlined,
+                      color: LightColors.kDarkBlue,
+                    ),
+                    title: Text(
+                      'QR Code',
+                      style: TextStyle(color: Colors.black54, fontSize: 15),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      color: LightColors.kDarkBlue,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GeneratePage(
+                                widget.firstname, widget.lastname)),
+                      );
+                    },
+                  ),
+                ),
                 Card(
                   color: NeumorphicColors.background,
                   child: ListTile(
@@ -257,7 +292,6 @@ class _ProfiltravelState extends State<Profiltravel> {
                     onTap: () {},
                   ),
                 ),
-                Spacer(),
               ],
             ),
           ),

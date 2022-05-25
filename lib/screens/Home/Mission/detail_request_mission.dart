@@ -266,7 +266,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                               ),
                               Container(
                                   padding: EdgeInsets.all(10),
-                                  height: 350,
+                                  height: 550,
                                   child: Neumorphic(
                                       style: NeumorphicStyle(
                                         depth: 1,
@@ -291,6 +291,114 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     fontSize: 20),
                                               ),
                                             ),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 0),
+                                                child: Container(
+                                                  height: 50,
+                                                  // color: Colors.grey[200],
+                                                  child: Neumorphic(
+                                                    style: NeumorphicStyle(
+                                                      //     shape: NeumorphicShape.flat,
+                                                      color: NeumorphicColors
+                                                          .background,
+                                                      boxShape:
+                                                          NeumorphicBoxShape
+                                                              .roundRect(
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
+                                                          child: Text(
+                                                            "Mission Country :",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black54),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
+                                                          child: Text(
+                                                              widget.mission[
+                                                                      "missionCountry"]
+                                                                      ["name"]
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 0),
+                                                child: Container(
+                                                  height: 50,
+                                                  // color: Colors.grey[200],
+                                                  child: Neumorphic(
+                                                    style: NeumorphicStyle(
+                                                      //     shape: NeumorphicShape.flat,
+                                                      color: NeumorphicColors
+                                                          .background,
+                                                      boxShape:
+                                                          NeumorphicBoxShape
+                                                              .roundRect(
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
+                                                          child: Text(
+                                                            "Mission City :",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black54),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
+                                                          child: Text(
+                                                              widget.mission[
+                                                                      "missionCity"]
+                                                                      ["name"]
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
@@ -352,12 +460,18 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       width: 0,
                                                                     ),
 
-                                                                    Icon(
-                                                                      Icons
-                                                                          .compare_arrows,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
+                                                                    widget.mission["roundTrip"] ==
+                                                                            true
+                                                                        ? Icon(
+                                                                            Icons.compare_arrows,
+                                                                            color:
+                                                                                Colors.black54,
+                                                                          )
+                                                                        : Icon(
+                                                                            Icons.arrow_right_alt,
+                                                                            color:
+                                                                                Colors.black54,
+                                                                          ),
 
                                                                     Expanded(
                                                                       child:
@@ -377,7 +491,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
 
                                                                     //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
                                                                   ]),
-                                                              widget.mission[
+                                                              /*    widget.mission[
                                                                           "roundTrip"] ==
                                                                       true
                                                                   ? Row(
@@ -419,7 +533,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
 
                                                                           //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
                                                                         ])
-                                                                  : Container(),
+                                                                  : Container(), */
                                                             ],
                                                           ),
                                                   ),
@@ -454,7 +568,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .only(
                                                                   left: 10),
                                                           child: Text(
-                                                            "Objet Mission :",
+                                                            "Object :",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black54),
@@ -508,7 +622,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .only(
                                                                   left: 10),
                                                           child: Text(
-                                                            "Objet Formula :",
+                                                            "Formula :",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black54),
@@ -537,7 +651,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     const EdgeInsets.fromLTRB(
                                                         10, 10, 10, 0),
                                                 child: Container(
-                                                  height: 50,
+                                                  height: 100,
                                                   // color: Colors.grey[200],
                                                   child: Neumorphic(
                                                     style: NeumorphicStyle(
@@ -551,10 +665,13 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .circular(
                                                                           8)),
                                                     ),
-                                                    child: Row(
+                                                    child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceBetween,
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: <Widget>[
                                                         Padding(
                                                           padding:
@@ -572,15 +689,32 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                           padding:
                                                               const EdgeInsets
                                                                       .only(
-                                                                  right: 10),
-                                                          child: Text(
-                                                              widget.mission[
-                                                                      "transportationComment"]
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
-                                                        )
+                                                                  left: 10,
+                                                                  top: 10),
+                                                          child: Container(
+                                                            height: 70,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              scrollDirection:
+                                                                  Axis.vertical,
+                                                              child: Center(
+                                                                child: Text(
+                                                                    widget
+                                                                        .mission[
+                                                                            "transportationComment"]
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
@@ -591,7 +725,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                               ),
                               Container(
                                   padding: EdgeInsets.all(10),
-                                  height: 430,
+                                  height: 500,
                                   child: Neumorphic(
                                       style: NeumorphicStyle(
                                         depth: 1,
@@ -646,7 +780,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .only(
                                                                   left: 10),
                                                           child: Text(
-                                                            "Your perdieme :",
+                                                            "Applicable perdiem :",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black54),
@@ -665,16 +799,95 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                   style: TextStyle(
                                                                       color: Colors
                                                                           .black))
-                                                              : Text(
-                                                                  widget
-                                                                      .mission[
-                                                                          "perdiem"]
-                                                                          [
-                                                                          "indemnity"]
-                                                                      .toString(),
+                                                              : Row(
+                                                                  children: [
+                                                                    Text(
+                                                                        widget
+                                                                            .mission["perdiem"][
+                                                                                "indemnity"]
+                                                                            .toString(),
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black)),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .euro,
+                                                                      color: LightColors
+                                                                          .kDarkBlue,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 0),
+                                                child: Container(
+                                                  height: 50,
+                                                  // color: Colors.grey[200],
+                                                  child: Neumorphic(
+                                                    style: NeumorphicStyle(
+                                                      //     shape: NeumorphicShape.flat,
+                                                      color: NeumorphicColors
+                                                          .background,
+                                                      boxShape:
+                                                          NeumorphicBoxShape
+                                                              .roundRect(
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
+                                                          child: Text(
+                                                            "Request additional amount :",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black54),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
+                                                          child: widget.mission[
+                                                                      "extraExpenses"] ==
+                                                                  null
+                                                              ? Text("No Amout",
                                                                   style: TextStyle(
                                                                       color: Colors
-                                                                          .black)),
+                                                                          .black))
+                                                              : Row(
+                                                                  children: [
+                                                                    Text(
+                                                                        widget
+                                                                            .mission["extraExpenses"][
+                                                                                "\$numberDecimal"]
+                                                                            .toString(),
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black)),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .euro,
+                                                                      color: LightColors
+                                                                          .kDarkBlue,
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                         )
                                                       ],
                                                     ),
@@ -685,7 +898,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     const EdgeInsets.fromLTRB(
                                                         10, 10, 10, 0),
                                                 child: Container(
-                                                  height: 50,
+                                                  height: 100,
                                                   // color: Colors.grey[200],
                                                   child: Neumorphic(
                                                     style: NeumorphicStyle(
@@ -699,10 +912,13 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .circular(
                                                                           8)),
                                                     ),
-                                                    child: Row(
+                                                    child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceBetween,
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: <Widget>[
                                                         Padding(
                                                           padding:
@@ -710,7 +926,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .only(
                                                                   left: 10),
                                                           child: Text(
-                                                            "Amount :",
+                                                            "Accomodation Comment :",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black54),
@@ -720,68 +936,32 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                           padding:
                                                               const EdgeInsets
                                                                       .only(
-                                                                  right: 10),
-                                                          child: Text(
-                                                              widget.mission[
-                                                                      "extraExpenses"]
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )),
-                                            Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 10, 10, 0),
-                                                child: Container(
-                                                  height: 50,
-                                                  // color: Colors.grey[200],
-                                                  child: Neumorphic(
-                                                    style: NeumorphicStyle(
-                                                      //     shape: NeumorphicShape.flat,
-                                                      color: NeumorphicColors
-                                                          .background,
-                                                      boxShape:
-                                                          NeumorphicBoxShape
-                                                              .roundRect(
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8)),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10),
-                                                          child: Text(
-                                                            "The hostel I would like :",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black54),
+                                                                  left: 10,
+                                                                  top: 10),
+                                                          child: Container(
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            height: 70,
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              scrollDirection:
+                                                                  Axis.vertical,
+                                                              child: Center(
+                                                                child: Text(
+                                                                    widget
+                                                                        .mission[
+                                                                            "accomodationComment"]
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black)),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  right: 10),
-                                                          child: Text(
-                                                              widget.mission[
-                                                                      "accomodationComment"]
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
-                                                        )
                                                       ],
                                                     ),
                                                   ),
@@ -855,7 +1035,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                     const EdgeInsets.fromLTRB(
                                                         10, 10, 10, 0),
                                                 child: Container(
-                                                  height: 80,
+                                                  height: 100,
                                                   // color: Colors.grey[200],
                                                   child: Neumorphic(
                                                     style: NeumorphicStyle(
@@ -869,47 +1049,55 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                       .circular(
                                                                           8)),
                                                     ),
-                                                    child: Row(
+                                                    child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .center,
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: <Widget>[
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 10),
-                                                              child: Text(
-                                                                "Comment :",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black54),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10),
+                                                          child: Text(
+                                                            "Expense Comment :",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black54),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10,
+                                                                  top: 10),
+                                                          child: Container(
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            height: 70,
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              scrollDirection:
+                                                                  Axis.vertical,
+                                                              child: Center(
+                                                                child: Text(
+                                                                    widget
+                                                                        .mission[
+                                                                            "expensesComment"]
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black)),
                                                               ),
                                                             ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          10),
-                                                              child: Text(
-                                                                  widget
-                                                                      .mission[
-                                                                          "expensesComment"]
-                                                                      .toString(),
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black)),
-                                                            )
-                                                          ],
+                                                          ),
                                                         ),
                                                       ],
                                                     ),

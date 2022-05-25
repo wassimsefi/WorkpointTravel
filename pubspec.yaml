@@ -86,8 +86,7 @@ dependencies:
   fa_stepper: ^0.0.2
   google_maps_flutter: ^2.0.2
   location: ^4.2.0
-
-
+  qr_flutter: ^3.2.0
 
 
 
@@ -165,6 +164,7 @@ flutter:
     - assets/logoff.json
     - assets/logoff.json
     - assets/images/vaccin.svg
+    - assets/images/iconandroid.png
 
 flutter_intl:
   enabled: true

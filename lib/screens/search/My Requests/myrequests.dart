@@ -357,6 +357,31 @@ class _MyrequestsState extends State<Myrequests> {
                                                                     ),
                                                                   ),
                                                                   Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            20.0),
+                                                                    child:
+                                                                        Center(
+                                                                      child: Row(
+                                                                          mainAxisAlignment: MainAxisAlignment
+                                                                              .start,
+                                                                          children: <
+                                                                              Widget>[
+                                                                            Icon(
+                                                                              Icons.location_on,
+                                                                              color: Colors.black54,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 5,
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: AutoSizeText(filtred[x]["mission"]["missionCountry"]["name"].toString() + " " + filtred[x]["mission"]["missionCity"]["name"].toString(), style: TextStyle(color: Colors.black54)),
+                                                                            )
+                                                                          ]),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
                                                                       padding: const EdgeInsets
                                                                               .only(
                                                                           left:
@@ -371,17 +396,29 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                           child: AutoSizeText("pas de deolacement", style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                         )
                                                                                       : Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                                                                          Icon(
+                                                                                            Icons.flight_takeoff_outlined,
+                                                                                            color: Colors.black54,
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 5,
+                                                                                          ),
+
                                                                                           Expanded(
                                                                                             child: AutoSizeText(filtred[x]["mission"]["onewayDepartureCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
                                                                                           ),
                                                                                           SizedBox(
                                                                                             width: 0,
                                                                                           ),
-
-                                                                                          Icon(
-                                                                                            Icons.compare_arrows,
-                                                                                            color: Colors.black54,
-                                                                                          ),
+                                                                                          filtred[x]["mission"]["roundTrip"] == true
+                                                                                              ? Icon(
+                                                                                                  Icons.compare_arrows,
+                                                                                                  color: Colors.black54,
+                                                                                                )
+                                                                                              : Icon(
+                                                                                                  Icons.arrow_right_alt,
+                                                                                                  color: Colors.black54,
+                                                                                                ),
                                                                                           SizedBox(
                                                                                             width: 2,
                                                                                           ),
@@ -392,7 +429,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                           //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
                                                                                         ]),
                                                                                 ),
-                                                                                filtred[x]["mission"]["roundTrip"] == true
+                                                                                /* filtred[x]["mission"]["roundTrip"] == true
                                                                                     ? Center(
                                                                                         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
                                                                                           Expanded(
@@ -417,6 +454,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                         ]),
                                                                                       )
                                                                                     : Container(),
+                                                                                    */
                                                                               ],
                                                                             )
                                                                           : Container()),

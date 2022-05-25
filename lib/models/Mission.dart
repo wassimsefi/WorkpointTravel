@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:vato/models/Floor.dart';
+
 class Missions {
   String title;
   String MissionFormula;
@@ -9,7 +13,7 @@ class Missions {
   String dateDebut;
   String dateFinal;
   String perdiem;
-  String amount;
+  double amount;
   String expensesComment;
   String transportationComment;
 
@@ -26,10 +30,8 @@ class Missions {
   String validtePassport;
   String visa;
   bool obtenirVisa;
-  String departureCountryRetour;
-  String departureCityRetour;
-  String destinationCountryRetour;
-  String destinationCityRetour;
+  String missionCountry;
+  String missionCity;
 
   List<Map<dynamic, dynamic>> documents_visa = [];
   List<Map<dynamic, dynamic>> vaccin = [];
@@ -61,10 +63,8 @@ class Missions {
         obtenirVisa = map["getVisa"],
         documents_visa = map["visaDocuments"],
         vaccin = map["vaccines"],
-        destinationCityRetour = map["returnDestinationCity"],
-        destinationCountryRetour = map["returnDestinationCountry"],
-        departureCityRetour = map["returnDepartureCity"],
-        departureCountryRetour = map["returnDepartureCountry"];
+        missionCountry = map["missionCountry"],
+        missionCity = map["MissionCity"];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -96,13 +96,10 @@ class Missions {
     data["getVisa"] = obtenirVisa;
     data["visaDocuments"] = documents_visa;
     data["vaccines"] = vaccin;
-    data["returnDestinationCity"] = destinationCityRetour;
+    data["missionCountry"] = missionCountry;
 
-    data["returnDestinationCountry"] = destinationCountryRetour;
+    data["missionCity"] = missionCity;
 
-    data["returnDepartureCity"] = departureCityRetour;
-
-    data["returnDepartureCountry"] = departureCountryRetour;
     return data;
   }
 
