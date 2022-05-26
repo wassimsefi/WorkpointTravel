@@ -37,7 +37,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   OperationService _operationService = new OperationService();
   AwesomeNotifications().initialize(
-    // set the icon to null if you want to use the default app icon
+    a+q < // set the icon to null if you want to use the default app icon
       'resource://drawable/icon',
       [
         NotificationChannel(
