@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jiffy/jiffy.dart';
 
 class VaccinVisa extends StatefulWidget {
   List visas;
@@ -19,6 +20,8 @@ class _VaccinVisaState extends State<VaccinVisa> {
 
     print("object");
     print("object list" + widget.visas.toString());
+    print("object list 2222" + widget.visas[0]["id"]["name"].toString());
+
     super.initState();
   }
 
@@ -44,9 +47,21 @@ class _VaccinVisaState extends State<VaccinVisa> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "Visa ",
-                            style: TextStyle(color: Colors.black, fontSize: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.credit_card,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Visa ",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                              ),
+                            ],
                           ),
                         ),
                         widget.visas.length == 0
@@ -97,24 +112,28 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                             child: Center(
                                                 child: Padding(
                                               padding: const EdgeInsets.only(
-                                                  right: 10),
+                                                  right: 10, left: 10),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Icon(
-                                                    Icons.credit_card,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
                                                   Text(
-                                                      widget.visas[i]["name"]
+                                                      widget.visas[i]["id"]
+                                                              ["name"]
                                                           .toString(),
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.black)),
+                                                  Text(
+                                                      Jiffy(widget.visas[i]
+                                                              ["expiryDate"])
+                                                          .yMMMMd
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.black54)),
                                                 ],
                                               ),
                                             )),
@@ -142,9 +161,24 @@ class _VaccinVisaState extends State<VaccinVisa> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "Vaccsine ",
-                            style: TextStyle(color: Colors.black, fontSize: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                  icon: SvgPicture.asset(
+                                "assets/images/vaccin.svg",
+                                width: 30,
+                                height: 30,
+                              )),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Vaccsine ",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                              ),
+                            ],
                           ),
                         ),
                         widget.vaccines.length == 0
@@ -193,27 +227,28 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                             child: Center(
                                                 child: Padding(
                                               padding: const EdgeInsets.only(
-                                                  right: 10),
+                                                  right: 10, left: 10),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  IconButton(
-                                                      icon: SvgPicture.asset(
-                                                    "assets/images/vaccin.svg",
-                                                    width: 30,
-                                                    height: 30,
-                                                  )),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
                                                   Text(
-                                                      widget.vaccines[i]["name"]
+                                                      widget.vaccines[i]["id"]
+                                                              ["name"]
                                                           .toString(),
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.black)),
+                                                  Text(
+                                                      Jiffy(widget.vaccines[i]
+                                                              ["expiryDate"])
+                                                          .yMMMMd
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.black54)),
                                                 ],
                                               ),
                                             )),

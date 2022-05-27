@@ -10,6 +10,7 @@ import 'package:sweetalert/sweetalert.dart';
 import 'package:vato/SplashScreen.dart';
 
 import 'package:vato/constants/light_colors.dart';
+import 'package:jiffy/jiffy.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:csc_picker/csc_picker.dart';
@@ -59,6 +60,8 @@ class _StepperWidgetState extends State<StepperWidget>
   bool transport_required = true;
   bool round_trip = false;
   bool visaB = false;
+  bool vaccineB = false;
+
   bool docVisa = false;
 
   List<bool> vaccinList = [];
@@ -204,6 +207,7 @@ class _StepperWidgetState extends State<StepperWidget>
   dynamic selectedValuePartner;
   bool testTransport = false;
   bool testAccomdation = false;
+  bool testVisa = false;
 
   final List<DropdownMenuItem> partner = [];
 
@@ -705,6 +709,16 @@ class _StepperWidgetState extends State<StepperWidget>
                                       idVisa = value["data"]["_id"];
 
                                       missionVisa = value["data"]["name"];
+                                      for (var i = 0;
+                                          i < User["visa"].length;
+                                          i++) {
+                                        if (missionVisa ==
+                                            User["visa"][i]["id"]["name"]) {
+                                          setState(() {
+                                            testVisa = true;
+                                          });
+                                        }
+                                      }
 
                                       nbrDoc = value["data"]["documents_list"]
                                           .length;
@@ -760,6 +774,16 @@ class _StepperWidgetState extends State<StepperWidget>
 
                                       map['name'] = value["data"]["name"];
                                       map['isChecked'] = false;
+                                      map['vaccine'] = false;
+
+                                      for (var i = 0;
+                                          i < User["vaccine"].length;
+                                          i++) {
+                                        if (value["data"]["name"] ==
+                                            User["vaccine"][i]["id"]["name"]) {
+                                          map['vaccine'] = true;
+                                        }
+                                      }
                                       VaccinList.add(map);
                                     });
                                   }
@@ -2052,7 +2076,7 @@ class _StepperWidgetState extends State<StepperWidget>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(0),
                 height: 400,
                 child: Neumorphic(
                     style: NeumorphicStyle(
@@ -2115,10 +2139,13 @@ class _StepperWidgetState extends State<StepperWidget>
                                           padding: const EdgeInsets.only(
                                               top: 0.8, left: 12, right: 10),
                                           child: User != null
-                                              ? Text("" +
-                                                  User["passportValidity"]
-                                                      .substring(0, 10)
-                                                      .toString())
+                                              ? Text(
+                                                  Jiffy(User[
+                                                          "passportValidity"])
+                                                      .yMMMMd
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.black))
                                               : Text("null"),
                                           //  child: Text("Your Perdiem : "),
                                         ),
@@ -2130,7 +2157,7 @@ class _StepperWidgetState extends State<StepperWidget>
                           Padding(
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                               child: Container(
-                                height: 50,
+                                height: 100,
                                 // color: Colors.grey[200],
                                 child: Neumorphic(
                                   style: NeumorphicStyle(
@@ -2162,13 +2189,56 @@ class _StepperWidgetState extends State<StepperWidget>
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 0.8, left: 12, right: 10),
-                                        child: nbrDoc == 0
-                                            ? Text("Null")
-                                            : Text("" + missionVisa),
-                                        //  child: Text("Your Perdiem : "),
-                                      ),
+                                          padding: const EdgeInsets.only(
+                                              top: 0.8, left: 12, right: 10),
+                                          child: nbrDoc == 0
+                                              ? Text("Null")
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 10, 10, 0),
+                                                  child: Container(
+                                                    height: 50,
+                                                    // color: Colors.grey[200],
+                                                    child: Center(
+                                                        child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 10,
+                                                              left: 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              missionVisa
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black)),
+                                                          testVisa == true
+                                                              ? Icon(
+                                                                  Icons.check,
+                                                                  color: Colors
+                                                                      .green,
+                                                                )
+                                                              : Icon(
+                                                                  Icons
+                                                                      .clear_outlined,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                        ],
+                                                      ),
+                                                    )),
+                                                  ))
+
+                                          //  child: Text("Your Perdiem : "),
+                                          ),
                                     ],
                                   ),
                                 ),
@@ -2308,8 +2378,8 @@ class _StepperWidgetState extends State<StepperWidget>
               height: 20,
             ),
             Container(
-                padding: EdgeInsets.all(10),
-                height: 250,
+                padding: EdgeInsets.all(0),
+                height: 500,
                 child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: 1,
@@ -2333,38 +2403,177 @@ class _StepperWidgetState extends State<StepperWidget>
                           vaccineMission.length == 0
                               ? Center(child: Text("aucun vaccines"))
                               : Expanded(
-                                  child: SizedBox(
-                                    child: ListView.builder(
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: nbrVaccin,
-                                      itemBuilder: (context, i) {
-                                        return Card(
-                                            color: NeumorphicColors.background,
-                                            child: ListTile(
-                                              title: Text(
-                                                  "" + VaccinList[i]["name"]),
-                                              leading: Icon(Icons.medication),
-                                              trailing: Checkbox(
-                                                //  hoverColor: LightColors.kDarkBlue,
-                                                //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                                value: VaccinList[i]
-                                                    ["isChecked"],
-                                                onChanged: (newValue) {
-                                                  setState(() {
-                                                    VaccinList[i]["isChecked"] =
-                                                        newValue;
-                                                    print(
-                                                        "test test test ::: " +
-                                                            VaccinList
-                                                                .toString());
-                                                  });
-                                                },
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 10, 10, 0),
+                                          child: Container(
+                                            height: 200,
+                                            // color: Colors.grey[200],
+                                            child: Neumorphic(
+                                              style: NeumorphicStyle(
+                                                //     shape: NeumorphicShape.flat,
+                                                color:
+                                                    NeumorphicColors.background,
+                                                boxShape: NeumorphicBoxShape
+                                                    .roundRect(
+                                                        BorderRadius.circular(
+                                                            8)),
                                               ),
-                                            ));
-                                      },
-                                    ),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.info_outline,
+                                                          color: LightColors
+                                                              .kDarkBlue,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          "Applicable visa for mission country :",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      child: ListView.builder(
+                                                        //physics:NeverScrollableScrollPhysics(),
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        shrinkWrap: true,
+                                                        itemCount: nbrVaccin,
+                                                        itemBuilder:
+                                                            (context, i) {
+                                                          return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .fromLTRB(
+                                                                      10,
+                                                                      10,
+                                                                      10,
+                                                                      0),
+                                                              child: Container(
+                                                                height: 50,
+                                                                // color: Colors.grey[200],
+                                                                child: Center(
+                                                                    child:
+                                                                        Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      right: 10,
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                          VaccinList[i]["name"]
+                                                                              .toString(),
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.black)),
+                                                                      VaccinList[i]["vaccine"] ==
+                                                                              true
+                                                                          ? Icon(
+                                                                              Icons.check,
+                                                                              color: Colors.green,
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.clear_outlined,
+                                                                              color: Colors.red,
+                                                                            ),
+                                                                    ],
+                                                                  ),
+                                                                )),
+                                                              ));
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )),
+                                      Expanded(
+                                        child: Row(
+                                          //   mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Checkbox(
+                                              //  hoverColor: LightColors.kDarkBlue,
+                                              //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                              value: vaccineB,
+                                              onChanged: (bool value) {
+                                                setState(() {
+                                                  vaccineB = value;
+                                                });
+                                              },
+                                            ),
+                                            Flexible(
+                                              child: AutoSizeText(
+                                                "I want to get this vaccine requested documents. ",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      vaccineB == true
+                                          ? Expanded(
+                                              child: SizedBox(
+                                                child: ListView.builder(
+                                                  //physics:NeverScrollableScrollPhysics(),
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  shrinkWrap: true,
+                                                  itemCount: nbrVaccin,
+                                                  itemBuilder: (context, i) {
+                                                    return Card(
+                                                        color: NeumorphicColors
+                                                            .background,
+                                                        child: ListTile(
+                                                          title: Text("" +
+                                                              VaccinList[i]
+                                                                  ["name"]),
+                                                          leading: Icon(
+                                                              Icons.medication),
+                                                          trailing: Checkbox(
+                                                            //  hoverColor: LightColors.kDarkBlue,
+                                                            //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                                            value: VaccinList[i]
+                                                                ["isChecked"],
+                                                            onChanged:
+                                                                (newValue) {
+                                                              setState(() {
+                                                                VaccinList[i][
+                                                                        "isChecked"] =
+                                                                    newValue;
+                                                                print("test test test ::: " +
+                                                                    VaccinList
+                                                                        .toString());
+                                                              });
+                                                            },
+                                                          ),
+                                                        ));
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : new Container(),
+                                    ],
                                   ),
                                 )
                         ]))),
