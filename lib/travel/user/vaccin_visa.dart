@@ -50,9 +50,12 @@ class _VaccinVisaState extends State<VaccinVisa> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.credit_card,
-                              ),
+                              IconButton(
+                                  icon: Image.asset(
+                                "assets/images/visa.png",
+                                width: 30,
+                                height: 30,
+                              )),
                               SizedBox(
                                 width: 10,
                               ),
@@ -174,7 +177,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                 width: 10,
                               ),
                               Text(
-                                "Vaccsine ",
+                                "Vaccine ",
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 20),
                               ),

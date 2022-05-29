@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:search_choices/search_choices.dart';
@@ -223,6 +224,11 @@ class _StepperWidgetState extends State<StepperWidget>
         print("object ...............");
         //  loginUser();
         Missions missions = new Missions();
+        Expenses expenses = new Expenses();
+        Transportations transportation = new Transportations();
+        Accomodations accomodations = new Accomodations();
+        Vaccines vaccines = new Vaccines();
+        Visas visas = new Visas();
         missions.title = title;
         missions.MissionFormula = formula["_id"];
         missions.MissionObjet = object["_id"];
@@ -232,28 +238,33 @@ class _StepperWidgetState extends State<StepperWidget>
         missions.dateDebut = StartDate;
         missions.dateFinal = EndDate;
         if (peridemObject == null) {
-          missions.perdiem = null;
+          expenses.perdiem = null;
         } else {
-          missions.perdiem = peridemObject[0]["_id"];
+          expenses.perdiem = peridemObject[0]["_id"];
         }
-        missions.amount = double.parse(amount);
-        missions.expensesComment = expensesComment;
-        missions.transportationComment = transportationComment;
+        expenses.amount = double.parse(amount);
+        expenses.expensesComment = expensesComment;
 
-        missions.needTransport = testTransport;
-        missions.allerRetour = round_trip;
-        missions.missionCountry = pays_mission["_id"];
-        missions.missionCity = city_mission["_id"];
+        missions.expenses = expenses;
 
+        transportation.transportationComment = transportationComment;
+
+        transportation.needTransport = testTransport;
+        transportation.allerRetour = round_trip;
+        transportation.missionCountry = pays_mission["_id"];
+        transportation.missionCity = city_mission["_id"];
+
+        missions.transportations = transportation;
         print("testAccomdation" + testAccomdation.toString());
         print("testTransport" + testTransport.toString());
         print("round_trip" + testAccomdation.toString());
 
         if (testAccomdation == true) {
-          missions.hotel = hotelPreference;
-          missions.rateHotelMax = Mximum_rate_per_night["_id"];
-          missions.altitude = altitudeHotel;
-          missions.longitude = longitudeHotel;
+          accomodations.hotel = hotelPreference;
+          accomodations.rateHotelMax = Mximum_rate_per_night["_id"];
+          accomodations.altitude = altitudeHotel;
+          accomodations.longitude = longitudeHotel;
+          missions.accomodations = accomodations;
         }
         if (testTransport == true) {
           /*  missions.departureCountryAller = pays_depart["_id"];
@@ -261,22 +272,26 @@ class _StepperWidgetState extends State<StepperWidget>
           missions.destinationCountryAller = pays_destination["_id"];
           missions.destinationCityAller = city_destination["_id"];*/
 
-          missions.departureCountryAller = departure_country["_id"];
-          missions.departureCityAller = departure_city["_id"];
-          missions.destinationCountryAller = destination_country["_id"];
-          missions.destinationCityAller = destination_city["_id"];
+          transportation.departureCountryAller = departure_country["_id"];
+          transportation.departureCityAller = departure_city["_id"];
+          transportation.destinationCountryAller = destination_country["_id"];
+          transportation.destinationCityAller = destination_city["_id"];
+          missions.transportations = transportation;
         }
-        missions.validtePassport = " 2058-28-02";
-        missions.visa = idVisa;
-        missions.obtenirVisa = visaB;
+        visas.validtePassport = " 2058-28-02";
+        visas.visa = idVisa;
+        visas.obtenirVisa = visaB;
 
         for (var i = 0; i < nbrDoc; i++) {
-          missions.documents_visa.add(VisaList[i]);
+          visas.documents_visa.add(VisaList[i]);
         }
 
         for (var i = 0; i < nbrVaccin; i++) {
-          missions.vaccin.add(VaccinList[i]);
+          vaccines.vaccin.add(VaccinList[i]);
         }
+
+        missions.visas = visas;
+        missions.vaccines = vaccines;
 
         Requests request = new Requests();
         request.idSender = User_id;
@@ -1695,33 +1710,6 @@ class _StepperWidgetState extends State<StepperWidget>
                                         ],
                                       ),
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          if (city_depart == departure_city) {
-                                            destination_country = pays_depart;
-                                            destination_city = city_depart;
-
-                                            departure_country =
-                                                pays_destination;
-                                            departure_city = city_destination;
-                                          } else {
-                                            destination_country =
-                                                pays_destination;
-                                            destination_city = city_destination;
-
-                                            departure_country = pays_depart;
-                                            departure_city = city_depart;
-                                          }
-                                        });
-                                      },
-                                      child: Image(
-                                          color: Colors.black54,
-                                          width: 50,
-                                          height: 50,
-                                          image: AssetImage(
-                                              'assets/images/doubleFleche.png')),
-                                    )
                                   ],
                                 ),
                               ),
@@ -1783,21 +1771,37 @@ class _StepperWidgetState extends State<StepperWidget>
                                                                           "name"]
                                                                       .toString() +
                                                                   " )")),
-                                                      _selectedIndex == 0
-                                                          ? Icon(
-                                                              Icons
-                                                                  .compare_arrows,
-                                                              color: Colors
-                                                                  .black54,
-                                                            )
-                                                          : Icon(
-                                                              Icons
-                                                                  .arrow_forward,
-                                                              color: Colors
-                                                                  .black54,
-                                                            ),
-                                                      SizedBox(
-                                                        width: 20,
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.compare_arrows,
+                                                          color: Colors.black54,
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            if (city_depart ==
+                                                                departure_city) {
+                                                              destination_country =
+                                                                  pays_depart;
+                                                              destination_city =
+                                                                  city_depart;
+
+                                                              departure_country =
+                                                                  pays_destination;
+                                                              departure_city =
+                                                                  city_destination;
+                                                            } else {
+                                                              destination_country =
+                                                                  pays_destination;
+                                                              destination_city =
+                                                                  city_destination;
+
+                                                              departure_country =
+                                                                  pays_depart;
+                                                              departure_city =
+                                                                  city_depart;
+                                                            }
+                                                          });
+                                                        },
                                                       ),
                                                       Flexible(
                                                           child: destination_city ==
@@ -2092,10 +2096,21 @@ class _StepperWidgetState extends State<StepperWidget>
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              "Visa ",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                    icon: Image.asset(
+                                  "assets/images/visa.png",
+                                  width: 30,
+                                  height: 30,
+                                )),
+                                Text(
+                                  "Visa ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
@@ -2310,70 +2325,6 @@ class _StepperWidgetState extends State<StepperWidget>
                                     )
                               : new Container(),
                         ]))),
-            /*    Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Validité du passeport : 24/08/2026"),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                nbrDoc == 0
-                    ? Text("Visa : null ")
-                    : Text("Visa : " + missionVisa),
-              ],
-            ),
-            Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Checkbox(
-                  //  hoverColor: LightColors.kDarkBlue,
-                  //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: visaB,
-                  onChanged: (bool value) {
-                    setState(() {
-                      visaB = value;
-                    });
-                  },
-                ),
-                Text("Je dois obtenir le visa "),
-              ],
-            ),
-            visaB == true
-                ? nbrDoc == 0
-                    ? Center(child: Text("aucun visa"))
-                    : ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: nbrDoc,
-                        itemBuilder: (context, i) {
-                          return Card(
-                            color: NeumorphicColors.background,
-                            child: ListTile(
-                              subtitle: Text("number of document : " +
-                                  VisaList[i]["nbrDoc"].toString()),
-                              title: Text("" + VisaList[i]["name"]),
-                              leading: Icon(Icons.file_copy),
-                              trailing: Checkbox(
-                                //  hoverColor: LightColors.kDarkBlue,
-                                //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                value: VisaList[i]["isChecked"],
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    VisaList[i]["isChecked"] = newValue;
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        })
-                : new Container(),*/
-
             SizedBox(
               height: 20,
             ),
@@ -2394,10 +2345,21 @@ class _StepperWidgetState extends State<StepperWidget>
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              "Vaccines ",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                    icon: SvgPicture.asset(
+                                  "assets/images/vaccin.svg",
+                                  width: 30,
+                                  height: 30,
+                                )),
+                                Text(
+                                  "Vaccines ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                ),
+                              ],
                             ),
                           ),
                           vaccineMission.length == 0

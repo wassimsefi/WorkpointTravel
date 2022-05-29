@@ -15,6 +15,7 @@ import 'package:vato/services/RequestService.dart';
 import 'package:vato/services/UserServices.dart';
 import 'package:vato/widgets/navBar.dart';
 import 'package:vato/widgets/topContainerScan.dart';
+import 'package:jiffy/jiffy.dart';
 
 class Myrequests extends StatefulWidget {
   final int manager;
@@ -312,7 +313,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                 )),
                                                           ),
                                                           Expanded(
-                                                            flex: 9,
+                                                            flex: 11,
                                                             child: Container(
                                                               child: Column(
                                                                 mainAxisAlignment:
@@ -376,7 +377,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                               width: 5,
                                                                             ),
                                                                             Expanded(
-                                                                              child: AutoSizeText(filtred[x]["mission"]["missionCountry"]["name"].toString() + " " + filtred[x]["mission"]["missionCity"]["name"].toString(), style: TextStyle(color: Colors.black54)),
+                                                                              child: AutoSizeText(filtred[x]["mission"]["transportation"]["missionCountry"]["name"] + " " + filtred[x]["mission"]["transportation"]["missionCity"]["name"], style: TextStyle(color: Colors.black54)),
                                                                             )
                                                                           ]),
                                                                     ),
@@ -391,70 +392,28 @@ class _MyrequestsState extends State<Myrequests> {
                                                                           ? Column(
                                                                               children: [
                                                                                 Center(
-                                                                                  child: filtred[x]["mission"]["onewayDepartureCountry"] == null
-                                                                                      ? Expanded(
-                                                                                          child: AutoSizeText("pas de deolacement", style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                        )
-                                                                                      : Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                                                                                          Icon(
-                                                                                            Icons.flight_takeoff_outlined,
-                                                                                            color: Colors.black54,
-                                                                                          ),
-                                                                                          SizedBox(
-                                                                                            width: 5,
-                                                                                          ),
-
-                                                                                          Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["onewayDepartureCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                          ),
-                                                                                          SizedBox(
-                                                                                            width: 0,
-                                                                                          ),
-                                                                                          filtred[x]["mission"]["roundTrip"] == true
-                                                                                              ? Icon(
-                                                                                                  Icons.compare_arrows,
-                                                                                                  color: Colors.black54,
-                                                                                                )
-                                                                                              : Icon(
-                                                                                                  Icons.arrow_right_alt,
-                                                                                                  color: Colors.black54,
-                                                                                                ),
-                                                                                          SizedBox(
-                                                                                            width: 2,
-                                                                                          ),
-                                                                                          Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["onewayDestinationCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                          ),
-
-                                                                                          //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                                                        ]),
+                                                                                  child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                                                                    Icon(
+                                                                                      Icons.date_range,
+                                                                                      color: Colors.black54,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: 5,
+                                                                                    ),
+                                                                                    AutoSizeText(
+                                                                                      Jiffy(filtred[x]["mission"]["startDate"]).MMMMd.toString(),
+                                                                                      style: TextStyle(color: Colors.black54, fontSize: 12),
+                                                                                    ),
+                                                                                    AutoSizeText(
+                                                                                      " / ",
+                                                                                      style: TextStyle(color: Colors.black54, fontSize: 12),
+                                                                                    ),
+                                                                                    AutoSizeText(
+                                                                                      Jiffy(filtred[x]["mission"]["endDate"]).MMMMd.toString(),
+                                                                                      style: TextStyle(color: Colors.black54, fontSize: 12),
+                                                                                    ),
+                                                                                  ]),
                                                                                 ),
-                                                                                /* filtred[x]["mission"]["roundTrip"] == true
-                                                                                    ? Center(
-                                                                                        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                                                                                          Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["returnDepartureCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                          ),
-                                                                                          SizedBox(
-                                                                                            width: 0,
-                                                                                          ),
-
-                                                                                          Icon(
-                                                                                            Icons.compare_arrows,
-                                                                                            color: Colors.black54,
-                                                                                          ),
-                                                                                          SizedBox(
-                                                                                            width: 2,
-                                                                                          ),
-                                                                                          Expanded(
-                                                                                            child: AutoSizeText(filtred[x]["mission"]["returnDestinationCountry"]["name"], style: TextStyle(color: Colors.black54, fontSize: 10)),
-                                                                                          ),
-
-                                                                                          //  Expanded( child: AutoSizeText(filtred[x]["mission"]["departureCountryAller"], style: TextStyle(color: Colors.black54)),)
-                                                                                        ]),
-                                                                                      )
-                                                                                    : Container(),
-                                                                                    */
                                                                               ],
                                                                             )
                                                                           : Container()),
@@ -489,9 +448,11 @@ class _MyrequestsState extends State<Myrequests> {
                                                           ),
                                                           Spacer(),
                                                           Expanded(
-                                                            flex: 5,
+                                                            flex: 4,
                                                             child: Column(
-                                                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .end,
@@ -658,34 +619,6 @@ class _MyrequestsState extends State<Myrequests> {
                                                                                     "Rejected",
                                                                                     style: TextStyle(color: Colors.red, fontSize: 13),
                                                                                   ))),
-                                                                Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomRight,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              3.0),
-                                                                      child: (filtred[x]["name"].toString() ==
-                                                                              "Mission")
-                                                                          ? Column(
-                                                                              children: [
-                                                                                Text(
-                                                                                  new DateFormat('yyyy-MM-dd').format(DateTime.tryParse(filtred[x]["mission"]["startDate"])).toString(),
-                                                                                  style: TextStyle(color: Colors.black54, fontSize: 12),
-                                                                                ),
-                                                                                Text(
-                                                                                  new DateFormat('yyyy-MM-dd').format(DateTime.tryParse(filtred[x]["mission"]["endDate"])).toString(),
-                                                                                  style: TextStyle(color: Colors.black54, fontSize: 12),
-                                                                                ),
-                                                                              ],
-                                                                            )
-                                                                          : Text(
-                                                                              new DateFormat('yyyy-MM-dd  HH:mm').format(DateTime.tryParse(filtred[x]["createdAt"])).toString(),
-                                                                              style: TextStyle(color: Colors.black54, fontSize: 12),
-                                                                            ),
-                                                                    )),
                                                               ],
                                                             ),
                                                           )
