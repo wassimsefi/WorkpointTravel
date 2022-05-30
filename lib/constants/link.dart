@@ -10,7 +10,7 @@ class link {
 
   // static String linkw = "http://192.168.0.5:5000";
 
-  static String linkw = "http://192.168.0.5:5000";
+  static String linkw = "http://192.168.100.70:5000";
 
   // static String linkw = "http://192.168.0.4:5000";
 

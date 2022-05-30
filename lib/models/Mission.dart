@@ -20,7 +20,7 @@ class Missions {
   Vaccines vaccines;
   Missions.fromJsonMap(Map<String, dynamic> map)
       : title = map["title"],
-        MissionFormula = map["MissionFormula"],
+        MissionFormula = map["Formula"],
         MissionObjet = map["MissionObjet"],
         partner = map["partner"],
         manager = map["manager"],
@@ -43,7 +43,7 @@ class Missions {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["title"] = title;
-    data["MissionFormula"] = MissionFormula;
+    data["Formula"] = MissionFormula;
     data["MissionObjet"] = MissionObjet;
     data["partner"] = partner;
     data["manager"] = manager;
@@ -142,6 +142,7 @@ class Accomodations {
   String rateHotelMax;
   double longitude;
   double altitude;
+  bool needAccomodation;
 
   List<Map<dynamic, dynamic>> documents_visa = [];
   List<Map<dynamic, dynamic>> vaccin = [];
@@ -149,6 +150,7 @@ class Accomodations {
   Accomodations.fromJsonMap(Map<String, dynamic> map)
       : hotel = map["accomodationComment"],
         rateHotelMax = map["cityCap"],
+        needAccomodation = map["needAccomodation"],
         longitude = map["longitude"],
         altitude = map["altitude"];
 
@@ -157,6 +159,8 @@ class Accomodations {
 
     data["accomodationComment"] = hotel;
     data["cityCap"] = rateHotelMax;
+    data["needAccomodation"] = needAccomodation;
+
     data["longitude"] = longitude;
     data["altitude"] = altitude;
 

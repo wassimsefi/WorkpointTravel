@@ -259,6 +259,9 @@ class _StepperWidgetState extends State<StepperWidget>
         print("testTransport" + testTransport.toString());
         print("round_trip" + testAccomdation.toString());
 
+        accomodations.needAccomodation = testAccomdation;
+        missions.accomodations = accomodations;
+
         if (testAccomdation == true) {
           accomodations.hotel = hotelPreference;
           accomodations.rateHotelMax = Mximum_rate_per_night["_id"];
@@ -790,13 +793,15 @@ class _StepperWidgetState extends State<StepperWidget>
                                       map['name'] = value["data"]["name"];
                                       map['isChecked'] = false;
                                       map['vaccine'] = false;
-
+                                      map['vaccineDate'] = null;
                                       for (var i = 0;
                                           i < User["vaccine"].length;
                                           i++) {
                                         if (value["data"]["name"] ==
                                             User["vaccine"][i]["id"]["name"]) {
                                           map['vaccine'] = true;
+                                          map['vaccineDate'] =
+                                              User["vaccine"][i]["expiryDate"];
                                         }
                                       }
                                       VaccinList.add(map);
@@ -2330,7 +2335,7 @@ class _StepperWidgetState extends State<StepperWidget>
             ),
             Container(
                 padding: EdgeInsets.all(0),
-                height: 500,
+                height: 300,
                 child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: 1,
@@ -2441,12 +2446,31 @@ class _StepperWidgetState extends State<StepperWidget>
                                                                         MainAxisAlignment
                                                                             .spaceBetween,
                                                                     children: [
-                                                                      Text(
-                                                                          VaccinList[i]["name"]
-                                                                              .toString(),
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.black)),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Checkbox(
+                                                                            //  hoverColor: LightColors.kDarkBlue,
+                                                                            //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                                                            value:
+                                                                                VaccinList[i]["isChecked"],
+                                                                            onChanged:
+                                                                                (newValue) {
+                                                                              setState(() {
+                                                                                VaccinList[i]["isChecked"] = newValue;
+                                                                                print("test test test ::: " + VaccinList.toString());
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          Text(
+                                                                              VaccinList[i]["name"].toString(),
+                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                                                                          VaccinList[i]["vaccineDate"] == null
+                                                                              ? Text("", style: TextStyle(color: Colors.black54))
+                                                                              : Text(" ( " + Jiffy(VaccinList[i]["vaccineDate"]).yMMMMd.toString() + " )", style: TextStyle(color: Colors.black54)),
+                                                                        ],
+                                                                      ),
                                                                       VaccinList[i]["vaccine"] ==
                                                                               true
                                                                           ? Icon(
@@ -2469,72 +2493,6 @@ class _StepperWidgetState extends State<StepperWidget>
                                               ),
                                             ),
                                           )),
-                                      Expanded(
-                                        child: Row(
-                                          //   mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Checkbox(
-                                              //  hoverColor: LightColors.kDarkBlue,
-                                              //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                              value: vaccineB,
-                                              onChanged: (bool value) {
-                                                setState(() {
-                                                  vaccineB = value;
-                                                });
-                                              },
-                                            ),
-                                            Flexible(
-                                              child: AutoSizeText(
-                                                "I want to get this vaccine requested documents. ",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      vaccineB == true
-                                          ? Expanded(
-                                              child: SizedBox(
-                                                child: ListView.builder(
-                                                  //physics:NeverScrollableScrollPhysics(),
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  shrinkWrap: true,
-                                                  itemCount: nbrVaccin,
-                                                  itemBuilder: (context, i) {
-                                                    return Card(
-                                                        color: NeumorphicColors
-                                                            .background,
-                                                        child: ListTile(
-                                                          title: Text("" +
-                                                              VaccinList[i]
-                                                                  ["name"]),
-                                                          leading: Icon(
-                                                              Icons.medication),
-                                                          trailing: Checkbox(
-                                                            //  hoverColor: LightColors.kDarkBlue,
-                                                            //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                                            value: VaccinList[i]
-                                                                ["isChecked"],
-                                                            onChanged:
-                                                                (newValue) {
-                                                              setState(() {
-                                                                VaccinList[i][
-                                                                        "isChecked"] =
-                                                                    newValue;
-                                                                print("test test test ::: " +
-                                                                    VaccinList
-                                                                        .toString());
-                                                              });
-                                                            },
-                                                          ),
-                                                        ));
-                                                  },
-                                                ),
-                                              ),
-                                            )
-                                          : new Container(),
                                     ],
                                   ),
                                 )

@@ -146,6 +146,9 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                 ),
                               ),
                       ]))),
+          SizedBox(
+            height: 40,
+          ),
           Container(
               padding: EdgeInsets.all(10),
               height: 200,

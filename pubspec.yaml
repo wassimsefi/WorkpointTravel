@@ -166,6 +166,7 @@ flutter:
     - assets/logoff.json
     - assets/images/vaccin.svg
     - assets/images/iconandroid.png
+    - assets/images/status.svg
 
 flutter_intl:
   enabled: true

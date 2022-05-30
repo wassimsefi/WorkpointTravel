@@ -36,6 +36,20 @@ class MissionService {
     return response.data;
   }
 
+  Future<dynamic> CancelMission(String request, String tokenLogin) async {
+    final token = await _storage.read(key: 'token');
+    response =
+        await dio.delete(link.linkw + "/api/Mission/deleteMission/" + request,
+            options: Dio.Options(headers: {
+              'Content-type': 'application/json',
+              'Accept': 'application/json',
+              'x-access-token': token,
+            }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+    return response.data;
+  }
+
   Future<dynamic> getFormulabyName(name) async {
     //final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/Formula/getId/" + name,

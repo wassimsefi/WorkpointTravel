@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,7 @@ import 'package:vato/constants/light_colors.dart';
 import 'package:vato/constants/link.dart';
 import 'package:vato/screens/Home/Mission/detail_mission.dart';
 import 'package:vato/screens/search/My%20Requests/myrequests.dart';
+import 'package:vato/services/MissionService.dart';
 import 'package:vato/services/OperationsService.dart';
 import 'package:vato/services/RequestService.dart';
 import 'package:vato/widgets/navBar.dart';
@@ -49,6 +51,8 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
   String idUser;
   OperationService _operationService = new OperationService();
   RequestService _requestService = new RequestService();
+  MissionService _missionService = new MissionService();
+
   DateTime selectedDate;
   Future<dynamic> getDetail;
   List<dynamic> Operations = [];
@@ -141,8 +145,13 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                     alignment: Alignment.centerRight,
                                     child: Column(
                                       children: [
-                                        Icon(Icons.details),
-                                        Text("Show >>")
+                                        IconButton(
+                                            icon: Image.asset(
+                                          "assets/images/iconStatus.png",
+                                          // width: 100,
+                                          // height: 100,
+                                        )),
+                                        Text("Status")
                                       ],
                                     ),
                                   ),
@@ -641,7 +650,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                   right: 10),
                                                           child: Text(
                                                               widget.mission[
-                                                                      "MissionFormula"]
+                                                                      "Formula"]
                                                                       ["name"]
                                                                   .toString(),
                                                               style: TextStyle(
@@ -1430,7 +1439,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                               "vaccines"]
                                                                           .length *
                                                                       20.0 +
-                                                                  35,
+                                                                  20,
                                                               width: MediaQuery.of(
                                                                           context)
                                                                       .size
@@ -1441,10 +1450,10 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                                     const EdgeInsets
                                                                             .all(
                                                                         8.0),
-                                                                child: Center(
+                                                                child: Expanded(
                                                                   child: ListView.builder(
-                                                                      scrollDirection: Axis.vertical,
-                                                                      //shrinkWrap: true,
+                                                                      //    scrollDirection: Axis.vertical,
+                                                                      shrinkWrap: true,
                                                                       padding: EdgeInsets.only(top: 5.0),
                                                                       itemCount: widget.mission["vaccine"]["vaccines"].length,
                                                                       itemBuilder: (context, s) {
@@ -1722,6 +1731,10 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                   }
                                                 });
                                               } else {
+                                                print("aaaaaaaaaa : " +
+                                                    Operations[0]["request"]
+                                                            ["mission"]["_id"]
+                                                        .toString());
                                                 return true;
                                               }
                                               // return false to keep dialog
@@ -1761,31 +1774,76 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                 showCancelButton: true,
                                                 onPress: (bool isConfirm) {
                                               if (isConfirm) {
-                                                _requestService.CancelRequet(
-                                                        widget.Request_id,
-                                                        tokenLogin)
+                                                _operationService
+                                                        .CancelOperation(
+                                                            Operations[0]
+                                                                ["_id"],
+                                                            tokenLogin)
                                                     .then((value) {
                                                   if (value["status"]
                                                           .toString() ==
                                                       "200") {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Myrequests(
-                                                                        1)));
-                                                    SweetAlert.show(context,
-                                                        subtitle: "Deleting...",
-                                                        style: SweetAlertStyle
-                                                            .loading);
-                                                    new Future.delayed(
-                                                        new Duration(
-                                                            seconds: 2), () {
-                                                      SweetAlert.show(context,
-                                                          subtitle: "Done !",
-                                                          style: SweetAlertStyle
-                                                              .success);
+                                                    _requestService.CancelRequet(
+                                                            Operations[0]
+                                                                    ["request"]
+                                                                ["_id"],
+                                                            tokenLogin)
+                                                        .then((value) {
+                                                      if (value["status"]
+                                                              .toString() ==
+                                                          "200") {
+                                                        _missionService.CancelMission(
+                                                                Operations[0][
+                                                                        "request"]
+                                                                    [
+                                                                    "mission"]["_id"],
+                                                                tokenLogin)
+                                                            .then((value) {
+                                                          if (value["status"]
+                                                                  .toString() ==
+                                                              "200") {
+                                                            SweetAlert.show(
+                                                                context,
+                                                                subtitle:
+                                                                    "Deleting...",
+                                                                style:
+                                                                    SweetAlertStyle
+                                                                        .loading);
+                                                            new Future.delayed(
+                                                                new Duration(
+                                                                    seconds: 2),
+                                                                () {
+                                                              SweetAlert.show(
+                                                                  context,
+                                                                  subtitle:
+                                                                      "Done !",
+                                                                  style: SweetAlertStyle
+                                                                      .success);
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          Myrequests(
+                                                                              1)));
+                                                            });
+                                                          } else {
+                                                            SweetAlert.show(
+                                                                context,
+                                                                subtitle:
+                                                                    "Ooops! Something Went Wrong!!",
+                                                                style:
+                                                                    SweetAlertStyle
+                                                                        .error);
+                                                          }
+                                                        });
+                                                      } else {
+                                                        SweetAlert.show(context,
+                                                            subtitle:
+                                                                "Ooops! Something Went Wrong!!",
+                                                            style:
+                                                                SweetAlertStyle
+                                                                    .error);
+                                                      }
                                                     });
                                                   } else {
                                                     SweetAlert.show(context,
@@ -1796,6 +1854,10 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                   }
                                                 });
                                               } else {
+                                                print("aaaaaaaaaa : " +
+                                                    Operations[0]["request"]
+                                                            ["mission"]["_id"]
+                                                        .toString());
                                                 return true;
                                               }
                                               // return false to keep dialog
