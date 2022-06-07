@@ -22,48 +22,48 @@ class _StepperpageState extends State<Stepperpage> {
   List<Doodle> doodles = [];
   final List<String> listProcessing = [];
   final List<String> listValidation = [];
+  final List<String> listProcessingEtat = [];
+  final List<bool> listValidationEtat = [];
 
   @override
   void initState() {
-    if (widget.mission["transportValidation"] == false) {
-      listProcessing.add("Transport");
-    } else {
-      listValidation.add("Transport");
-    }
-    if (widget.mission["hotelValidation"] == false) {
-      listProcessing.add("Hotel");
-    } else {
-      listValidation.add("Hotel");
-    }
-    if (widget.mission["visaValidation"] == false) {
-      listProcessing.add("Visa");
-    } else {
-      listValidation.add("Visa");
-    }
-    if (widget.mission["CostsValidation"] == false) {
-      listProcessing.add("Per diem");
-    } else {
-      listValidation.add("Per diem");
-    }
-    if (widget.mission["vaccineValidation"] == false) {
-      listProcessing.add("Vaccine");
-    } else {
-      listValidation.add("Vaccine");
-    }
-    //listProcessing.addAll(["Transport", "Hotel", "Visa", "Per diem", "Vaccine"]);
+    listProcessing.add("Partener");
+    listProcessing.add("Manager");
+    listProcessing.add("Facilite");
+    listProcessing.add("DG");
+
+    listProcessingEtat.add(widget.mission["stepPartener"]["status"]);
+    listProcessingEtat.add(widget.mission["stepManager"]["status"]);
+    listProcessingEtat.add(widget.mission["stepFacilite"]["status"]);
+    listProcessingEtat.add(widget.mission["stepDG"]["status"]);
+
+    listValidation.add("Transport");
+
+    listValidation.add("Hotel");
+    listValidation.add("Visa");
+    listValidation.add("Per diem");
+    listValidation.add("Vaccine");
+
+    listValidationEtat.add(widget.mission["transportValidation"]);
+    listValidationEtat.add(widget.mission["hotelValidation"]);
+    listValidationEtat.add(widget.mission["visaValidation"]);
+    listValidationEtat.add(widget.mission["CostsValidation"]);
+    listValidationEtat.add(widget.mission["vaccineValidation"]);
 
     doodles.add(Doodle(
         name: "Draft",
         etat: "All",
         content: [],
+        Etatcontent: [],
         doodle:
             "https://www.google.com/logos/doodles/2016/abd-al-rahman-al-sufis-azophi-1113th-birthday-5115602948587520-hp2x.jpg",
         icon: Icon(Icons.lock_outline, color: Colors.white),
         iconBackground: LightColors.kDarkBlue));
     doodles.add(Doodle(
-        name: "Processing ",
+        name: "Processing",
         etat: "In progress",
         content: listProcessing,
+        Etatcontent: listProcessingEtat,
         doodle:
             "https://lh3.googleusercontent.com/ZTlbHDpH59p-aH2h3ggUdhByhuq1AfviGuoQpt3QqaC7bROzbKuARKeEfggkjRmAwfB1p4yKbcjPusNDNIE9O7STbc9C0SAU0hmyTjA=s660",
         icon: Icon(
@@ -76,6 +76,7 @@ class _StepperpageState extends State<Stepperpage> {
         name: "Validation",
         etat: "Done",
         content: listValidation,
+        Etatcontent: listValidationEtat,
         doodle:
             "https://www.google.com/logos/doodles/2015/abu-al-wafa-al-buzjanis-1075th-birthday-5436382608621568-hp2x.jpg",
         icon: Icon(
@@ -87,6 +88,7 @@ class _StepperpageState extends State<Stepperpage> {
         name: "Ending",
         etat: "Ending",
         content: [],
+        Etatcontent: [],
         doodle:
             "https://lh3.googleusercontent.com/bFwiXFZEum_vVibMzkgPlaKZMDc66W-S_cz1aPKbU0wyNzL_ucN_kXzjOlygywvf6Bcn3ipSLTsszGieEZTLKn9NHXnw8VJs4-xU6Br9cg=s660",
         icon: Icon(
@@ -148,7 +150,7 @@ class _StepperpageState extends State<Stepperpage> {
             clipBehavior: Clip.antiAlias,
             child: Container(
               width: width * 0.8,
-              height: 120 * (doodle.content.length / 8 + 1),
+              height: 120 * (doodle.content.length / 8 + 1) + 25,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -179,25 +181,53 @@ class _StepperpageState extends State<Stepperpage> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: doodle.content.length,
                       itemBuilder: (context, index) {
-                        return Text(doodle.content[index]);
+                        return doodle.name == "Processing"
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(doodle.content[index].toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      )),
+                                  doodle.Etatcontent[index] == "Done"
+                                      ? Icon(
+                                          Icons.check,
+                                          color: Colors.green,
+                                        )
+                                      : Icon(
+                                          Icons.clear_outlined,
+                                          color: Colors.red,
+                                        ),
+                                ],
+                              )
+                            : doodle.name == "Validation"
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(doodle.content[index].toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          )),
+                                      doodle.Etatcontent[index] == true
+                                          ? Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                            )
+                                          : Icon(
+                                              Icons.clear_outlined,
+                                              color: Colors.red,
+                                            ),
+                                    ],
+                                  )
+                                : Text(doodle.content[index],
+                                    //   textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ));
                       },
                     )
-                    /*   ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: doodle.content.length,
-                      itemBuilder: (context, index) {
-                        return Text(doodle.content[index]);
-                      },
-                    )*/
-                    /*                (doodle.content.length!=0) ?
-                        ListView.builder(
-                        itemCount: doodle.content.length,
-                        itemBuilder: (context, x) {
-                   return  Text(doodle.content[x]);
-                        })
-                        :
-                        Text("")*/
                   ],
                 ),
               ),
@@ -210,141 +240,4 @@ class _StepperpageState extends State<Stepperpage> {
         iconBackground: doodle.iconBackground,
         icon: doodle.icon);
   }
-
-/*  List<Step> steps = [
-    Step(
-      title: Text('Step 1'),
-      content: Text('Hello!'),
-      isActive: true,
-    ),
-    Step(
-      title: Text('Step 2'),
-      content: Text('World!'),
-      isActive: true,
-    ),
-    Step(
-      title: Text('Step 3'),
-      content: Text('Hello World!'),
-      state: StepState.complete,
-      isActive: true,
-    ),
-  ];*/
-
-/*  @override
-  Widget build(BuildContext context) {
-
-    double _height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
-   return CupertinoPageScaffold(
-     backgroundColor: NeumorphicColors.background,
-     navigationBar: CupertinoNavigationBar(
-       backgroundColor: NeumorphicColors.background,
-       middle: Text('Audit SG'),
-     ),
-     child: SafeArea(
-       child: OrientationBuilder(
-         builder: (BuildContext context, Orientation orientation) {
-           switch (orientation) {
-             case Orientation.portrait:
-               return _buildStepper(StepperType.vertical);
-             case Orientation.landscape:
-               return _buildStepper(StepperType.horizontal);
-             default:
-               throw UnimplementedError(orientation.toString());
-           }
-         },
-       ),
-     ),
-   );
-  }
-  CupertinoStepper _buildStepper(StepperType type) {
-    final canCancel = currentStep > 0;
-    final canContinue = currentStep < 3;
-    return CupertinoStepper(
-      type: type,
-      currentStep: currentStep,
-      onStepTapped: (step) => setState(() => currentStep = step),
-      onStepCancel: null,
-      onStepContinue:  null,
-      steps: [
-        for (var i = 0; i < 3; ++i)
-          _buildStep(
-            title: Text('Step ${i + 1}'),
-            isActive: i == currentStep,
-            state: i == currentStep
-                ? StepState.editing
-                : i < currentStep ? StepState.complete : StepState.indexed,
-          ),
-        _buildStep(
-          title: Text('Error'),
-          state: StepState.error,
-        ),
-        _buildStep(
-          title: Text('Disabled'),
-          state: StepState.disabled,
-        )
-      ],
-    );
-  }
-
-  Step _buildStep(
-      {
-    Widget title,
-    StepState state = StepState.indexed,
-    bool isActive = false,
-  }
-  )*/
-/*  {
-    return Step(
-      title: title,
-      subtitle: Text('Subtitle'),
-      state: state,
-      isActive: isActive,
-      content: Column(
-        children: <Widget>[
-          Text("heelooo1"),
-          Text("heelooo2"),
-          Text("heelooo3"),
-
-        ],
-      ),
-    );
-  }*/
 }
-
-
-
-
-/*
-Widget _steps() => Container(
-
-  color: NeumorphicColors.background,
-  child: Stepper(
-    steps: [
-      Step(
-        title: Text("First Step"),
-        subtitle: Text("Done "),
-          content: Text("you've completed the first step successfully"),
-          isActive: true,
-        state: StepState.complete
-      ),
-      Step(
-          title: Text("Second"),
-          subtitle: Text("waitting"),
-          content: Text("Let's look at its construtor."),
-          state: StepState.editing,
-          isActive: true
-     ),
-      Step(
-          title: Text("Third"),
-          subtitle: Text("Constructor"),
-          content: Text("Let's look at its construtor."),
-          state: StepState.disabled),
-
-    ],
-    controlsBuilder: (BuildContext context,
-        {VoidCallback onStepContinue, VoidCallback onStepCancel}) =>
-        Container(),
-  ),
-);*/

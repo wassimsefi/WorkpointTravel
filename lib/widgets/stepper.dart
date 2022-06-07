@@ -229,12 +229,24 @@ class _StepperWidgetState extends State<StepperWidget>
         Accomodations accomodations = new Accomodations();
         Vaccines vaccines = new Vaccines();
         Visas visas = new Visas();
+        StepPartener stepPartener = new StepPartener();
+        StepManager stepManager = new StepManager();
         missions.title = title;
         missions.MissionFormula = formula["_id"];
         missions.MissionObjet = object["_id"];
 
         missions.manager = selectedValueManger["_id"];
         missions.partner = selectedValuePartner["_id"];
+        stepPartener.manager = selectedValueManger["_id"];
+        stepPartener.partner = selectedValuePartner["_id"];
+        stepPartener.status = "Rejected";
+        missions.stepPartener = stepPartener;
+
+        stepManager.manager = selectedValueManger["_id"];
+        stepManager.partner = selectedValuePartner["_id"];
+        stepManager.status = "Rejected";
+        missions.stepManager = stepManager;
+
         missions.dateDebut = StartDate;
         missions.dateFinal = EndDate;
         if (peridemObject == null) {

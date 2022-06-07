@@ -24,6 +24,30 @@ class MissionService {
     return response.data;
   }
 
+  Future<dynamic> getAllVisa() async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/visa/",
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+
+    return response.data;
+  }
+
+  Future<dynamic> getAllVaccine() async {
+    //final token = await _storage.read(key: 'token');
+    response = await dio.get(link.linkw + "/api/vaccine/",
+        options: Dio.Options(headers: {
+          //  'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+
+    return response.data;
+  }
+
   Future<dynamic> getAllMissionFormula() async {
     //final token = await _storage.read(key: 'token');
     response = await dio.get(link.linkw + "/api/Formula/",

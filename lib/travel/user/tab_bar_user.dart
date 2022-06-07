@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweetalert/sweetalert.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -28,6 +29,7 @@ import 'package:vato/services/OperationsService.dart';
 import 'package:vato/services/ServiceLineService.dart';
 import 'package:vato/services/UserServices.dart';
 import 'package:vato/travel/user/historique.dart';
+import 'package:vato/travel/user/testhistory.dart';
 import 'package:vato/widgets/top_container.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -147,6 +149,26 @@ class _TabBarUserState extends State<TabBarUser> {
     setState(() {
       if (pickedFile != null) {
         _imagefile = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  File _image = File("not yet");
+  File _pickedIamages = File("not yet");
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
+    setState(() {
+      if (pickedFile != null) {
+        print("object1111111111111111111" + pickedFile.path);
+
+        _image = File(pickedFile.path);
+
+        setState(() {
+          _pickedIamages = File(pickedFile.path);
+        });
       } else {
         print('No image selected.');
       }
@@ -345,10 +367,23 @@ class _TabBarUserState extends State<TabBarUser> {
                               ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Text(
-                                    value,
-                                    style:
-                                        TextStyle(color: LightColors.kDarkBlue),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print("object : " + value);
+
+                                      if (value == "From Gallery") {
+                                        getImage(ImageSource.gallery);
+                                        Navigator.pop(context);
+                                      } else {
+                                        getImage(ImageSource.camera);
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(
+                                          color: LightColors.kDarkBlue),
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -363,8 +398,9 @@ class _TabBarUserState extends State<TabBarUser> {
                             center: CircleAvatar(
                               backgroundColor: LightColors.kLavender,
                               radius: height / 15,
-                              backgroundImage:
-                                  AssetImage("assets/images/10.jpeg"),
+                              backgroundImage: _image.path == "not yet"
+                                  ? AssetImage("assets/images/10.jpeg")
+                                  : FileImage(File(_pickedIamages.path)),
                             ),
                           ),
                           Column(
@@ -485,7 +521,7 @@ class _TabBarUserState extends State<TabBarUser> {
                               firstname,
                               lastname),
                           VaccinVisa(visas, vaccines),
-                          Historique(missions)
+                          HistoryPage()
                         ],
                       )),
                 ),

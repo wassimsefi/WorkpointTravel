@@ -18,6 +18,8 @@ class Missions {
   Accomodations accomodations;
   Visas visas;
   Vaccines vaccines;
+  StepPartener stepPartener;
+  StepManager stepManager;
   Missions.fromJsonMap(Map<String, dynamic> map)
       : title = map["title"],
         MissionFormula = map["Formula"],
@@ -36,6 +38,8 @@ class Missions {
             ? new Accomodations.fromJsonMap(map['accomodation'])
             : null,
         visas = map['visa'] != null ? new Visas.fromJsonMap(map['visa']) : null,
+        stepPartener = new StepPartener.fromJsonMap(map['stepPartener']),
+        stepManager = new StepManager.fromJsonMap(map['stepManager']),
         vaccines = map['vaccine'] != null
             ? new Vaccines.fromJsonMap(map['visa'])
             : null;
@@ -61,6 +65,12 @@ class Missions {
     }
     if (visas != null) {
       data['visa'] = visas.toJson();
+    }
+    if (stepPartener != null) {
+      data['stepPartener'] = stepPartener.toJson();
+    }
+    if (stepManager != null) {
+      data['stepManager'] = stepManager.toJson();
     }
     if (vaccines != null) {
       data['vaccine'] = vaccines.toJson();
@@ -211,4 +221,66 @@ class Vaccines {
   }
 
   Vaccines();
+}
+
+class StepPartener {
+  String partner;
+  String manager;
+  String ManagerComment;
+  String status;
+
+  List<Map<dynamic, dynamic>> documents_visa = [];
+  List<Map<dynamic, dynamic>> vaccin = [];
+
+  StepPartener.fromJsonMap(Map<String, dynamic> map)
+      : partner = map["partner"],
+        manager = map["manager"],
+        ManagerComment = map["ManagerComment"],
+        status = map["status"];
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data["partner"] = partner;
+    data["manager"] = manager;
+    data["ManagerComment"] = ManagerComment;
+    data["status"] = status;
+
+    return data;
+  }
+
+  StepPartener();
+}
+
+class StepManager {
+  String partner;
+  String manager;
+  String facilite;
+  String faciliteComment;
+  String status;
+
+  List<Map<dynamic, dynamic>> documents_visa = [];
+  List<Map<dynamic, dynamic>> vaccin = [];
+
+  StepManager.fromJsonMap(Map<String, dynamic> map)
+      : partner = map["partner"],
+        manager = map["manager"],
+        facilite = map["facilite"],
+        faciliteComment = map["faciliteComment"],
+        status = map["status"];
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data["partner"] = partner;
+    data["manager"] = manager;
+    data["facilite"] = facilite;
+
+    data["faciliteComment"] = faciliteComment;
+    data["status"] = status;
+
+    return data;
+  }
+
+  StepManager();
 }

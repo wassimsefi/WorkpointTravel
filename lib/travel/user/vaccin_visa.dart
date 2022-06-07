@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:vato/travel/user/add_vaccine.dart';
+import 'package:vato/travel/user/add_visa.dart';
 
 class VaccinVisa extends StatefulWidget {
   List visas;
@@ -20,7 +22,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
 
     print("object");
     print("object list" + widget.visas.toString());
-    print("object list 2222" + widget.visas[0]["id"]["name"].toString());
+    // print("object list 2222" + widget.visas[0]["id"]["name"].toString());
 
     super.initState();
   }
@@ -32,7 +34,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
         children: [
           Container(
               padding: EdgeInsets.all(10),
-              height: 200,
+              height: 300,
               child: Neumorphic(
                   style: NeumorphicStyle(
                     depth: 1,
@@ -70,7 +72,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
                         widget.visas.length == 0
                             ? Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                 child: Container(
                                   height: 50,
                                   width: MediaQuery.of(context).size.width,
@@ -99,7 +101,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                   itemBuilder: (context, i) {
                                     return Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            10, 10, 10, 0),
+                                            10, 10, 10, 10),
                                         child: Container(
                                           height: 50,
                                           // color: Colors.grey[200],
@@ -145,13 +147,36 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                   },
                                 ),
                               ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: Image.asset(
+                                  "assets/images/visa.png",
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddVisa(widget.visas)),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ]))),
           SizedBox(
             height: 40,
           ),
           Container(
               padding: EdgeInsets.all(10),
-              height: 200,
+              height: 300,
               width: MediaQuery.of(context).size.width,
               child: Neumorphic(
                   style: NeumorphicStyle(
@@ -190,7 +215,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
                         widget.vaccines.length == 0
                             ? Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                 child: Container(
                                   height: 50,
                                   width: MediaQuery.of(context).size.width,
@@ -217,7 +242,7 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                   itemBuilder: (context, i) {
                                     return Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            10, 10, 10, 0),
+                                            10, 10, 10, 10),
                                         child: Container(
                                           height: 50,
                                           // color: Colors.grey[200],
@@ -263,6 +288,28 @@ class _VaccinVisaState extends State<VaccinVisa> {
                                   },
                                 ),
                               ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: SvgPicture.asset(
+                                  "assets/images/vaccin.svg",
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddVaccine()),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ]))),
         ],
       ),
