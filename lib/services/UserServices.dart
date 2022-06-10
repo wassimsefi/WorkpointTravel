@@ -339,4 +339,21 @@ class UserService {
     dynamic body = jsonDecode(res.body);
     return body;*/
   }
+
+  Future<dynamic> updateVisa(
+      String visa, String date, String idImage, String user) async {
+    final token = await _storage.read(key: 'token');
+    response = await dio.put(link.linkw + "/api/User/UpdateVisa/" + user,
+        data: jsonEncode(<String, String>{
+          'id': visa,
+          'expiryDate': date,
+          "idImage": idImage
+        }),
+        options: Dio.Options(headers: {
+          //   'x-access-token': token,
+        }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+    return response.data;
+  }
 }

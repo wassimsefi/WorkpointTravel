@@ -520,7 +520,7 @@ class _TabBarUserState extends State<TabBarUser> {
                               passportValidity,
                               firstname,
                               lastname),
-                          VaccinVisa(visas, vaccines),
+                          VaccinVisa(visas, vaccines, iduser),
                           HistoryPage()
                         ],
                       )),

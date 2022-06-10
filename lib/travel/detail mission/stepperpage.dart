@@ -23,32 +23,31 @@ class _StepperpageState extends State<Stepperpage> {
   final List<String> listProcessing = [];
   final List<String> listValidation = [];
   final List<String> listProcessingEtat = [];
-  final List<bool> listValidationEtat = [];
+  final List<String> listValidationEtat = [];
 
   @override
   void initState() {
-    listProcessing.add("Partener");
-    listProcessing.add("Manager");
-    listProcessing.add("Facilite");
-    listProcessing.add("DG");
+    listProcessing.add("Transport");
+    listProcessing.add("Hotel");
+    listProcessing.add("Visa");
+    listProcessing.add("Per diem");
+    listProcessing.add("Vaccine");
 
-    listProcessingEtat.add(widget.mission["stepPartener"]["status"]);
-    listProcessingEtat.add(widget.mission["stepManager"]["status"]);
-    listProcessingEtat.add(widget.mission["stepFacilite"]["status"]);
-    listProcessingEtat.add(widget.mission["stepDG"]["status"]);
+    listProcessingEtat.add(widget.mission["transportation"]["status"]);
+    listProcessingEtat.add(widget.mission["accomodation"]["status"]);
+    listProcessingEtat.add(widget.mission["visa"]["status"]);
+    listProcessingEtat.add(widget.mission["expenses"]["status"]);
+    listProcessingEtat.add(widget.mission["vaccine"]["status"]);
 
-    listValidation.add("Transport");
+    listValidation.add("Partener");
+    listValidation.add("Manager");
+    listValidation.add("Facilite");
+    listValidation.add("DG");
 
-    listValidation.add("Hotel");
-    listValidation.add("Visa");
-    listValidation.add("Per diem");
-    listValidation.add("Vaccine");
-
-    listValidationEtat.add(widget.mission["transportValidation"]);
-    listValidationEtat.add(widget.mission["hotelValidation"]);
-    listValidationEtat.add(widget.mission["visaValidation"]);
-    listValidationEtat.add(widget.mission["CostsValidation"]);
-    listValidationEtat.add(widget.mission["vaccineValidation"]);
+    listValidationEtat.add(widget.mission["stepPartener"]["status"]);
+    listValidationEtat.add(widget.mission["stepManager"]["status"]);
+    listValidationEtat.add(widget.mission["stepFacilite"]["status"]);
+    listValidationEtat.add(widget.mission["stepDG"]["status"]);
 
     doodles.add(Doodle(
         name: "Draft",
@@ -58,6 +57,19 @@ class _StepperpageState extends State<Stepperpage> {
         doodle:
             "https://www.google.com/logos/doodles/2016/abd-al-rahman-al-sufis-azophi-1113th-birthday-5115602948587520-hp2x.jpg",
         icon: Icon(Icons.lock_outline, color: Colors.white),
+        iconBackground: LightColors.kDarkBlue));
+
+    doodles.add(Doodle(
+        name: "Validation",
+        etat: "Done",
+        content: listValidation,
+        Etatcontent: listValidationEtat,
+        doodle:
+            "https://www.google.com/logos/doodles/2015/abu-al-wafa-al-buzjanis-1075th-birthday-5436382608621568-hp2x.jpg",
+        icon: Icon(
+          Icons.done,
+          color: Colors.white,
+        ),
         iconBackground: LightColors.kDarkBlue));
     doodles.add(Doodle(
         name: "Processing",
@@ -70,18 +82,6 @@ class _StepperpageState extends State<Stepperpage> {
           Icons.lock_clock_outlined,
           color: Colors.white,
           size: 32.0,
-        ),
-        iconBackground: LightColors.kDarkBlue));
-    doodles.add(Doodle(
-        name: "Validation",
-        etat: "Done",
-        content: listValidation,
-        Etatcontent: listValidationEtat,
-        doodle:
-            "https://www.google.com/logos/doodles/2015/abu-al-wafa-al-buzjanis-1075th-birthday-5436382608621568-hp2x.jpg",
-        icon: Icon(
-          Icons.done,
-          color: Colors.white,
         ),
         iconBackground: LightColors.kDarkBlue));
     doodles.add(Doodle(
@@ -181,7 +181,7 @@ class _StepperpageState extends State<Stepperpage> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: doodle.content.length,
                       itemBuilder: (context, index) {
-                        return doodle.name == "Processing"
+                        return doodle.name == "Validation"
                             ? Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -201,7 +201,7 @@ class _StepperpageState extends State<Stepperpage> {
                                         ),
                                 ],
                               )
-                            : doodle.name == "Validation"
+                            : doodle.name == "Processing"
                                 ? Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -210,15 +210,21 @@ class _StepperpageState extends State<Stepperpage> {
                                           style: TextStyle(
                                             color: Colors.black,
                                           )),
-                                      doodle.Etatcontent[index] == true
+                                      doodle.Etatcontent[index] == "Done"
                                           ? Icon(
                                               Icons.check,
                                               color: Colors.green,
                                             )
-                                          : Icon(
-                                              Icons.clear_outlined,
-                                              color: Colors.red,
-                                            ),
+                                          : doodle.Etatcontent[index] ==
+                                                  "Processing"
+                                              ? Icon(
+                                                  Icons.pending_outlined,
+                                                  color: Colors.orange,
+                                                )
+                                              : Icon(
+                                                  Icons.clear_outlined,
+                                                  color: Colors.red,
+                                                ),
                                     ],
                                   )
                                 : Text(doodle.content[index],

@@ -9,7 +9,9 @@ import 'package:vato/travel/user/add_visa.dart';
 class VaccinVisa extends StatefulWidget {
   List visas;
   List vaccines;
-  VaccinVisa(this.visas, this.vaccines, {Key key}) : super(key: key);
+  String iduser;
+  VaccinVisa(this.visas, this.vaccines, this.iduser, {Key key})
+      : super(key: key);
 
   @override
   _VaccinVisaState createState() => _VaccinVisaState();
@@ -154,16 +156,16 @@ class _VaccinVisaState extends State<VaccinVisa> {
                             children: [
                               IconButton(
                                 icon: Image.asset(
-                                  "assets/images/visa.png",
-                                  width: 30,
-                                  height: 30,
+                                  "assets/images/add-file.png",
+                                  width: 50,
+                                  height: 50,
                                 ),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddVisa(widget.visas)),
+                                        builder: (context) => AddVisa(
+                                            widget.visas, widget.iduser)),
                                   );
                                 },
                               ),
@@ -294,10 +296,10 @@ class _VaccinVisaState extends State<VaccinVisa> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                icon: SvgPicture.asset(
-                                  "assets/images/vaccin.svg",
-                                  width: 30,
-                                  height: 30,
+                                icon: Image.asset(
+                                  "assets/images/add-file.png",
+                                  width: 70,
+                                  height: 70,
                                 ),
                                 onPressed: () {
                                   Navigator.push(

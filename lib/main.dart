@@ -31,7 +31,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 final apiProvider = Provider((ref) => API());
-void main() {
+Future<void> main() async {
   /* HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();

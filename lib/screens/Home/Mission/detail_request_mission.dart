@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweetalert/sweetalert.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -123,9 +124,19 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingAnimationWidget.hexagonDots(
+                            color: LightColors.kDarkBlue,
+                            size: 50,
+                          ),
+                        );
                       case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingAnimationWidget.hexagonDots(
+                            color: LightColors.kDarkBlue,
+                            size: 50,
+                          ),
+                        );
                       case ConnectionState.done:
                         return SingleChildScrollView(
                           child: Column(
@@ -147,11 +158,16 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                       children: [
                                         IconButton(
                                             icon: Image.asset(
-                                          "assets/images/iconStatus.png",
-                                          // width: 100,
-                                          // height: 100,
+                                          "assets/images/check-list.png",
+                                          color: LightColors.kDarkBlue,
                                         )),
-                                        Text("Status")
+                                        Text(
+                                          "Status",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: LightColors.kDarkBlue,
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -209,11 +225,11 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                         ),
                                         //   Spacer(),
                                         //  SizedBox(width: 10,),
-                                        (widget.StatusRequest == "pending")
+                                        (widget.StatusRequest == "Processing")
                                             ? Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        30, 0, 40, 10),
+                                                        30, 0, 10, 10),
                                                 child: Text(
                                                   widget.StatusRequest,
                                                   style: TextStyle(
@@ -224,8 +240,7 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                   textAlign: TextAlign.center,
                                                 ),
                                               )
-                                            : (widget.StatusRequest ==
-                                                    "accepted")
+                                            : (widget.StatusRequest == "Ending")
                                                 ? Padding(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(
@@ -238,18 +253,37 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                               FontWeight.w400),
                                                     ),
                                                   )
-                                                : Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        30, 10, 10, 10),
-                                                    child: Text(
-                                                      widget.StatusRequest,
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                  ),
+                                                : (widget.StatusRequest ==
+                                                        "Validation")
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                30, 10, 10, 10),
+                                                        child: Text(
+                                                          widget.StatusRequest,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.blue,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                        ),
+                                                      )
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                30, 10, 10, 10),
+                                                        child: Text(
+                                                          widget.StatusRequest,
+                                                          style: TextStyle(
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                        ),
+                                                      ),
                                         // Spacer(),
                                         // SizedBox(height: 5,),
                                         Padding(
@@ -1899,7 +1933,12 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                           ),
                         );
                     }
-                    return CircularProgressIndicator();
+                    return Center(
+                      child: LoadingAnimationWidget.hexagonDots(
+                        color: LightColors.kDarkBlue,
+                        size: 50,
+                      ),
+                    );
                   }),
             ),
           )

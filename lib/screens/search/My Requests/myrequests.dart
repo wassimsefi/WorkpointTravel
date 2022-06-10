@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweetalert/sweetalert.dart';
@@ -203,10 +204,18 @@ class _MyrequestsState extends State<Myrequests> {
                             switch (snapshot.connectionState) {
                               case ConnectionState.none:
                                 return Center(
-                                    child: CircularProgressIndicator());
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                    color: LightColors.kDarkBlue,
+                                    size: 50,
+                                  ),
+                                );
                               case ConnectionState.waiting:
                                 return Center(
-                                    child: CircularProgressIndicator());
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                    color: LightColors.kDarkBlue,
+                                    size: 50,
+                                  ),
+                                );
                               case ConnectionState.done:
                                 return (NBRequests == 0)
                                     ? Center(
@@ -605,20 +614,25 @@ class _MyrequestsState extends State<Myrequests> {
                                                                             .bottomRight,
                                                                     child: Padding(
                                                                         padding: const EdgeInsets.all(3.0),
-                                                                        child: (filtred[x]["status"] == "pending")
+                                                                        child: (filtred[x]["status"] == "Processing")
                                                                             ? Text(
-                                                                                "Pending",
+                                                                                "Processing",
                                                                                 style: TextStyle(color: Colors.orange, fontSize: 13),
                                                                               )
-                                                                            : (filtred[x]["status"] == "accepted")
+                                                                            : (filtred[x]["status"] == "Validation")
                                                                                 ? Text(
-                                                                                    "Approved",
-                                                                                    style: TextStyle(color: Colors.green, fontSize: 13),
+                                                                                    "Validation",
+                                                                                    style: TextStyle(color: Colors.blue, fontSize: 13),
                                                                                   )
-                                                                                : Text(
-                                                                                    "Rejected",
-                                                                                    style: TextStyle(color: Colors.red, fontSize: 13),
-                                                                                  ))),
+                                                                                : (filtred[x]["status"] == "Ending")
+                                                                                    ? Text(
+                                                                                        "Ending",
+                                                                                        style: TextStyle(color: Colors.green, fontSize: 13),
+                                                                                      )
+                                                                                    : Text(
+                                                                                        "Rejected",
+                                                                                        style: TextStyle(color: Colors.red, fontSize: 13),
+                                                                                      ))),
                                                               ],
                                                             ),
                                                           )

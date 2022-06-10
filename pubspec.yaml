@@ -88,8 +88,10 @@ dependencies:
   location: ^4.2.0
   qr_flutter: ^3.2.0
   flutter_slidable: ^0.5.7
-  
-
+  image_gallery_saver: ^1.6.9
+  permission_handler: ^8.1.2
+  loading_animation_widget:
+ 
 
 
 

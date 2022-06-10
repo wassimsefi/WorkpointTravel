@@ -746,7 +746,7 @@ class _ListReservationState extends State<ListReservation> {
                                                                   }),
                                                         ),
                                                         Spacer(),
-                                                        status == "accepted"
+                                                        status == "Validation"
                                                             ? Align(
                                                                 alignment:
                                                                     Alignment
@@ -793,7 +793,7 @@ class _ListReservationState extends State<ListReservation> {
                                                                         ))),
                                                                   )
                                                                 : status ==
-                                                                        "refused"
+                                                                        "Processing"
                                                                     ? Align(
                                                                         alignment:
                                                                             Alignment.topRight,
@@ -801,7 +801,7 @@ class _ListReservationState extends State<ListReservation> {
                                                                             padding: const EdgeInsets.fromLTRB(2, 2, 2, 8),
                                                                             child: Container(
                                                                                 child: Text(
-                                                                              'Rejected',
+                                                                              'Processing',
                                                                               style: TextStyle(
                                                                                 color: Colors.red,
                                                                                 fontSize: 12,

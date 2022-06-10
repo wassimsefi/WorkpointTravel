@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vato/constants/light_colors.dart';
 import 'package:vato/services/HistoryService.dart';
@@ -66,9 +67,21 @@ class _HistoryPageState extends State<HistoryPage> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                  child: Center(
+                child: LoadingAnimationWidget.hexagonDots(
+                  color: LightColors.kDarkBlue,
+                  size: 50,
+                ),
+              ));
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                  child: Center(
+                child: LoadingAnimationWidget.hexagonDots(
+                  color: LightColors.kDarkBlue,
+                  size: 50,
+                ),
+              ));
             case ConnectionState.done:
               return (NBHistorys == 0)
                   ? Center(
@@ -125,7 +138,12 @@ class _HistoryPageState extends State<HistoryPage> {
                       });
           }
 
-          return CircularProgressIndicator();
+          return Center(
+            child: LoadingAnimationWidget.hexagonDots(
+              color: LightColors.kDarkBlue,
+              size: 50,
+            ),
+          );
         });
   }
 
