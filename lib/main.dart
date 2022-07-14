@@ -32,12 +32,12 @@ class MyHttpOverrides extends HttpOverrides {
 
 final apiProvider = Provider((ref) => API());
 Future<void> main() async {
-  /* HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
 
   WidgetsFlutterBinding.ensureInitialized();
   OperationService _operationService = new OperationService();
   AwesomeNotifications().initialize(
-    a+q < // set the icon to null if you want to use the default app icon
+      // set the icon to null if you want to use the default app icon
       'resource://drawable/icon',
       [
         NotificationChannel(
@@ -51,33 +51,30 @@ Future<void> main() async {
           channelKey: 'basic_channel',
           channelDescription: 'Simple Notification',
         ),
-      ]
-  );
+      ]);
 
   String res;
 
   FirebaseApp firebaseApp = await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await AwesomeNotifications().actionStream.listen((event) {
-
-_operationService.checkoutParking(event.createdDate.toString()).then((value) => print(value.toString()));
+    _operationService
+        .checkoutParking(event.createdDate.toString())
+        .then((value) => print(value.toString()));
   });
-  */
 
   runApp(ProviderScope(child: MyApp()));
 }
-/*
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
   print("Handling a background message: ${message.data.toString()}");
 
-
-  if(
-  !StringUtils.isNullOrEmpty(message.notification?.title, considerWhiteSpaceAsEmpty: true) ||
-      !StringUtils.isNullOrEmpty(message.notification?.body, considerWhiteSpaceAsEmpty: true)
-  ){
+  if (!StringUtils.isNullOrEmpty(message.notification?.title,
+          considerWhiteSpaceAsEmpty: true) ||
+      !StringUtils.isNullOrEmpty(message.notification?.body,
+          considerWhiteSpaceAsEmpty: true)) {
     print('message also contained a notification: ${message.notification}');
 
     String imageUrl;
@@ -86,54 +83,53 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
     Map<String, dynamic> notificationAdapter = {
       NOTIFICATION_CHANNEL_KEY: 'basic_channel',
-      NOTIFICATION_ID:
-      message.data[NOTIFICATION_CONTENT]??[NOTIFICATION_ID] ??
+      NOTIFICATION_ID: message.data[NOTIFICATION_CONTENT] ??
+          [NOTIFICATION_ID] ??
           message.messageId ??
           Random().nextInt(2147483647),
-      NOTIFICATION_TITLE:
-      message.data[NOTIFICATION_CONTENT]??[NOTIFICATION_TITLE] ??
+      NOTIFICATION_TITLE: message.data[NOTIFICATION_CONTENT] ??
+          [NOTIFICATION_TITLE] ??
           message.notification?.title,
-      NOTIFICATION_BODY:
-      message.data[NOTIFICATION_CONTENT]??[NOTIFICATION_BODY] ??
-          message.notification?.body ,
+      NOTIFICATION_BODY: message.data[NOTIFICATION_CONTENT] ??
+          [NOTIFICATION_BODY] ??
+          message.notification?.body,
       NOTIFICATION_LAYOUT:
-      StringUtils.isNullOrEmpty(imageUrl) ? 'Default' : 'BigPicture',
+          StringUtils.isNullOrEmpty(imageUrl) ? 'Default' : 'BigPicture',
       NOTIFICATION_BIG_PICTURE: imageUrl
     };
 
     AwesomeNotifications().createNotificationFromJsonData(notificationAdapter);
-  }
-  else {
+  } else {
     AwesomeNotifications().createNotification(
         content: NotificationContent(
             id: 10,
             channelKey: 'basic_channel',
             title: jsonDecode(message.data["content"])["title"],
             body: jsonDecode(message.data["content"])["body"],
-            createdDate: jsonDecode(message.data["content"])["payload"]["id"]
-                .toString()
-          //  payload: valueMap
-          //  ticker:  jsonDecode(message.data["content"])["ticker"],
-        ), actionButtons: [
-      NotificationActionButton(key: "YES", label: "YES",),
-      NotificationActionButton(key: "NO", label: "NO"),
-    ]
-    );
+            createdDate:
+                jsonDecode(message.data["content"])["payload"]["id"].toString()
+            //  payload: valueMap
+            //  ticker:  jsonDecode(message.data["content"])["ticker"],
+            ),
+        actionButtons: [
+          NotificationActionButton(
+            key: "YES",
+            label: "YES",
+          ),
+          NotificationActionButton(key: "NO", label: "NO"),
+        ]);
   }
-  }
-
+}
 
 // Declared as global, outside of any class
 
 /// Global variables
 /// * [GlobalKey<NavigatorState>]
 class GlobalVariable {
-
   /// This global key is used in material app for navigation through firebase notifications.
   /// [navState] usage can be found in [notification_notifier.dart] file.
   static final GlobalKey<NavigatorState> navState = GlobalKey<NavigatorState>();
 }
-*/
 
 class MyApp extends StatefulWidget {
   @override
@@ -163,14 +159,16 @@ class _MyAppState extends State<MyApp> {
       home: SplashScreen(),
     );
   }
-  /*
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   //Stream<RemoteMessage> _firebaseMessaging = FirebaseMessaging.onMessage;
 
   FlutterLocalNotificationsPlugin fltNotification;
   void pushFCMtoken() async {
-    String token=await messaging.getToken();
+    String token = await messaging.getToken();
+    print("*********Token device********* " + token.toString());
   }
+
   @override
   void initState() {
     initMessaging();
@@ -179,11 +177,11 @@ class _MyAppState extends State<MyApp> {
         .getInitialMessage()
         .then((RemoteMessage message) {
       if (message != null) {
-
-        return   Navigator.push(
+        return Navigator.push(
             navigatorKey.currentState.context,
             MaterialPageRoute(
-                builder: (context) => navigationScreen(1,null,null,0,"Teamrequests",null,"Teamrequests")));
+                builder: (context) => navigationScreen(
+                    1, null, null, 0, "Teamrequests", null, "Teamrequests")));
       }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -191,71 +189,62 @@ class _MyAppState extends State<MyApp> {
         globals.isnotified = true;
         globals.countnotified = globals.countnotified + 1;
       });
-      if (message.data["screen"]=="team") {
-        return  Navigator.push(
+      if (message.data["screen"] == "team") {
+        return Navigator.push(
             navigatorKey.currentState.context,
             MaterialPageRoute(
                 builder: (context) => navigationScreen(
                     1, null, null, 0, "Teamrequests", null, "Teamrequests")));
-      }
-      else if (message.data["screen"]=="myrequest") {
+      } else if (message.data["screen"] == "myrequest") {
         return Navigator.push(
             navigatorKey.currentState.context,
             MaterialPageRoute(
-                builder: (context) =>
-                    navigationScreen(
-                        1,
-                        null,
-                        null,
-                        0,
-                        "Myrequests",
-                        null,
-                        "Myrequests")));
-      }
-      else {
-        return  Navigator.push(
-            navigatorKey.currentState.context,
-            MaterialPageRoute(
-                builder: (context) => SplashScreen()));
+                builder: (context) => navigationScreen(
+                    1, null, null, 0, "Myrequests", null, "Myrequests")));
+      } else {
+        return Navigator.push(navigatorKey.currentState.context,
+            MaterialPageRoute(builder: (context) => SplashScreen()));
       }
     });
 
     pushFCMtoken();
     super.initState();
-
   }
 
   void initMessaging() {
-    var androiInit = AndroidInitializationSettings('@mipmap/ic_launcher');//for logo
+    var androiInit =
+        AndroidInitializationSettings('@mipmap/ic_launcher'); //for logo
     var iosInit = IOSInitializationSettings();
-    var initSetting=InitializationSettings(android: androiInit,iOS:
-    iosInit);
+    var initSetting = InitializationSettings(android: androiInit, iOS: iosInit);
     fltNotification = FlutterLocalNotificationsPlugin();
-    fltNotification.initialize(initSetting,onSelectNotification: (String payload)async{
+    fltNotification.initialize(initSetting,
+        onSelectNotification: (String payload) async {
       return Navigator.push(
           navigatorKey.currentState.context,
           MaterialPageRoute(
-              builder: (context) => navigationScreen(1,null,null,0,"Teamrequests",null,"Teamrequests")));
+              builder: (context) => navigationScreen(
+                  1, null, null, 0, "Teamrequests", null, "Teamrequests")));
     });
     var androidDetails =
-    AndroidNotificationDetails('1', 'channelName', 'channel Description');
+        AndroidNotificationDetails('1', 'channelName', 'channel Description');
     var iosDetails = IOSNotificationDetails();
     var generalNotificationDetails =
-    NotificationDetails(android: androidDetails, iOS: iosDetails);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {     RemoteNotification notification=message.notification;
-    AndroidNotification android=message.notification?.android;
-    if(notification!=null && android!=null){
-      //  fltNotification.show(
-      // notification.hashCode, notification.title, notification.
-      // body, generalNotificationDetails);
-      fltNotification.show(
-          notification.hashCode, notification.title, notification.body, generalNotificationDetails,payload: "Notification");
-    }
-    setState(() {
-      globals.isnotified = true;
-      globals.countnotified = globals.countnotified + 1;
-    });
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        //  fltNotification.show(
+        // notification.hashCode, notification.title, notification.
+        // body, generalNotificationDetails);
+        fltNotification.show(notification.hashCode, notification.title,
+            notification.body, generalNotificationDetails,
+            payload: "Notification");
+      }
+      setState(() {
+        globals.isnotified = true;
+        globals.countnotified = globals.countnotified + 1;
+      });
     });
   }
-*/
 }

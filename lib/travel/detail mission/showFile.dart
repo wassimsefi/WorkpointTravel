@@ -60,7 +60,7 @@ class FilePageState extends State<FilePage> {
 
   _save() async {
     var response = await Dio().get(
-        "http://192.168.100.58:8087/alfresco/s/slingshot/node/content/workspace/SpacesStore/660aa61b-cfa2-40df-952c-638cb6a494f1?a=true&alf_ticket=TICKET_648b4d9c6c3ce631fa5a7f56726189272c289304",
+        "http://192.168.100.50:8087/alfresco/s/slingshot/node/content/workspace/SpacesStore/660aa61b-cfa2-40df-952c-638cb6a494f1?a=true&alf_ticket=TICKET_dc241c43cc611a9a20d2ac9ba159d40c4898fc2c",
         options: Options(responseType: ResponseType.bytes));
     final result = await ImageGallerySaver.saveImage(
         Uint8List.fromList(response.data),
@@ -105,7 +105,7 @@ class FilePageState extends State<FilePage> {
               height: (MediaQuery.of(context).size.height - 270) / 2,
               color: NeumorphicColors.background,
               child: Image.network(
-                "http://192.168.100.58:8087/alfresco/s/slingshot/node/content/workspace/SpacesStore/660aa61b-cfa2-40df-952c-638cb6a494f1?a=true&alf_ticket=TICKET_648b4d9c6c3ce631fa5a7f56726189272c289304",
+                "http://192.168.100.50:8087/alfresco/s/slingshot/node/content/workspace/SpacesStore/660aa61b-cfa2-40df-952c-638cb6a494f1?a=true&alf_ticket=TICKET_dc241c43cc611a9a20d2ac9ba159d40c4898fc2c",
                 loadingBuilder: (BuildContext context, Widget child,
                     ImageChunkEvent loadingProgress) {
                   if (loadingProgress == null) {

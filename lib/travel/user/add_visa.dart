@@ -57,7 +57,7 @@ class _AddVisaState extends State<AddVisa> {
 
         _image = File(pickedFile.path);
 
-        setState(() async {
+        /*  setState(() async {
           print("aaa !!!!" + _pickedIamages.toString());
           FormData formData = FormData.fromMap({
             "destination":
@@ -74,14 +74,15 @@ class _AddVisaState extends State<AddVisa> {
 
           print("************ " + formData.fields.toString());
 
-          _alfrescoService.getAddDoc(formData).then((value) async {
+          /*   _alfrescoService.getAddDoc(formData).then((value) async {
             print("okay !!!!");
             setState(() {
               idImage = value["nodeRef"];
             });
-          });
-          _pickedIamages = File(pickedFile.path);
+          });*/
         });
+        */
+        _pickedIamages = File(pickedFile.path);
       } else {
         print('No image selected.');
       }

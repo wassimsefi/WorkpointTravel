@@ -16,7 +16,7 @@ class AlfrescoService {
   Future<dynamic> getAddDoc(dynamic test) async {
     //final token = await _storage.read(key: 'token');
     response = await dio.post(
-        "http://192.168.100.58:8087/alfresco/s/api/upload?alf_ticket=TICKET_648b4d9c6c3ce631fa5a7f56726189272c289304",
+        "http://192.168.100.50:8087/alfresco/s/api/upload?alf_ticket=TICKET_dc241c43cc611a9a20d2ac9ba159d40c4898fc2c",
         data: test,
         options: Dio.Options(headers: {
           //  'x-access-token': token,
@@ -30,7 +30,7 @@ class AlfrescoService {
   Future<dynamic> getDoc() async {
     //final token = await _storage.read(key: 'token');
     response = await dio.get(
-        "http://192.168.100.58:8087/alfresco/s/slingshot/node/content/workspace/SpacesStore/9fed8eea-9459-4a2b-a0d2-c0af8c527904?a=true&alf_ticket=TICKET_648b4d9c6c3ce631fa5a7f56726189272c289304",
+        "http://192.168.100.50:8087/alfresco/s/slingshot/node/content/workspace/SpacesStore/9fed8eea-9459-4a2b-a0d2-c0af8c527904?a=true&alf_ticket=TICKET_dc241c43cc611a9a20d2ac9ba159d40c4898fc2c",
         options: Dio.Options(headers: {
           //  'x-access-token': token,
         }));

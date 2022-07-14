@@ -260,16 +260,45 @@ class MissionService {
     //dynamic body = jsonDecode(response);
     print("response operation" + response.data.toString());
     return response.data;
-/*    Response res = await post(
-      Uri.parse(link.linkw + "/api/Request/addRequest"),
-      body: json.encode(request),
-      headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        'x-access-token': token
-      },
-    );
-    dynamic body = jsonDecode(res.body);
-    return body;*/
+  }
+
+  Future<dynamic> stepManager(
+      String comment, String status, String id, String tokenLogin) async {
+    final token = await _storage.read(key: 'token');
+    response =
+        await dio.put(link.linkw + "/api/Mission/updateStepManager/" + id,
+            data: {"status": status, "faciliteComment": comment},
+            options: Dio.Options(headers: {
+              //   'x-access-token': token,
+            }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+    return response.data;
+  }
+
+  Future<dynamic> acceptMission(String id, String tokenLogin) async {
+    final token = await _storage.read(key: 'token');
+    response =
+        await dio.put(link.linkw + "/api/Mission/updateStepManagerAccept/" + id,
+            //  data: json.encode(),
+            options: Dio.Options(headers: {
+              //   'x-access-token': token,
+            }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+    return response.data;
+  }
+
+  Future<dynamic> refuseMission(String id, String tokenLogin) async {
+    final token = await _storage.read(key: 'token');
+    response =
+        await dio.put(link.linkw + "/api/Mission/updateStepManagerRefuse/" + id,
+            // data: json.encode(),
+            options: Dio.Options(headers: {
+              //   'x-access-token': token,
+            }));
+    //dynamic body = jsonDecode(response);
+    print("response operation" + response.data.toString());
+    return response.data;
   }
 }

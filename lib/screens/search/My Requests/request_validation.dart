@@ -11,6 +11,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:vato/constants/light_colors.dart';
 import 'package:vato/screens/Home/Mission/detail_request_mission.dart';
 import 'package:vato/screens/search/My%20Requests/detail_request.dart';
+import 'package:vato/screens/search/My%20Requests/detail_request_validation.dart';
 import 'package:vato/services/OperationsService.dart';
 import 'package:vato/services/RequestService.dart';
 import 'package:vato/services/UserServices.dart';
@@ -18,15 +19,14 @@ import 'package:vato/widgets/navBar.dart';
 import 'package:vato/widgets/topContainerScan.dart';
 import 'package:jiffy/jiffy.dart';
 
-class Myrequests extends StatefulWidget {
-  final int manager;
-  const Myrequests(this.manager, {Key key}) : super(key: key);
+class RequestValidations extends StatefulWidget {
+  const RequestValidations({Key key}) : super(key: key);
 
   @override
-  _MyrequestsState createState() => _MyrequestsState();
+  _RequestValidationsState createState() => _RequestValidationsState();
 }
 
-class _MyrequestsState extends State<Myrequests> {
+class _RequestValidationsState extends State<RequestValidations> {
   Future<SharedPreferences> _prefs;
   String tokenLogin;
   String idUser;
@@ -68,11 +68,10 @@ class _MyrequestsState extends State<Myrequests> {
       });
 
       getMyrequets =
-          _requestService.getRequestByUser(idUser, tokenLogin).then((value) {
+          _requestService.getRequestByManager(idUser, tokenLogin).then((value) {
         setState(() {
           filtred = Requests = value["data"];
 
-          print("object" + filtred.toString());
           Requests.sort((a, b) => b["updatedAt"].compareTo(a["updatedAt"]));
         });
 
@@ -135,7 +134,7 @@ class _MyrequestsState extends State<Myrequests> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Center(
-                        child: Text("My requests ",
+                        child: Text("Requests Validations ",
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 25,
@@ -172,28 +171,6 @@ class _MyrequestsState extends State<Myrequests> {
                                       ));
                                 });
                           },
-                        ),
-                        Container(
-                          color: Colors.black45,
-                          height: 30,
-                          width: 2,
-                        ),
-                        SearchChoices.single(
-                          items: manager,
-                          value: selectedValue,
-                          hint: " Validator",
-
-                          searchHint: "Select your validator",
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value;
-                              filtred = Requests.where((element) =>
-                                  element["idReciever"]["_id"]
-                                      .toString()
-                                      .contains(value)).toList();
-                            });
-                          },
-                          //   isExpanded: true,
                         ),
                       ],
                     ),
@@ -234,14 +211,14 @@ class _MyrequestsState extends State<Myrequests> {
                                                     context,
                                                     filtred[x]["name"] == "Mission"
                                                         ? MaterialPageRoute(
-                                                            builder: (context) => DetailRequestMission(
+                                                            builder: (context) => DetailRequestValidation(
                                                                 filtred[x]
                                                                     ["_id"],
-                                                                filtred[x]["idReciever"][
+                                                                filtred[x]["idSender"][
                                                                         "firstname"] +
                                                                     " " +
                                                                     filtred[x]
-                                                                            ["idReciever"]
+                                                                            ["idSender"]
                                                                         [
                                                                         "lastname"],
                                                                 new DateFormat(
@@ -251,7 +228,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                     .toString(),
                                                                 ["testt 111", "test 2222"],
                                                                 filtred[x]["status"].toString(),
-                                                                filtred[x]["idReciever"]["photo"],
+                                                                filtred[x]["idSender"]["photo"],
                                                                 filtred[x]["mission"]["comment"],
                                                                 filtred[x]["mission"]))
                                                         : MaterialPageRoute(builder: (context) => DetailRequest(filtred[x]["_id"], filtred[x]["idReciever"]["firstname"] + " " + filtred[x]["idReciever"]["lastname"], new DateFormat('yyyy-MM-dd HH:mm').format(DateTime.tryParse(filtred[x]["createdAt"])).toString(), filtred[x]["UserNotif"], filtred[x]["status"].toString(), filtred[x]["idReciever"]["photo"], filtred[x]["commentUser"], filtred[x]["commentManager"])));
@@ -446,7 +423,7 @@ class _MyrequestsState extends State<Myrequests> {
                                                                               width: 5,
                                                                             ),
                                                                             Expanded(
-                                                                              child: AutoSizeText(filtred[x]["idReciever"]["firstname"] + " " + Requests[x]["idReciever"]["lastname"], style: TextStyle(color: Colors.black54)),
+                                                                              child: AutoSizeText(filtred[x]["idSender"]["firstname"] + " " + Requests[x]["idSender"]["lastname"], style: TextStyle(color: Colors.black54)),
                                                                             )
                                                                           ]),
                                                                     ),
@@ -480,43 +457,121 @@ class _MyrequestsState extends State<Myrequests> {
                                                                     ),
                                                                     onTap:
                                                                         () async {
-                                                                      SweetAlert.show(
-                                                                          context,
-                                                                          subtitle:
-                                                                              "Do you want to delete this request",
-                                                                          style: SweetAlertStyle
-                                                                              .confirm,
-                                                                          confirmButtonColor: LightColors
-                                                                              .kRed,
-                                                                          cancelButtonColor: Colors
-                                                                              .white12,
-                                                                          showCancelButton:
-                                                                              true,
-                                                                          onPress:
-                                                                              (bool isConfirm) {
-                                                                        if (isConfirm) {
-                                                                          _requestService.CancelRequet(filtred[x]["_id"], tokenLogin)
-                                                                              .then((value) {
-                                                                            if (value["status"].toString() ==
-                                                                                "200") {
-                                                                              SweetAlert.show(context, subtitle: "Deleting...", style: SweetAlertStyle.loading);
-                                                                              new Future.delayed(new Duration(seconds: 2), () {
-                                                                                SweetAlert.show(context, subtitle: "Done !", style: SweetAlertStyle.success);
-                                                                              }).whenComplete(() => setState(() {
-                                                                                    filtred.removeAt(x);
-                                                                                  }));
+                                                                      List<dynamic>
+                                                                          Operationss =
+                                                                          [];
+                                                                      String
+                                                                          OldDate =
+                                                                          "";
+                                                                      String
+                                                                          Datee =
+                                                                          "";
+                                                                      String
+                                                                          DateeRemote =
+                                                                          "";
+
+                                                                      _operationService
+                                                                          .getOperationsbyRequest(
+                                                                              filtred[x]["_id"],
+                                                                              tokenLogin)
+                                                                          .then((value) {
+                                                                        setState(
+                                                                            () {
+                                                                          Operationss =
+                                                                              value["data"];
+                                                                        });
+                                                                        if (filtred[x]["name"] ==
+                                                                            "WFH") {
+                                                                          for (var i = 0;
+                                                                              i < Operationss.length;
+                                                                              i++) {
+                                                                            if (Jiffy(DateTime.now().add(Duration(days: -1))).isAfter(new DateFormat("yyyy-MM-dd").format(DateTime.parse(Operationss[i]["date"].toString().substring(0, 10)))) ==
+                                                                                true) {
+                                                                              OldDate = "yes";
                                                                             } else {
-                                                                              {
-                                                                                SweetAlert.show(context, subtitle: "Ooops! Something Went Wrong!!", style: SweetAlertStyle.error);
-                                                                              }
+                                                                              Datee = "yes";
                                                                             }
-                                                                          });
+                                                                          }
+                                                                          if (Datee ==
+                                                                              "yes") {
+                                                                            SweetAlert.show(context,
+                                                                                subtitle: "Do you want to delete this request",
+                                                                                style: SweetAlertStyle.confirm,
+                                                                                confirmButtonColor: LightColors.kRed,
+                                                                                cancelButtonColor: Colors.white12,
+                                                                                showCancelButton: true, onPress: (bool isConfirm) {
+                                                                              if (isConfirm) {
+                                                                                _requestService.CancelRequet(filtred[x]["_id"], tokenLogin).then((value) {
+                                                                                  if (value["status"].toString() == "200") {
+                                                                                    SweetAlert.show(context, subtitle: "Deleting...", style: SweetAlertStyle.loading);
+                                                                                    new Future.delayed(new Duration(seconds: 2), () {
+                                                                                      SweetAlert.show(context, subtitle: "Done !", style: SweetAlertStyle.success);
+                                                                                    }).whenComplete(() => setState(() {
+                                                                                          filtred.removeAt(x);
+                                                                                        }));
+                                                                                  } else {
+                                                                                    {
+                                                                                      SweetAlert.show(context, subtitle: "Ooops! Something Went Wrong!!", style: SweetAlertStyle.error);
+                                                                                    }
+                                                                                  }
+                                                                                });
+                                                                              } else {
+                                                                                return true;
+                                                                              }
+                                                                              // return false to keep dialog
+                                                                              return false;
+                                                                            });
+                                                                          } else if (Datee ==
+                                                                              "") {
+                                                                            SweetAlert.show(context,
+                                                                                subtitle: "You cannot cancel this request because it contains older slots!",
+                                                                                style: SweetAlertStyle.error);
+                                                                          }
                                                                         } else {
-                                                                          return true;
+                                                                          if (Jiffy(DateTime.now().add(Duration(days: -1))).isAfter(new DateFormat("yyyy-MM-dd").format(DateTime.parse(Operationss[0]["date_debut"].toString().substring(0, 10)))) ==
+                                                                              true) {
+                                                                            OldDate =
+                                                                                "yes";
+                                                                          } else {
+                                                                            DateeRemote =
+                                                                                "yes";
+                                                                          }
+                                                                          if (DateeRemote ==
+                                                                              "yes") {
+                                                                            SweetAlert.show(context,
+                                                                                subtitle: "Do you want to delete this request !!!",
+                                                                                style: SweetAlertStyle.confirm,
+                                                                                confirmButtonColor: LightColors.kRed,
+                                                                                cancelButtonColor: Colors.white12,
+                                                                                showCancelButton: true, onPress: (bool isConfirm) {
+                                                                              if (isConfirm) {
+                                                                                _requestService.CancelRequet(filtred[x]["_id"], tokenLogin).then((value) {
+                                                                                  if (value["status"].toString() == "200") {
+                                                                                    SweetAlert.show(context, subtitle: "Deleting...", style: SweetAlertStyle.loading);
+                                                                                    new Future.delayed(new Duration(seconds: 2), () {
+                                                                                      SweetAlert.show(context, subtitle: "Done !", style: SweetAlertStyle.success);
+                                                                                    }).whenComplete(() => setState(() {
+                                                                                          filtred.removeAt(x);
+                                                                                        }));
+                                                                                  } else {
+                                                                                    {
+                                                                                      SweetAlert.show(context, subtitle: "Ooops! Something Went Wrong!!", style: SweetAlertStyle.error);
+                                                                                    }
+                                                                                  }
+                                                                                });
+                                                                              } else {
+                                                                                return true;
+                                                                              }
+                                                                              // return false to keep dialog
+                                                                              return false;
+                                                                            });
+                                                                          } else if (Datee ==
+                                                                              "") {
+                                                                            SweetAlert.show(context,
+                                                                                subtitle: "You cannot cancel this request !",
+                                                                                style: SweetAlertStyle.error);
+                                                                          }
                                                                         }
-                                                                        // return false to keep dialog
-                                                                        return false;
-                                                                      });
 
 /*                                                                          else
                                                                           {
@@ -524,7 +579,8 @@ class _MyrequestsState extends State<Myrequests> {
 
                                                                           }*/
 
-                                                                      //  SweetAlert.show(context,subtitle: "You cannot cancel this request because it contains older slots!", style: SweetAlertStyle.error);
+                                                                        //  SweetAlert.show(context,subtitle: "You cannot cancel this request because it contains older slots!", style: SweetAlertStyle.error);
+                                                                      });
                                                                     }),
                                                                 SizedBox(
                                                                   height: 30,

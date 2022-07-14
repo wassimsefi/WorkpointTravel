@@ -25,10 +25,14 @@ import 'package:vato/constants/light_colors.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:intl/intl.dart';
 import 'package:vato/generated/intl/messages_en.dart';
+import 'package:vato/models/Historique.dart';
 import 'package:vato/models/Mission.dart';
+import 'package:vato/models/Notification.dart';
 import 'package:vato/models/Operation.dart';
 import 'package:vato/models/Request.dart';
+import 'package:vato/services/HistoryService.dart';
 import 'package:vato/services/MissionService.dart';
+import 'package:vato/services/Notification.dart';
 import 'package:vato/services/OperationsService.dart';
 import 'package:vato/services/RequestService.dart';
 import 'package:vato/services/UserServices.dart';
@@ -197,6 +201,8 @@ class _StepperWidgetState extends State<StepperWidget>
   UserService _userService = new UserService();
   RequestService _requestservice = new RequestService();
   OperationService _operationservice = new OperationService();
+  NotificationServices _notificationServices = new NotificationServices();
+  HistoryService _historyService = new HistoryService();
 
   var User;
   List<dynamic> managers;
@@ -336,22 +342,46 @@ class _StepperWidgetState extends State<StepperWidget>
                 _operationservice
                     .addOperation(operation, this.tokenLogin)
                     .then((value) async {
-                  if (value["status"].toString() == "200") {
-                    if (value["status"].toString() == "200") {
-                      await SweetAlert.show(context,
-                          subtitle: " Done !", style: SweetAlertStyle.success,
-                          onPress: (bool isConfirm) {
-                        if (isConfirm) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => navigationScreen(
-                                      0, null, null, 0, null, null, "home")));
-                          return false;
+                  //  Notification notification = new Notification();
+
+                  Notifications notification = new Notifications();
+                  notification.Action = "APPROVE";
+                  notification.idReciever = request.idReciever;
+                  notification.idSender = request.idSender;
+                  notification.message = " Added a Travel mission request";
+                  notification.request = operation.request;
+                  notification.title = "TRAVEL";
+
+                  Historique historique = Historique();
+                  historique.user = request.idSender;
+                  historique.TransactionType = "ADD_MISSION";
+                  historique.message = " added a Travel mission request ";
+
+                  _notificationServices
+                      .addNotification(notification, this.tokenLogin)
+                      .then((value) async {
+                    _historyService
+                        .addNotification(historique, this.tokenLogin)
+                        .then((value) async {
+                      if (value["status"].toString() == "200") {
+                        if (value["status"].toString() == "200") {
+                          await SweetAlert.show(context,
+                              subtitle: " Done !",
+                              style: SweetAlertStyle.success,
+                              onPress: (bool isConfirm) {
+                            if (isConfirm) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => navigationScreen(0,
+                                          null, null, 0, null, null, "home")));
+                              return false;
+                            }
+                          });
                         }
-                      });
-                    }
-                  }
+                      }
+                    });
+                  });
                 });
               });
             } else if (value["status"].toString() == "201") {

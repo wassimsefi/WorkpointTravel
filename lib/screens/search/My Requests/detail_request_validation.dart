@@ -12,13 +12,14 @@ import 'package:vato/constants/light_colors.dart';
 import 'package:vato/constants/link.dart';
 import 'package:vato/screens/Home/Mission/detail_mission.dart';
 import 'package:vato/screens/search/My%20Requests/myrequests.dart';
+import 'package:vato/screens/search/My%20Requests/request_validation.dart';
 import 'package:vato/services/MissionService.dart';
 import 'package:vato/services/OperationsService.dart';
 import 'package:vato/services/RequestService.dart';
 import 'package:vato/widgets/navBar.dart';
 import 'package:vato/widgets/topContainerBack.dart';
 
-class DetailRequestMission extends StatefulWidget {
+class DetailRequestValidation extends StatefulWidget {
   String Request_id;
   String manager;
   String Date;
@@ -30,7 +31,7 @@ class DetailRequestMission extends StatefulWidget {
   String commentUser;
   dynamic mission;
 
-  DetailRequestMission(
+  DetailRequestValidation(
       this.Request_id,
       this.manager,
       this.Date,
@@ -43,16 +44,18 @@ class DetailRequestMission extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DetailRequestMissionState createState() => _DetailRequestMissionState();
+  _DetailRequestValidationState createState() =>
+      _DetailRequestValidationState();
 }
 
-class _DetailRequestMissionState extends State<DetailRequestMission> {
+class _DetailRequestValidationState extends State<DetailRequestValidation> {
   Future<SharedPreferences> _prefs;
   String tokenLogin;
   String idUser;
   OperationService _operationService = new OperationService();
   RequestService _requestService = new RequestService();
   MissionService _missionService = new MissionService();
+  TextEditingController commentController = new TextEditingController();
 
   DateTime selectedDate;
   Future<dynamic> getDetail;
@@ -148,38 +151,6 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15),
                                 maxLines: 1,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: InkWell(
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Column(
-                                      children: [
-                                        IconButton(
-                                            icon: Image.asset(
-                                          "assets/images/check-list.png",
-                                          color: LightColors.kDarkBlue,
-                                        )),
-                                        Text(
-                                          "Status",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: LightColors.kDarkBlue,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  onTap: () => {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailMission(widget.mission)),
-                                    )
-                                  },
-                                ),
                               ),
                               Row(
                                 children: [
@@ -1647,143 +1618,66 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                                       .toString())),
                                         ],
                                       ))),
-                              Container(
-                                  padding: EdgeInsets.all(10),
-                                  height: 80,
-                                  child: Neumorphic(
-                                      style: NeumorphicStyle(
-                                        depth: 1,
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                      depth: 1,
 
-                                        //shape: NeumorphicShape.convex,
-                                        color: NeumorphicColors.background,
-                                        boxShape: NeumorphicBoxShape.roundRect(
-                                            BorderRadius.all(
-                                                Radius.elliptical(20, 20))),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
-                                            child: Text(
-                                              "Validator's comment",
-                                              style: TextStyle(
-                                                  color: Colors.black54),
+                                      //shape: NeumorphicShape.convex,
+                                      color: NeumorphicColors.background,
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.all(
+                                              Radius.elliptical(20, 20))),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                            "Validator's comment",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            controller: commentController,
+                                            minLines: 2,
+                                            maxLines: 5,
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            decoration: InputDecoration(
+                                              hintText: 'Comment',
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20.0)),
+                                              ),
                                             ),
                                           ),
-                                          Container(
-                                            width: 130,
-                                            child: Text(widget.commentManager
-                                                            .toString() ==
-                                                        "null" ||
-                                                    widget.commentManager
-                                                            .toString() ==
-                                                        ""
-                                                ? "No comment"
-                                                : widget.commentManager
-                                                    .toString()),
-                                          ),
-                                        ],
-                                      ))),
-                              Center(
-                                child: Container(
-                                    width: 60,
-                                    height: 50,
-                                    child: NeumorphicButton(
-                                      //margin: EdgeInsets.fromLTRB(5,0,0,0),
-                                      onPressed: () async {
-                                        String OldDate = "";
-                                        String Datee = "";
-                                        String DateeRemote = "";
-                                        if (Operations[0]["OperationType"] ==
-                                            "WFH") {
-                                          for (var i = 0;
-                                              i < Operations.length;
-                                              i++) {
-                                            if (Jiffy(DateTime.now().add(
-                                                        Duration(days: -1)))
-                                                    .isAfter(new DateFormat(
-                                                            "yyyy-MM-dd")
-                                                        .format(DateTime.parse(
-                                                            Operations[i]
-                                                                    ["date"]
-                                                                .toString()
-                                                                .substring(
-                                                                    0, 10)))) ==
-                                                true) {
-                                              OldDate = "yes";
-                                            } else {
-                                              Datee = "yes";
-                                            }
-                                          }
-                                          if (Datee == "yes") {
-                                            SweetAlert.show(context,
-                                                subtitle:
-                                                    "Do you want to delete this Operation",
-                                                style: SweetAlertStyle.confirm,
-                                                confirmButtonColor:
-                                                    LightColors.kRed,
-                                                cancelButtonColor:
-                                                    Colors.white12,
-                                                showCancelButton: true,
-                                                onPress: (bool isConfirm) {
-                                              if (isConfirm) {
-                                                _requestService.CancelRequet(
-                                                        widget.Request_id,
-                                                        tokenLogin)
-                                                    .then((value) {
-                                                  if (value["status"]
-                                                          .toString() ==
-                                                      "200") {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Myrequests(
-                                                                        1)));
-                                                    SweetAlert.show(context,
-                                                        subtitle: "Deleting...",
-                                                        style: SweetAlertStyle
-                                                            .loading);
-                                                    new Future.delayed(
-                                                        new Duration(
-                                                            seconds: 2), () {
-                                                      SweetAlert.show(context,
-                                                          subtitle: "Done !",
-                                                          style: SweetAlertStyle
-                                                              .success);
-                                                    });
-                                                  } else {
-                                                    SweetAlert.show(context,
-                                                        subtitle:
-                                                            "Ooops! Something Went Wrong!!",
-                                                        style: SweetAlertStyle
-                                                            .error);
-                                                  }
-                                                });
-                                              } else {
-                                                print("aaaaaaaaaa : " +
-                                                    Operations[0]["request"]
-                                                            ["mission"]["_id"]
-                                                        .toString());
-                                                return true;
-                                              }
-                                              // return false to keep dialog
-                                              return false;
-                                            });
-                                          } else {
-                                            SweetAlert.show(context,
-                                                subtitle:
-                                                    "You cannot cancel this request because it contains older slots!",
-                                                style: SweetAlertStyle.error);
-                                          }
-                                        } else {
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: 60,
+                                      height: 50,
+                                      child: NeumorphicButton(
+                                        //margin: EdgeInsets.fromLTRB(5,0,0,0),
+                                        onPressed: () async {
                                           SweetAlert.show(context,
                                               subtitle:
-                                                  "Do you want to delete this Operation",
+                                                  "Do you want to Accepter this misssion",
                                               style: SweetAlertStyle.confirm,
                                               confirmButtonColor:
                                                   LightColors.kRed,
@@ -1791,74 +1685,32 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                               showCancelButton: true,
                                               onPress: (bool isConfirm) {
                                             if (isConfirm) {
-                                              _operationService.CancelOperation(
-                                                      Operations[0]["_id"],
+                                              _missionService
+                                                  .stepManager(
+                                                      commentController.text,
+                                                      "Done",
+                                                      widget.mission["_id"],
                                                       tokenLogin)
                                                   .then((value) {
                                                 if (value["status"]
                                                         .toString() ==
                                                     "200") {
-                                                  _requestService.CancelRequet(
-                                                          Operations[0]
-                                                                  ["request"]
-                                                              ["_id"],
-                                                          tokenLogin)
-                                                      .then((value) {
-                                                    if (value["status"]
-                                                            .toString() ==
-                                                        "200") {
-                                                      _missionService.CancelMission(
-                                                              Operations[0][
-                                                                      "request"]
-                                                                  [
-                                                                  "mission"]["_id"],
-                                                              tokenLogin)
-                                                          .then((value) {
-                                                        if (value["status"]
-                                                                .toString() ==
-                                                            "200") {
-                                                          SweetAlert.show(
-                                                              context,
-                                                              subtitle:
-                                                                  "Deleting...",
-                                                              style:
-                                                                  SweetAlertStyle
-                                                                      .loading);
-                                                          new Future.delayed(
-                                                              new Duration(
-                                                                  seconds: 2),
-                                                              () {
-                                                            SweetAlert.show(
-                                                                context,
-                                                                subtitle:
-                                                                    "Done !",
-                                                                style:
-                                                                    SweetAlertStyle
-                                                                        .success);
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        Myrequests(
-                                                                            1)));
-                                                          });
-                                                        } else {
-                                                          SweetAlert.show(
-                                                              context,
-                                                              subtitle:
-                                                                  "Ooops! Something Went Wrong!!",
-                                                              style:
-                                                                  SweetAlertStyle
-                                                                      .error);
-                                                        }
-                                                      });
-                                                    } else {
-                                                      SweetAlert.show(context,
-                                                          subtitle:
-                                                              "Ooops! Something Went Wrong!!",
-                                                          style: SweetAlertStyle
-                                                              .error);
-                                                    }
+                                                  SweetAlert.show(context,
+                                                      subtitle: "Deleting...",
+                                                      style: SweetAlertStyle
+                                                          .loading);
+                                                  new Future.delayed(
+                                                      new Duration(seconds: 2),
+                                                      () {
+                                                    SweetAlert.show(context,
+                                                        subtitle: "Done !",
+                                                        style: SweetAlertStyle
+                                                            .success);
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RequestValidations()));
                                                   });
                                                 } else {
                                                   SweetAlert.show(context,
@@ -1878,28 +1730,117 @@ class _DetailRequestMissionState extends State<DetailRequestMission> {
                                             // return false to keep dialog
                                             return false;
                                           });
-                                        }
-                                      },
-                                      style: NeumorphicStyle(
-                                        shape: NeumorphicShape.convex,
-                                        color: NeumorphicColors.background,
-                                        boxShape: NeumorphicBoxShape.roundRect(
-                                            BorderRadius.circular(8)),
-                                      ),
-                                      padding: const EdgeInsets.all(1.0),
-                                      child: Center(
-                                        child: Icon(Icons.delete,
-                                            color: LightColors.kRed),
-                                      ),
+                                        },
+                                        style: NeumorphicStyle(
+                                          shape: NeumorphicShape.convex,
+                                          color: NeumorphicColors.background,
+                                          boxShape:
+                                              NeumorphicBoxShape.roundRect(
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: Center(
+                                          child: Icon(Icons.check,
+                                              color: Colors.green),
+                                        ),
 
-                                      // ListTile(
-                                      //   leading: Icon(Icons.delete,color:LightColors.kRed) ,
-                                      //   title: Text("Delete",style:TextStyle(fontSize: 18,color:LightColors.kRed,)),
-                                      //
-                                      //   // trailing: Text(mat.toString(),style: TextStyle(color: LightColors.kbluel,fontSize: 15),),
-                                      //
-                                      // ),
-                                    )),
+                                        // ListTile(
+                                        //   leading: Icon(Icons.delete,color:LightColors.kRed) ,
+                                        //   title: Text("Delete",style:TextStyle(fontSize: 18,color:LightColors.kRed,)),
+                                        //
+                                        //   // trailing: Text(mat.toString(),style: TextStyle(color: LightColors.kbluel,fontSize: 15),),
+                                        //
+                                        // ),
+                                      )),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Container(
+                                      width: 60,
+                                      height: 50,
+                                      child: NeumorphicButton(
+                                        //margin: EdgeInsets.fromLTRB(5,0,0,0),
+                                        onPressed: () async {
+                                          SweetAlert.show(context,
+                                              subtitle:
+                                                  "Do you want to reject this misssion",
+                                              style: SweetAlertStyle.confirm,
+                                              confirmButtonColor:
+                                                  LightColors.kRed,
+                                              cancelButtonColor: Colors.white12,
+                                              showCancelButton: true,
+                                              onPress: (bool isConfirm) {
+                                            if (isConfirm) {
+                                              _missionService
+                                                  .stepManager(
+                                                      commentController.text,
+                                                      "Rejected",
+                                                      widget.mission["_id"],
+                                                      tokenLogin)
+                                                  .then((value) {
+                                                if (value["status"]
+                                                        .toString() ==
+                                                    "200") {
+                                                  SweetAlert.show(context,
+                                                      subtitle: "Deleting...",
+                                                      style: SweetAlertStyle
+                                                          .loading);
+                                                  new Future.delayed(
+                                                      new Duration(seconds: 2),
+                                                      () {
+                                                    SweetAlert.show(context,
+                                                        subtitle: "Done !",
+                                                        style: SweetAlertStyle
+                                                            .success);
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RequestValidations()));
+                                                  });
+                                                } else {
+                                                  SweetAlert.show(context,
+                                                      subtitle:
+                                                          "Ooops! Something Went Wrong!!",
+                                                      style: SweetAlertStyle
+                                                          .error);
+                                                }
+                                              });
+                                            } else {
+                                              print("aaaaaaaaaa : " +
+                                                  Operations[0]["request"]
+                                                          ["mission"]["_id"]
+                                                      .toString());
+                                              return true;
+                                            }
+                                            // return false to keep dialog
+                                            return false;
+                                          });
+                                        },
+                                        style: NeumorphicStyle(
+                                          shape: NeumorphicShape.convex,
+                                          color: NeumorphicColors.background,
+                                          boxShape:
+                                              NeumorphicBoxShape.roundRect(
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.clear_outlined,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+
+                                        // ListTile(
+                                        //   leading: Icon(Icons.delete,color:LightColors.kRed) ,
+                                        //   title: Text("Delete",style:TextStyle(fontSize: 18,color:LightColors.kRed,)),
+                                        //
+                                        //   // trailing: Text(mat.toString(),style: TextStyle(color: LightColors.kbluel,fontSize: 15),),
+                                        //
+                                        // ),
+                                      )),
+                                ],
                               ),
                               SizedBox(
                                 height: _height * 0.01,
